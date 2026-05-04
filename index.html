@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Metal</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #1a1a2e; color: #e0e0e0; font-size: 13px; }
+
+  .top-bar {
+    background: #16213e;
+    border-bottom: 1px solid #0f3460;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .top-title { font-size: 15px; font-weight: 600; color: #e2e8f0; letter-spacing: .02em; }
+  .top-period { font-size: 11px; color: #94a3b8; }
+
+  .tab-bar {
+    display: flex;
+    gap: 4px;
+    padding: 0 16px;
+    background: #16213e;
+    border-bottom: 1px solid #0f3460;
+  }
+  .tab {
+    padding: 8px 16px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    color: #94a3b8;
+    transition: all .15s;
+    user-select: none;
+  }
+  .tab:hover { color: #e2e8f0; }
+  .tab.active { color: #fff; border-bottom-color: #3b82f6; }
+  .tab.active.t24k { border-bottom-color: #3b82f6; color: #93c5fd; }
+  .tab.active.tgti { border-bottom-color: #10b981; color: #6ee7b7; }
+  .tab.active.tgtt { border-bottom-color: #f97316; color: #fdba74; }
+  .tab.active.tall { border-bottom-color: #a78bfa; color: #c4b5fd; }
+
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    padding: 12px 16px 0;
+  }
+  .kpi {
+    background: #16213e;
+    border: 1px solid #0f3460;
+    border-radius: 8px;
+    padding: 10px 14px;
+  }
+  .kpi-label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px; }
+  .kpi-val { font-size: 22px; font-weight: 700; color: #e2e8f0; line-height: 1.1; }
+  .kpi-sub { font-size: 10px; color: #475569; margin-top: 3px; }
+  .kpi-up { color: #34d399; }
+  .kpi-dn { color: #f87171; }
+
+  .chart-wrap {
+    padding: 12px 16px 16px;
+  }
+  .chart-title {
+    font-size: 11px;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    margin-bottom: 8px;
+  }
+  .chart-legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+  .leg {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: #94a3b8;
+  }
+  .leg-sq { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+  .leg-ln { width: 20px; height: 2px; border-radius: 1px; flex-shrink: 0; }
+  .chart-box { position: relative; width: 100%; height: 280px; }
+
+  .dax-section { padding: 12px 16px 16px; }
+  .dax-header { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 10px; }
+  .dax-card {
+    background: #16213e;
+    border: 1px solid #0f3460;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+  .dax-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: #0f3460;
+    cursor: pointer;
+  }
+  .dax-card-name { font-size: 12px; font-weight: 600; color: #93c5fd; }
+  .dax-badge { font-size: 10px; padding: 2px 7px; border-radius: 3px; font-weight: 600; }
+  .dax-code {
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 11px;
+    line-height: 1.65;
+    padding: 10px 12px;
+    color: #cbd5e1;
+    white-space: pre;
+    overflow-x: auto;
+    display: none;
+  }
+  .dax-code.open { display: block; }
+  .kw { color: #c084fc; }
+  .fn { color: #67e8f9; }
+  .str { color: #86efac; }
+  .num { color: #fbbf24; }
+  .cm { color: #475569; font-style: italic; }
+  .copy-btn {
+    font-size: 10px;
+    padding: 2px 8px;
+    cursor: pointer;
+    border-radius: 3px;
+    background: transparent;
+    border: 1px solid #334155;
+    color: #94a3b8;
+  }
+  .copy-btn:hover { background: #1e293b; }
+
+  .note-box {
+    margin: 0 16px 12px;
+    background: #0f3460;
+    border-left: 3px solid #3b82f6;
+    border-radius: 0 6px 6px 0;
+    padding: 8px 12px;
+    font-size: 11px;
+    color: #93c5fd;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <span class="top-title">Dashboard de Avaliações de Metal</span>
+  <span class="top-period" id="periodo">Nov/2024 → Nov/2025 &nbsp;|&nbsp; 13 meses</span>
+</div>
+
+<div class="tab-bar">
+  <div class="tab active tall" onclick="setLoja('TODAS')">Todas as Lojas</div>
+  <div class="tab t24k" onclick="setLoja('24K')">24K — Meier</div>
+  <div class="tab tgti" onclick="setLoja('GTI')">GTI — Ipanema</div>
+  <div class="tab tgtt" onclick="setLoja('GTT')">GTT — Tijuca</div>
+  <div class="tab" onclick="setView('dax')" id="tab-dax">Medidas DAX</div>
+</div>
+
+<div id="view-chart">
+  <div class="kpi-row">
+    <div class="kpi"><div class="kpi-label">Avaliações s/4</div><div class="kpi-val" id="k-aval">—</div><div class="kpi-sub" id="k-aval-s">—</div></div>
+    <div class="kpi"><div class="kpi-label">Compras</div><div class="kpi-val" id="k-comp">—</div><div class="kpi-sub" id="k-comp-s">—</div></div>
+    <div class="kpi"><div class="kpi-label">Índice de Conversão</div><div class="kpi-val" id="k-conv">—</div><div class="kpi-sub" id="k-conv-s">—</div></div>
+    <div class="kpi"><div class="kpi-label">Metal Comprado</div><div class="kpi-val" id="k-metal">—</div><div class="kpi-sub" id="k-metal-s">—</div></div>
+  </div>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Avaliações s/4 | Compras | Índice de Conversão | Metal Comprado</div>
+    <div class="chart-legend">
+      <span class="leg"><span class="leg-sq" id="lq-aval"></span> Avaliações s/4</span>
+      <span class="leg"><span class="leg-sq" id="lq-comp"></span> Compras</span>
+      <span class="leg"><span class="leg-ln" style="background:#EF9F27"></span> Índice de Conversão</span>
+      <span class="leg"><span class="leg-ln" style="background:#4ade80;border-top:2px dashed #4ade80;height:0"></span> Metal Comprado (g)</span>
+    </div>
+    <div class="chart-box"><canvas id="mainChart" role="img" aria-label="Gráfico mensal de avaliações, compras e conversão"></canvas></div>
+  </div>
+</div>
+
+<div id="view-dax" style="display:none">
+  <div class="note-box">
+    Crie cada medida separadamente no Power BI: clique com botão direito na tabela → <strong>Nova medida</strong> → cole apenas o bloco correspondente. Clique no título de cada card para expandir.
+  </div>
+  <div class="dax-section">
+    <div class="dax-header">Medidas — criar uma por vez</div>
+
+    <div class="dax-card">
+      <div class="dax-card-head" onclick="toggleDax('d1')">
+        <span class="dax-card-name">Aval_s4_Meier &nbsp;<span style="color:#475569;font-weight:400;font-size:10px">→ tb_metal_meier</span></span>
+        <div style="display:flex;gap:6px;align-items:center"><span class="dax-badge" style="background:#1e3a5f;color:#93c5fd">Contagem</span><button class="copy-btn" onclick="event.stopPropagation();copyDax('d1c')">Copiar</button></div>
+      </div>
+      <div class="dax-code" id="d1"><span id="d1c"><span class="fn">Aval_s4_Meier</span> <span class="kw">=</span>
+<span class="kw">CALCULATE</span>(
+    <span class="kw">COUNTROWS</span>(tb_metal_meier),
+    <span class="kw">NOT</span>(
+        tb_metal_meier[TRANSACAO] <span class="kw">=</span> <span class="str">"NÃO COMPRA"</span>
+            <span class="kw">&&</span> tb_metal_meier[MOTIVO NC] <span class="kw">=</span> <span class="num">4</span>
+    )
+)</span></div>
+    </div>
+
+    <div class="dax-card">
+      <div class="dax-card-head" onclick="toggleDax('d2')">
+        <span class="dax-card-name">Aval_s4_Ipanema &nbsp;<span style="color:#475569;font-weight:400;font-size:10px">→ tb_metal_ipanema</span></span>
+        <div style="display:flex;gap:6px;align-items:center"><span class="dax-badge" style="background:#064e3b;color:#6ee7b7">Contagem</span><button class="copy-btn" onclick="event.stopPropagation();copyDax('d2c')">Copiar</button></div>
+      </div>
+      <div class="dax-code" id="d2"><span id="d2c"><span class="fn">Aval_s4_Ipanema</span> <span class="kw">=</span>
+<span class="kw">CALCULATE</span>(
+    <span class="kw">COUNTROWS</span>(tb_metal_ipanema),
+    <span class="kw">NOT</span>(
+        tb_metal_ipanema[TRANSACAO] <span class="kw">=</span> <span class="str">"NÃO COMPRA"</span>
+            <span class="kw">&&</span> tb_metal_ipanema[MOTIVO NC] <span class="kw">=</span> <span class="num">4</span>
+    )
+)</span></div>
+    </div>
+
+    <div class="dax-card">
+      <div class="dax-card-head" onclick="toggleDax('d3')">
+        <span class="dax-card-name">Aval_s4_Tijuca &nbsp;<span style="color:#475569;font-weight:400;font-size:10px">→ tb_metal_tijuca</span></span>
+        <div style="display:flex;gap:6px;align-items:center"><span class="dax-badge" style="background:#431407;color:#fdba74">Contagem</span><button class="copy-btn" onclick="event.stopPropagation();copyDax('d3c')">Copiar</button></div>
+      </div>
+      <div class="dax-code" id="d3"><span id="d3c"><span class="fn">Aval_s4_Tijuca</span> <span class="kw">=</span>
+<span class="kw">CALCULATE</span>(
+    <span class="kw">COUNTROWS</span>(tb_metal_tijuca),
+    <span class="kw">NOT</span>(
+        tb_metal_tijuca[TRANSACAO] <span class="kw">=</span> <span class="str">"NÃO COMPRA"</span>
+            <span class="kw">&&</span> tb_metal_tijuca[MOTIVO NC] <span class="kw">=</span> <span class="num">4</span>
+    )
+)</span></div>
+    </div>
+
+    <div class="dax-card">
+      <div class="dax-card-head" onclick="toggleDax('d4')">
+        <span class="dax-card-name">Compras_Meier &nbsp;<span style="color:#475569;font-weight:400;font-size:10px">→ tb_metal_meier</span></span>
+        <div style="display:flex;gap:6px;align-items:center"><span class="dax-badge" style="background:#1e3a5f;color:#93c5fd">Contagem</span><button class="copy-btn" onclick="event.stopPropagation();copyDax('d4c')">Copiar</button></div>
+      </div>
+      <div class="dax-code" id="d4"><span id="d4c"><span class="fn">Compras_Meier</span> <span class="kw">=</span>
+<span class="kw">CALCULATE</span>(
+    <span class="kw">COUNTROWS</span>(tb_metal_meier),
+    tb_metal_meier[TRANSACAO] <span class="kw">=</span> <span class="str">"COMPRA"</span>
+)</span></div>
+    </div>
+
+    <div class="dax-card">
+      <div class="dax-card-head" onclick="toggleDax('d5')">
+        <span class="dax-card-name">Compras_Ipanema &nbsp;<span style="color:#475569;font-weight:400;font-size:10px">→ tb_metal_ipanema</span></span>
+        <div style="display:flex;gap:6px;align-items:center"><span class="dax-badge" style="background:#064e3b;color:#6ee7b7">Contagem</span><button class="copy-btn" onclick="event.stopPropagation();copyDax('d5c')">Copiar</button></div>
+      </div>
+      <div class="dax-code" id="d5"><span id="d5c"><span class="fn">Compras_Ipanema</span> <span class="kw">=</span>
+<span class="kw">CALCULATE</span>(
+    <span class="kw">COUNTROWS</span>(tb_metal_ipanema),
+    tb_metal_ipanema[TRANSACAO] <span class="kw">=</span> <span class="str">"Compra"</span>
+)</span></div>
+    </div>
+
+    <div class="dax-card">
+      <div class="dax-card-head" onclick="toggleDax('d6')">
+        <span class="dax-card-name">Compras_Tijuca &nbsp;<span style="color:#475569;font-weight:400;font-size:10px">→ tb_metal_tijuca</span></span>
+        <div style="display:flex;gap:6px;align-items:center"><span class="dax-badge" style="background:#431407;color:#fdba74">Contagem</span><button class="copy-btn" onclick="event.stopPropagation();copyDax('d6c')">Copiar</button></div>
+      </div>
+      <div class="dax-code" id="d6"><span id="d6c"><span class="fn">Compras_Tijuca</span> <span class="kw">=</span>
+<span class="kw">CALCULATE</span>(
+    <span class="kw">COUNTROWS</span>(tb_metal_tijuca),
+    tb_metal_tijuca[TRANSACAO] <span class="kw">=</span> <span class="str">"COMPRA"</span>
+)</span></div>
+    </div>
+
+    <div class="dax-card">
+      <div class="dax-card-head" onclick="toggleDax('d7')">
+        <span class="dax-card-name">IndConv_Meier / Ipanema / Tijuca</span>
+        <div style="display:flex;gap:6px;align-items:center"><span class="dax-badge" style="background:#1c1917;color:#fbbf24">% Conversão</span><button class="copy-btn" onclick="event.stopPropagation();copyDax('d7c')">Copiar</button></div>
+      </div>
+      <div class="dax-code" id="d7"><span id="d7c"><span class="fn">IndConv_Meier</span> <span class="kw">=</span> <span class="kw">DIVIDE</span>([Compras_Meier], [Aval_s4_Meier], <span class="num">0</span>)
+
+<span class="fn">IndConv_Ipanema</span> <span class="kw">=</span> <span class="kw">DIVIDE</span>([Compras_Ipanema], [Aval_s4_Ipanema], <span class="num">0</span>)
+
+<span class="fn">IndConv_Tijuca</span> <span class="kw">=</span> <span class="kw">DIVIDE</span>([Compras_Tijuca], [Aval_s4_Tijuca], <span class="num">0</span>)</span></div>
+    </div>
+
+    <div class="dax-card">
+      <div class="dax-card-head" onclick="toggleDax('d8')">
+        <span class="dax-card-name">Metal_Meier / Ipanema / Tijuca &nbsp;(gramas)</span>
+        <div style="display:flex;gap:6px;align-items:center"><span class="dax-badge" style="background:#14532d;color:#86efac">Soma</span><button class="copy-btn" onclick="event.stopPropagation();copyDax('d8c')">Copiar</button></div>
+      </div>
+      <div class="dax-code" id="d8"><span id="d8c"><span class="fn">Metal_Meier</span> <span class="kw">=</span>
+<span class="kw">CALCULATE</span>(<span class="kw">SUM</span>(tb_metal_meier[PESO TOTAL]), tb_metal_meier[TRANSACAO] <span class="kw">=</span> <span class="str">"COMPRA"</span>)
+
+<span class="fn">Metal_Ipanema</span> <span class="kw">=</span>
+<span class="kw">CALCULATE</span>(<span class="kw">SUM</span>(tb_metal_ipanema[PESO TOTAL]), tb_metal_ipanema[TRANSACAO] <span class="kw">=</span> <span class="str">"Compra"</span>)
+
+<span class="fn">Metal_Tijuca</span> <span class="kw">=</span>
+<span class="kw">CALCULATE</span>(<span class="kw">SUM</span>(tb_metal_tijuca[PESO TOTAL]), tb_metal_tijuca[TRANSACAO] <span class="kw">=</span> <span class="str">"COMPRA"</span>)</span></div>
+    </div>
+
+    <div class="dax-card">
+      <div class="dax-card-head" onclick="toggleDax('d9')">
+        <span class="dax-card-name">Valor_Meier / Ipanema / Tijuca &nbsp;(R$)</span>
+        <div style="display:flex;gap:6px;align-items:center"><span class="dax-badge" style="background:#14532d;color:#86efac">Soma</span><button class="copy-btn" onclick="event.stopPropagation();copyDax('d9c')">Copiar</button></div>
+      </div>
+      <div class="dax-code" id="d9"><span id="d9c"><span class="fn">Valor_Meier</span> <span class="kw">=</span>
+<span class="kw">CALCULATE</span>(<span class="kw">SUM</span>(tb_metal_meier[VALOR GASTO/OFERTA]), tb_metal_meier[TRANSACAO] <span class="kw">=</span> <span class="str">"COMPRA"</span>)
+
+<span class="fn">Valor_Ipanema</span> <span class="kw">=</span>
+<span class="kw">CALCULATE</span>(<span class="kw">SUM</span>(tb_metal_ipanema[VALOR GASTO/OFERTA]), tb_metal_ipanema[TRANSACAO] <span class="kw">=</span> <span class="str">"Compra"</span>)
+
+<span class="fn">Valor_Tijuca</span> <span class="kw">=</span>
+<span class="kw">CALCULATE</span>(<span class="kw">SUM</span>(tb_metal_tijuca[VALOR GASTO/OFERTA]), tb_metal_tijuca[TRANSACAO] <span class="kw">=</span> <span class="str">"COMPRA"</span>)</span></div>
+    </div>
+
+    <div class="dax-card">
+      <div class="dax-card-head" onclick="toggleDax('d10')">
+        <span class="dax-card-name">Totais Consolidados — todas as lojas</span>
+        <div style="display:flex;gap:6px;align-items:center"><span class="dax-badge" style="background:#2e1065;color:#c4b5fd">Consolidado</span><button class="copy-btn" onclick="event.stopPropagation();copyDax('d10c')">Copiar</button></div>
+      </div>
+      <div class="dax-code" id="d10"><span id="d10c"><span class="fn">Total_Aval_s4</span> <span class="kw">=</span> [Aval_s4_Meier] <span class="kw">+</span> [Aval_s4_Ipanema] <span class="kw">+</span> [Aval_s4_Tijuca]
+
+<span class="fn">Total_Compras</span> <span class="kw">=</span> [Compras_Meier] <span class="kw">+</span> [Compras_Ipanema] <span class="kw">+</span> [Compras_Tijuca]
+
+<span class="fn">Total_IndConv</span> <span class="kw">=</span> <span class="kw">DIVIDE</span>([Total_Compras], [Total_Aval_s4], <span class="num">0</span>)
+
+<span class="fn">Total_Metal</span> <span class="kw">=</span> [Metal_Meier] <span class="kw">+</span> [Metal_Ipanema] <span class="kw">+</span> [Metal_Tijuca]
+
+<span class="fn">Total_Valor</span> <span class="kw">=</span> [Valor_Meier] <span class="kw">+</span> [Valor_Ipanema] <span class="kw">+</span> [Valor_Tijuca]</span></div>
+    </div>
+
+    <div class="dax-card">
+      <div class="dax-card-head" onclick="toggleDax('d11')">
+        <span class="dax-card-name">Coluna AnoMes — criar em cada tabela</span>
+        <div style="display:flex;gap:6px;align-items:center"><span class="dax-badge" style="background:#1c1917;color:#fbbf24">Coluna</span><button class="copy-btn" onclick="event.stopPropagation();copyDax('d11c')">Copiar</button></div>
+      </div>
+      <div class="dax-code" id="d11"><span id="d11c"><span class="cm">-- Coluna para eixo X do gráfico (texto)</span>
+<span class="fn">AnoMes</span> <span class="kw">=</span> <span class="kw">FORMAT</span>(tb_metal_meier[DATA], <span class="str">"YYYY/MM"</span>)
+
+<span class="cm">-- Coluna de ordenação (número) — classificar AnoMes por esta</span>
+<span class="fn">AnoMes_Ord</span> <span class="kw">=</span> <span class="kw">VALUE</span>(<span class="kw">FORMAT</span>(tb_metal_meier[DATA], <span class="str">"YYYYMM"</span>))</span></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const DATA = {
+  "24K": [{"ANO_MES":"2024-11","AVAL_S4":163,"COMPRAS":148,"CONV":90.8,"METAL":1529.39,"VALOR":264132},{"ANO_MES":"2024-12","AVAL_S4":154,"COMPRAS":150,"CONV":97.4,"METAL":984.84,"VALOR":178112},{"ANO_MES":"2025-01","AVAL_S4":183,"COMPRAS":177,"CONV":96.72,"METAL":1843.7,"VALOR":402186},{"ANO_MES":"2025-02","AVAL_S4":168,"COMPRAS":161,"CONV":95.83,"METAL":1526.1,"VALOR":318285},{"ANO_MES":"2025-03","AVAL_S4":216,"COMPRAS":205,"CONV":94.91,"METAL":1926.6,"VALOR":484582},{"ANO_MES":"2025-04","AVAL_S4":160,"COMPRAS":153,"CONV":95.62,"METAL":1338.4,"VALOR":380795},{"ANO_MES":"2025-05","AVAL_S4":173,"COMPRAS":164,"CONV":94.8,"METAL":1342.2,"VALOR":335150},{"ANO_MES":"2025-06","AVAL_S4":166,"COMPRAS":155,"CONV":93.37,"METAL":1996,"VALOR":505030},{"ANO_MES":"2025-07","AVAL_S4":186,"COMPRAS":176,"CONV":94.62,"METAL":1943,"VALOR":374383},{"ANO_MES":"2025-08","AVAL_S4":173,"COMPRAS":156,"CONV":90.17,"METAL":1274.5,"VALOR":271117},{"ANO_MES":"2025-09","AVAL_S4":202,"COMPRAS":192,"CONV":95.05,"METAL":2972.3,"VALOR":476092},{"ANO_MES":"2025-10","AVAL_S4":210,"COMPRAS":194,"CONV":92.38,"METAL":1865.6,"VALOR":471364},{"ANO_MES":"2025-11","AVAL_S4":172,"COMPRAS":164,"CONV":95.35,"METAL":1686,"VALOR":373029}],
+  "GTI": [{"ANO_MES":"2024-11","AVAL_S4":123,"COMPRAS":107,"CONV":86.99,"METAL":2563.87,"VALOR":553718},{"ANO_MES":"2024-12","AVAL_S4":95,"COMPRAS":84,"CONV":88.42,"METAL":1929.7,"VALOR":459412},{"ANO_MES":"2025-01","AVAL_S4":133,"COMPRAS":123,"CONV":92.48,"METAL":2344.48,"VALOR":671068},{"ANO_MES":"2025-02","AVAL_S4":122,"COMPRAS":107,"CONV":87.7,"METAL":2592.78,"VALOR":774781},{"ANO_MES":"2025-03","AVAL_S4":163,"COMPRAS":145,"CONV":88.96,"METAL":2489.53,"VALOR":683699},{"ANO_MES":"2025-04","AVAL_S4":114,"COMPRAS":105,"CONV":92.11,"METAL":2368.42,"VALOR":676845},{"ANO_MES":"2025-05","AVAL_S4":178,"COMPRAS":162,"CONV":91.01,"METAL":2940.22,"VALOR":856380},{"ANO_MES":"2025-06","AVAL_S4":116,"COMPRAS":107,"CONV":92.24,"METAL":1849.42,"VALOR":532506},{"ANO_MES":"2025-07","AVAL_S4":160,"COMPRAS":142,"CONV":88.75,"METAL":4077.47,"VALOR":1181494},{"ANO_MES":"2025-08","AVAL_S4":130,"COMPRAS":113,"CONV":86.92,"METAL":1920.1,"VALOR":463486},{"ANO_MES":"2025-09","AVAL_S4":143,"COMPRAS":130,"CONV":90.91,"METAL":2294.95,"VALOR":589990},{"ANO_MES":"2025-10","AVAL_S4":189,"COMPRAS":165,"CONV":87.3,"METAL":2906.83,"VALOR":817336},{"ANO_MES":"2025-11","AVAL_S4":139,"COMPRAS":123,"CONV":88.49,"METAL":2527.56,"VALOR":751356}],
+  "GTT": [{"ANO_MES":"2024-11","AVAL_S4":329,"COMPRAS":298,"CONV":90.58,"METAL":4595.18,"VALOR":836344},{"ANO_MES":"2024-12","AVAL_S4":303,"COMPRAS":278,"CONV":91.75,"METAL":3928.86,"VALOR":692402},{"ANO_MES":"2025-01","AVAL_S4":331,"COMPRAS":281,"CONV":84.89,"METAL":3144.1,"VALOR":598185},{"ANO_MES":"2025-02","AVAL_S4":335,"COMPRAS":283,"CONV":84.48,"METAL":3676.2,"VALOR":868547},{"ANO_MES":"2025-03","AVAL_S4":343,"COMPRAS":295,"CONV":86.01,"METAL":3380.9,"VALOR":666086},{"ANO_MES":"2025-04","AVAL_S4":352,"COMPRAS":306,"CONV":86.93,"METAL":3189.9,"VALOR":720579},{"ANO_MES":"2025-05","AVAL_S4":373,"COMPRAS":311,"CONV":83.38,"METAL":3691.4,"VALOR":939244},{"ANO_MES":"2025-06","AVAL_S4":345,"COMPRAS":294,"CONV":85.22,"METAL":2831.9,"VALOR":670390},{"ANO_MES":"2025-07","AVAL_S4":401,"COMPRAS":340,"CONV":84.79,"METAL":4144.8,"VALOR":867892},{"ANO_MES":"2025-08","AVAL_S4":392,"COMPRAS":331,"CONV":84.44,"METAL":4477.9,"VALOR":1013538},{"ANO_MES":"2025-09","AVAL_S4":355,"COMPRAS":318,"CONV":89.58,"METAL":4050.1,"VALOR":892069},{"ANO_MES":"2025-10","AVAL_S4":419,"COMPRAS":356,"CONV":84.96,"METAL":4428.1,"VALOR":1115109},{"ANO_MES":"2025-11","AVAL_S4":379,"COMPRAS":326,"CONV":86.02,"METAL":4044.7,"VALOR":1150052}],
+  "TODAS": [{"ANO_MES":"2024-11","AVAL_S4":615,"COMPRAS":553,"CONV":89.92,"METAL":8688.44,"VALOR":1654194},{"ANO_MES":"2024-12","AVAL_S4":552,"COMPRAS":512,"CONV":92.75,"METAL":6843.4,"VALOR":1329926},{"ANO_MES":"2025-01","AVAL_S4":647,"COMPRAS":581,"CONV":89.8,"METAL":7332.28,"VALOR":1671439},{"ANO_MES":"2025-02","AVAL_S4":625,"COMPRAS":551,"CONV":88.16,"METAL":7795.08,"VALOR":1961613},{"ANO_MES":"2025-03","AVAL_S4":722,"COMPRAS":645,"CONV":89.34,"METAL":7797.03,"VALOR":1834367},{"ANO_MES":"2025-04","AVAL_S4":626,"COMPRAS":564,"CONV":90.1,"METAL":6896.72,"VALOR":1778219},{"ANO_MES":"2025-05","AVAL_S4":724,"COMPRAS":637,"CONV":87.98,"METAL":7973.82,"VALOR":2130774},{"ANO_MES":"2025-06","AVAL_S4":627,"COMPRAS":556,"CONV":88.68,"METAL":6677.32,"VALOR":1707926},{"ANO_MES":"2025-07","AVAL_S4":747,"COMPRAS":658,"CONV":88.09,"METAL":10165.27,"VALOR":2423769},{"ANO_MES":"2025-08","AVAL_S4":695,"COMPRAS":600,"CONV":86.33,"METAL":7672.5,"VALOR":1748141},{"ANO_MES":"2025-09","AVAL_S4":700,"COMPRAS":640,"CONV":91.43,"METAL":9317.35,"VALOR":1958151},{"ANO_MES":"2025-10","AVAL_S4":818,"COMPRAS":715,"CONV":87.41,"METAL":9200.53,"VALOR":2403809},{"ANO_MES":"2025-11","AVAL_S4":690,"COMPRAS":613,"CONV":88.84,"METAL":8258.26,"VALOR":2274437}]
+};
+
+const PALETTE = {
+  "TODAS": { aval:"#7c3aed", comp:"#a78bfa", label:"Todas as Lojas" },
+  "24K":   { aval:"#1d4ed8", comp:"#60a5fa", label:"24K — Meier" },
+  "GTI":   { aval:"#065f46", comp:"#34d399", label:"GTI — Ipanema" },
+  "GTT":   { aval:"#9a3412", comp:"#fb923c", label:"GTT — Tijuca" }
+};
+
+let currentLoja = "TODAS";
+let chart = null;
+
+function fmtMes(s) {
+  const [y,m] = s.split('-');
+  return y+'/'+m;
+}
+function fmtNum(n) { return n.toLocaleString('pt-BR'); }
+function fmtR(n) { return 'R$ '+(n/1000).toFixed(0)+'k'; }
+
+function updateKPIs(data) {
+  const aval = data.reduce((a,r)=>a+r.AVAL_S4,0);
+  const comp = data.reduce((a,r)=>a+r.COMPRAS,0);
+  const conv = (comp/aval*100).toFixed(2);
+  const metal = data.reduce((a,r)=>a+r.METAL,0);
+  const valor = data.reduce((a,r)=>a+r.VALOR,0);
+  const last = data[data.length-1];
+  const prev = data[data.length-2];
+
+  document.getElementById('k-aval').textContent = fmtNum(aval);
+  document.getElementById('k-aval-s').textContent = data.length+' meses';
+  document.getElementById('k-comp').textContent = fmtNum(comp);
+  document.getElementById('k-comp-s').textContent = 'média '+Math.round(comp/data.length)+'/mês';
+  document.getElementById('k-conv').textContent = conv+'%';
+  const diff = last && prev ? (last.CONV - prev.CONV).toFixed(2) : 0;
+  const cls = diff >= 0 ? 'kpi-up' : 'kpi-dn';
+  const sig = diff >= 0 ? '+' : '';
+  document.getElementById('k-conv-s').innerHTML = '<span class="'+cls+'">'+sig+diff+'pp último mês</span>';
+  document.getElementById('k-metal').textContent = metal.toFixed(0)+'g';
+  document.getElementById('k-metal-s').textContent = fmtR(valor)+' total';
+}
+
+function renderChart() {
+  const data = DATA[currentLoja];
+  const p = PALETTE[currentLoja];
+  const labels = data.map(r=>fmtMes(r.ANO_MES));
+
+  document.getElementById('lq-aval').style.background = p.aval;
+  document.getElementById('lq-comp').style.background = p.comp;
+  updateKPIs(data);
+
+  const ctx = document.getElementById('mainChart').getContext('2d');
+  if(chart) chart.destroy();
+
+  chart = new Chart(ctx, {
+    data: {
+      labels,
+      datasets: [
+        { type:'bar', label:'Avaliações s/4', data:data.map(r=>r.AVAL_S4), backgroundColor:p.aval+'99', borderWidth:0, yAxisID:'y', order:3 },
+        { type:'bar', label:'Compras', data:data.map(r=>r.COMPRAS), backgroundColor:p.comp+'cc', borderWidth:0, yAxisID:'y', order:2 },
+        { type:'line', label:'Índice de Conversão', data:data.map(r=>r.CONV), borderColor:'#EF9F27', backgroundColor:'transparent', borderWidth:2.5, pointRadius:5, pointBackgroundColor:'#1a1a2e', pointBorderColor:'#EF9F27', pointBorderWidth:2, tension:0.3, yAxisID:'y2', order:1 },
+        { type:'line', label:'Metal (g)', data:data.map(r=>r.METAL), borderColor:'#4ade80', backgroundColor:'transparent', borderWidth:1.5, borderDash:[4,3], pointRadius:3, pointBackgroundColor:'#4ade80', tension:0.3, yAxisID:'y3', order:0 }
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      interaction:{ mode:'index', intersect:false },
+      plugins:{
+        legend:{ display:false },
+        tooltip:{
+          backgroundColor:'#0f172a',
+          borderColor:'#1e3a5f',
+          borderWidth:1,
+          titleColor:'#94a3b8',
+          bodyColor:'#e2e8f0',
+          callbacks:{
+            label: ctx => {
+              const v = ctx.parsed.y;
+              if(ctx.dataset.label.includes('Conversão')) return ' '+ctx.dataset.label+': '+v.toFixed(2)+'%';
+              if(ctx.dataset.label.includes('Metal')) return ' '+ctx.dataset.label+': '+v.toFixed(1)+'g';
+              return ' '+ctx.dataset.label+': '+fmtNum(v);
+            }
+          }
+        }
+      },
+      scales:{
+        x:{ ticks:{ autoSkip:false, maxRotation:45, font:{size:10}, color:'#475569' }, grid:{ color:'#1e293b' } },
+        y:{ position:'left', ticks:{ font:{size:10}, color:'#475569' }, grid:{ color:'#1e293b' } },
+        y2:{ position:'right', min:75, max:100, ticks:{ font:{size:10}, color:'#EF9F27', callback:v=>v+'%' }, grid:{ display:false } },
+        y3:{ display:false }
+      }
+    }
+  });
+}
+
+function setLoja(loja) {
+  currentLoja = loja;
+  document.querySelectorAll('.tab').forEach(t => {
+    t.classList.remove('active');
+    if(t.getAttribute('onclick') === "setLoja('"+loja+"')") t.classList.add('active');
+  });
+  document.getElementById('view-chart').style.display = '';
+  document.getElementById('view-dax').style.display = 'none';
+  document.getElementById('tab-dax').classList.remove('active');
+  renderChart();
+}
+
+function setView(v) {
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-dax').classList.add('active');
+  document.getElementById('view-chart').style.display = 'none';
+  document.getElementById('view-dax').style.display = '';
+}
+
+function toggleDax(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('open');
+}
+
+function copyDax(id) {
+  const el = document.getElementById(id);
+  navigator.clipboard.writeText(el.innerText);
+}
+
+renderChart();
+</script>
+</body>
+</html>
