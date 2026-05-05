@@ -486,6 +486,118 @@ function getFilteredData(){
   return arr;
 }
 
+// ── ANALYTICS DATA — by loja ──
+const ANAL = {
+  feedback: {"24K":[{"FEEDBACK":"R","total":1216,"compras":1168,"nc":48,"conv":96.1},{"FEEDBACK":"L","total":255,"compras":223,"nc":32,"conv":87.5},{"FEEDBACK":"P","total":208,"compras":195,"nc":13,"conv":93.8},{"FEEDBACK":"G","total":143,"compras":129,"nc":14,"conv":90.2},{"FEEDBACK":"I","total":71,"compras":67,"nc":4,"conv":94.4},{"FEEDBACK":"SM","total":56,"compras":54,"nc":2,"conv":96.4},{"FEEDBACK":"V","total":26,"compras":25,"nc":1,"conv":96.2},{"FEEDBACK":"MI","total":19,"compras":18,"nc":1,"conv":94.7},{"FEEDBACK":"BF","total":11,"compras":11,"nc":0,"conv":100.0},{"FEEDBACK":"BP","total":11,"compras":11,"nc":0,"conv":100.0},{"FEEDBACK":"ND","total":8,"compras":8,"nc":0,"conv":100.0}],"GTI":[{"FEEDBACK":"R","total":919,"compras":831,"nc":88,"conv":90.4},{"FEEDBACK":"L","total":202,"compras":160,"nc":42,"conv":79.2},{"FEEDBACK":"G","total":155,"compras":138,"nc":17,"conv":89.0},{"FEEDBACK":"I","total":76,"compras":69,"nc":7,"conv":90.8},{"FEEDBACK":"P","total":65,"compras":59,"nc":6,"conv":90.8},{"FEEDBACK":"COM","total":42,"compras":42,"nc":0,"conv":100.0},{"FEEDBACK":"M","total":31,"compras":28,"nc":3,"conv":90.3},{"FEEDBACK":"H","total":27,"compras":26,"nc":1,"conv":96.3},{"FEEDBACK":"550","total":16,"compras":15,"nc":1,"conv":93.8},{"FEEDBACK":"S","total":13,"compras":13,"nc":0,"conv":100.0},{"FEEDBACK":"T","total":13,"compras":13,"nc":0,"conv":100.0},{"FEEDBACK":"C","total":9,"compras":8,"nc":1,"conv":88.9},{"FEEDBACK":"P2","total":8,"compras":7,"nc":1,"conv":87.5},{"FEEDBACK":"BP","total":7,"compras":7,"nc":0,"conv":100.0}],"GTT":[{"FEEDBACK":"R","total":2400,"compras":2162,"nc":238,"conv":90.1},{"FEEDBACK":"L","total":420,"compras":337,"nc":83,"conv":80.2},{"FEEDBACK":"G","total":315,"compras":284,"nc":31,"conv":90.2},{"FEEDBACK":"I","total":208,"compras":181,"nc":27,"conv":87.0},{"FEEDBACK":"NSD","total":156,"compras":110,"nc":46,"conv":70.5},{"FEEDBACK":"P","total":153,"compras":137,"nc":16,"conv":89.5},{"FEEDBACK":"MP","total":115,"compras":94,"nc":21,"conv":81.7},{"FEEDBACK":"P215","total":51,"compras":48,"nc":3,"conv":94.1},{"FEEDBACK":"IE","total":51,"compras":40,"nc":11,"conv":78.4},{"FEEDBACK":"ICB","total":46,"compras":42,"nc":4,"conv":91.3},{"FEEDBACK":"MG","total":49,"compras":42,"nc":7,"conv":85.7},{"FEEDBACK":"MPC","total":37,"compras":35,"nc":2,"conv":94.6},{"FEEDBACK":"LG","total":36,"compras":28,"nc":8,"conv":77.8},{"FEEDBACK":"MV","total":28,"compras":28,"nc":0,"conv":100.0},{"FEEDBACK":"45","total":24,"compras":23,"nc":1,"conv":95.8},{"FEEDBACK":"BF","total":23,"compras":22,"nc":1,"conv":95.7},{"FEEDBACK":"O","total":22,"compras":18,"nc":4,"conv":81.8},{"FEEDBACK":"SM","total":19,"compras":17,"nc":2,"conv":89.5},{"FEEDBACK":"PDP","total":14,"compras":14,"nc":0,"conv":100.0},{"FEEDBACK":"COC","total":14,"compras":14,"nc":0,"conv":100.0},{"FEEDBACK":"AK","total":10,"compras":8,"nc":2,"conv":80.0},{"FEEDBACK":"MFL","total":10,"compras":9,"nc":1,"conv":90.0},{"FEEDBACK":"BM","total":10,"compras":10,"nc":0,"conv":100.0},{"FEEDBACK":"SF","total":11,"compras":4,"nc":7,"conv":36.4},{"FEEDBACK":"PC","total":5,"compras":3,"nc":2,"conv":60.0}],"TODAS":[{"FEEDBACK":"R","total":4535,"compras":4161,"nc":374,"conv":91.8},{"FEEDBACK":"L","total":877,"compras":720,"nc":157,"conv":82.1},{"FEEDBACK":"G","total":613,"compras":551,"nc":62,"conv":89.9},{"FEEDBACK":"P","total":426,"compras":391,"nc":35,"conv":91.8},{"FEEDBACK":"I","total":355,"compras":317,"nc":38,"conv":89.3},{"FEEDBACK":"NSD","total":156,"compras":110,"nc":46,"conv":70.5},{"FEEDBACK":"MP","total":115,"compras":94,"nc":21,"conv":81.7},{"FEEDBACK":"SM","total":75,"compras":71,"nc":4,"conv":94.7},{"FEEDBACK":"P215","total":51,"compras":48,"nc":3,"conv":94.1},{"FEEDBACK":"ICB","total":46,"compras":42,"nc":4,"conv":91.3},{"FEEDBACK":"COM","total":42,"compras":42,"nc":0,"conv":100.0},{"FEEDBACK":"MG","total":49,"compras":42,"nc":7,"conv":85.7},{"FEEDBACK":"IE","total":51,"compras":40,"nc":11,"conv":78.4},{"FEEDBACK":"MPC","total":37,"compras":35,"nc":2,"conv":94.6},{"FEEDBACK":"BF","total":34,"compras":33,"nc":1,"conv":97.1},{"FEEDBACK":"MV","total":28,"compras":28,"nc":0,"conv":100.0},{"FEEDBACK":"LG","total":36,"compras":28,"nc":8,"conv":77.8},{"FEEDBACK":"M","total":31,"compras":28,"nc":3,"conv":90.3},{"FEEDBACK":"BP","total":27,"compras":27,"nc":0,"conv":100.0},{"FEEDBACK":"H","total":27,"compras":26,"nc":1,"conv":96.3},{"FEEDBACK":"V","total":26,"compras":25,"nc":1,"conv":96.2},{"FEEDBACK":"45","total":24,"compras":23,"nc":1,"conv":95.8},{"FEEDBACK":"O","total":22,"compras":18,"nc":4,"conv":81.8},{"FEEDBACK":"MI","total":19,"compras":18,"nc":1,"conv":94.7},{"FEEDBACK":"AK","total":10,"compras":8,"nc":2,"conv":80.0},{"FEEDBACK":"SF","total":12,"compras":4,"nc":8,"conv":33.3}]},
+  slots: {"24K":[{"SLOT":540,"total":51,"compras":50,"label":"09:00","conv":98.0},{"SLOT":570,"total":87,"compras":86,"label":"09:30","conv":98.9},{"SLOT":600,"total":103,"compras":100,"label":"10:00","conv":97.1},{"SLOT":630,"total":129,"compras":126,"label":"10:30","conv":97.7},{"SLOT":660,"total":150,"compras":145,"label":"11:00","conv":96.7},{"SLOT":690,"total":118,"compras":110,"label":"11:30","conv":93.2},{"SLOT":720,"total":141,"compras":130,"label":"12:00","conv":92.2},{"SLOT":750,"total":133,"compras":122,"label":"12:30","conv":91.7},{"SLOT":780,"total":123,"compras":120,"label":"13:00","conv":97.6},{"SLOT":810,"total":126,"compras":119,"label":"13:30","conv":94.4},{"SLOT":840,"total":102,"compras":97,"label":"14:00","conv":95.1},{"SLOT":870,"total":120,"compras":115,"label":"14:30","conv":95.8},{"SLOT":900,"total":102,"compras":97,"label":"15:00","conv":95.1},{"SLOT":930,"total":125,"compras":119,"label":"15:30","conv":95.2},{"SLOT":960,"total":116,"compras":110,"label":"16:00","conv":94.8},{"SLOT":990,"total":112,"compras":107,"label":"16:30","conv":95.5},{"SLOT":1020,"total":76,"compras":70,"label":"17:00","conv":92.1},{"SLOT":1050,"total":49,"compras":42,"label":"17:30","conv":85.7},{"SLOT":1080,"total":68,"compras":58,"label":"18:00","conv":85.3},{"SLOT":1110,"total":30,"compras":26,"label":"18:30","conv":86.7}],"GTI":[{"SLOT":540,"total":13,"compras":12,"label":"09:00","conv":92.3},{"SLOT":570,"total":27,"compras":26,"label":"09:30","conv":96.3},{"SLOT":600,"total":54,"compras":48,"label":"10:00","conv":88.9},{"SLOT":630,"total":46,"compras":41,"label":"10:30","conv":89.1},{"SLOT":660,"total":71,"compras":60,"label":"11:00","conv":84.5},{"SLOT":690,"total":85,"compras":74,"label":"11:30","conv":87.1},{"SLOT":720,"total":109,"compras":101,"label":"12:00","conv":92.7},{"SLOT":750,"total":104,"compras":92,"label":"12:30","conv":88.5},{"SLOT":780,"total":124,"compras":105,"label":"13:00","conv":84.7},{"SLOT":810,"total":83,"compras":72,"label":"13:30","conv":86.7},{"SLOT":840,"total":86,"compras":77,"label":"14:00","conv":89.5},{"SLOT":870,"total":78,"compras":73,"label":"14:30","conv":93.6},{"SLOT":900,"total":97,"compras":91,"label":"15:00","conv":93.8},{"SLOT":930,"total":80,"compras":75,"label":"15:30","conv":93.8},{"SLOT":960,"total":114,"compras":100,"label":"16:00","conv":87.7},{"SLOT":990,"total":118,"compras":102,"label":"16:30","conv":86.4},{"SLOT":1020,"total":110,"compras":96,"label":"17:00","conv":87.3},{"SLOT":1050,"total":74,"compras":67,"label":"17:30","conv":90.5},{"SLOT":1080,"total":59,"compras":57,"label":"18:00","conv":96.6},{"SLOT":1110,"total":30,"compras":26,"label":"18:30","conv":86.7},{"SLOT":1140,"total":23,"compras":23,"label":"19:00","conv":100.0}],"GTT":[{"SLOT":540,"total":53,"compras":46,"label":"09:00","conv":86.8},{"SLOT":570,"total":167,"compras":146,"label":"09:30","conv":87.4},{"SLOT":600,"total":202,"compras":177,"label":"10:00","conv":87.6},{"SLOT":630,"total":281,"compras":255,"label":"10:30","conv":90.7},{"SLOT":660,"total":296,"compras":259,"label":"11:00","conv":87.5},{"SLOT":690,"total":272,"compras":239,"label":"11:30","conv":87.9},{"SLOT":720,"total":292,"compras":252,"label":"12:00","conv":86.3},{"SLOT":750,"total":262,"compras":234,"label":"12:30","conv":89.3},{"SLOT":780,"total":263,"compras":242,"label":"13:00","conv":92.0},{"SLOT":810,"total":232,"compras":203,"label":"13:30","conv":87.5},{"SLOT":840,"total":206,"compras":185,"label":"14:00","conv":89.8},{"SLOT":870,"total":237,"compras":205,"label":"14:30","conv":86.5},{"SLOT":900,"total":234,"compras":196,"label":"15:00","conv":83.8},{"SLOT":930,"total":238,"compras":197,"label":"15:30","conv":82.8},{"SLOT":960,"total":246,"compras":214,"label":"16:00","conv":87.0},{"SLOT":990,"total":233,"compras":202,"label":"16:30","conv":86.7},{"SLOT":1020,"total":195,"compras":172,"label":"17:00","conv":88.2},{"SLOT":1050,"total":150,"compras":135,"label":"17:30","conv":90.0},{"SLOT":1080,"total":119,"compras":109,"label":"18:00","conv":91.6},{"SLOT":1110,"total":96,"compras":86,"label":"18:30","conv":89.6},{"SLOT":1140,"total":29,"compras":28,"label":"19:00","conv":96.6}],"TODAS":[{"SLOT":540,"total":117,"compras":108,"label":"09:00","conv":92.3},{"SLOT":570,"total":281,"compras":258,"label":"09:30","conv":91.8},{"SLOT":600,"total":359,"compras":325,"label":"10:00","conv":90.5},{"SLOT":630,"total":456,"compras":422,"label":"10:30","conv":92.5},{"SLOT":660,"total":517,"compras":464,"label":"11:00","conv":89.7},{"SLOT":690,"total":475,"compras":423,"label":"11:30","conv":89.1},{"SLOT":720,"total":542,"compras":483,"label":"12:00","conv":89.1},{"SLOT":750,"total":499,"compras":448,"label":"12:30","conv":89.8},{"SLOT":780,"total":510,"compras":467,"label":"13:00","conv":91.6},{"SLOT":810,"total":441,"compras":394,"label":"13:30","conv":89.3},{"SLOT":840,"total":394,"compras":359,"label":"14:00","conv":91.1},{"SLOT":870,"total":435,"compras":393,"label":"14:30","conv":90.3},{"SLOT":900,"total":433,"compras":384,"label":"15:00","conv":88.7},{"SLOT":930,"total":443,"compras":391,"label":"15:30","conv":88.3},{"SLOT":960,"total":476,"compras":424,"label":"16:00","conv":89.1},{"SLOT":990,"total":463,"compras":411,"label":"16:30","conv":88.8},{"SLOT":1020,"total":381,"compras":338,"label":"17:00","conv":88.7},{"SLOT":1050,"total":273,"compras":244,"label":"17:30","conv":89.4},{"SLOT":1080,"total":246,"compras":224,"label":"18:00","conv":91.1},{"SLOT":1110,"total":156,"compras":138,"label":"18:30","conv":88.5},{"SLOT":1140,"total":59,"compras":55,"label":"19:00","conv":93.2}]},
+  motivo_nc: {"24K":[{"cod":7,"label":"Avaliação divergente","total":26,"val_medio":3347},{"cod":5,"label":"Preço muito baixo","total":19,"val_medio":6454},{"cod":9,"label":"Item c/ documentação","total":14,"val_medio":1306},{"cod":8,"label":"Preço de mercado","total":14,"val_medio":6140},{"cod":3,"label":"Metal com defeito","total":12,"val_medio":3958},{"cod":2,"label":"Preço abaixo esperado","total":11,"val_medio":4960},{"cod":6,"label":"Não quer vender","total":7,"val_medio":4714},{"cod":10,"label":"Valor sentimental","total":7,"val_medio":5051},{"cod":11,"label":"Outros","total":5,"val_medio":11202}],"GTI":[{"cod":7,"label":"Avaliação divergente","total":41,"val_medio":7144},{"cod":8,"label":"Preço de mercado","total":39,"val_medio":27049},{"cod":5,"label":"Preço muito baixo","total":30,"val_medio":10788},{"cod":2,"label":"Preço abaixo esperado","total":26,"val_medio":7578},{"cod":10,"label":"Valor sentimental","total":10,"val_medio":8699},{"cod":3,"label":"Metal com defeito","total":10,"val_medio":7250},{"cod":11,"label":"Outros","total":5,"val_medio":17080},{"cod":1,"label":"Qualidade insatisfatória","total":3,"val_medio":14263},{"cod":6,"label":"Não quer vender","total":3,"val_medio":16477},{"cod":9,"label":"Item c/ documentação","total":1,"val_medio":1500}],"GTT":[{"cod":8,"label":"Preço de mercado","total":198,"val_medio":6682},{"cod":5,"label":"Preço muito baixo","total":117,"val_medio":6888},{"cod":7,"label":"Avaliação divergente","total":90,"val_medio":4432},{"cod":10,"label":"Valor sentimental","total":32,"val_medio":2806},{"cod":9,"label":"Item c/ documentação","total":30,"val_medio":2549},{"cod":2,"label":"Preço abaixo esperado","total":18,"val_medio":5501},{"cod":3,"label":"Metal com defeito","total":16,"val_medio":3502},{"cod":6,"label":"Não quer vender","total":7,"val_medio":1469},{"cod":11,"label":"Outros","total":7,"val_medio":3019},{"cod":1,"label":"Qualidade insatisfatória","total":1,"val_medio":6150}],"TODAS":[{"cod":8,"label":"Preço de mercado","total":251,"val_medio":9816},{"cod":5,"label":"Preço muito baixo","total":166,"val_medio":7543},{"cod":7,"label":"Avaliação divergente","total":157,"val_medio":4960},{"cod":2,"label":"Preço abaixo esperado","total":55,"val_medio":6375},{"cod":10,"label":"Valor sentimental","total":49,"val_medio":4330},{"cod":9,"label":"Item c/ documentação","total":45,"val_medio":2139},{"cod":3,"label":"Metal com defeito","total":38,"val_medio":4663},{"cod":6,"label":"Não quer vender","total":17,"val_medio":5454},{"cod":11,"label":"Outros","total":17,"val_medio":9970},{"cod":1,"label":"Qualidade insatisfatória","total":4,"val_medio":12235}]}
+};
+
+let slotChart=null, heatChart=null;
+
+function getAnalLoja(){ return F.loja==='TODAS'?'TODAS':F.loja; }
+
+function renderFeedback(){
+  const d = ANAL.feedback[getAnalLoja()] || ANAL.feedback['TODAS'];
+  const maxC = d[0]?.compras||1;
+  const tot = d.reduce((a,x)=>a+x.total,0);
+  document.getElementById('fb-list').innerHTML = d.slice(0,20).map(x=>{
+    const cc=x.conv>=93?'#4ade80':x.conv>=80?'#D4AF37':'#f87171';
+    return `<div class="fb-row">
+      <span class="fb-code">${x.FEEDBACK}</span>
+      <div class="fb-bar-wrap"><div class="fb-bar" style="width:${(x.compras/maxC*100).toFixed(1)}%;background:${cc}"></div></div>
+      <span class="fb-nums">${x.compras}/${x.total}</span>
+      <span class="fb-conv" style="color:${cc}">${x.conv}%</span>
+    </div>`;
+  }).join('');
+  const top=d[0], perfect=d.filter(x=>x.conv===100&&x.total>=8), low=d.filter(x=>x.conv<75&&x.total>=8);
+  document.getElementById('fb-insight').innerHTML=
+    `<strong>${top.FEEDBACK}</strong> lidera com ${top.total.toLocaleString('pt-BR')} atend. e ${top.conv}% de conv. — ${(top.total/tot*100).toFixed(0)}% do volume.`+
+    (perfect.length?` 100% de conv.: <strong>${perfect.map(x=>x.FEEDBACK).join(', ')}</strong>.`:'')+
+    (low.length?` Atenção (&lt;75%): <strong>${low.map(x=>x.FEEDBACK).join(', ')}</strong>.`:'');
+}
+
+function renderSlots(){
+  const d = ANAL.slots[getAnalLoja()] || ANAL.slots['TODAS'];
+  const sorted=[...d].sort((a,b)=>b.total-a.total);
+  document.getElementById('slot-peaks').innerHTML=sorted.slice(0,3).map((s,i)=>`
+    <div class="slot-peak"><div class="slot-peak-time">${s.label}</div>
+    <div class="slot-peak-label">#${i+1} pico · ${s.total} atend.</div></div>`).join('');
+  const ctx=document.getElementById('slotChart').getContext('2d');
+  if(slotChart){slotChart.destroy();slotChart=null;}
+  slotChart=new Chart(ctx,{data:{labels:d.map(x=>x.label),datasets:[
+    {type:'bar',label:'Atendimentos',data:d.map(x=>x.total),backgroundColor:'#3a2f10cc',borderColor:'#6b5520',borderWidth:1,yAxisID:'y',order:2,datalabels:{display:false}},
+    {type:'bar',label:'Compras',data:d.map(x=>x.compras),backgroundColor:'#6b5520cc',borderColor:'#D4AF37',borderWidth:1,yAxisID:'y',order:3,datalabels:{display:false}},
+    {type:'line',label:'Conversão %',data:d.map(x=>x.conv),borderColor:'#fff',backgroundColor:'transparent',borderWidth:2,
+     pointRadius:3,pointBackgroundColor:d.map(x=>x.conv>=90?'#4ade80':x.conv>=82?'#D4AF37':'#f87171'),
+     tension:0.4,yAxisID:'y2',order:1,
+     datalabels:{anchor:'top',align:'top',offset:1,color:c=>d[c.dataIndex].conv>=90?'#4ade80':d[c.dataIndex].conv>=82?'#D4AF37':'#f87171',font:{size:8,weight:'700'},formatter:v=>v+'%'}}
+  ]},options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:22}},interaction:{mode:'index',intersect:false},
+    plugins:{legend:{display:false},datalabels:{display:true},tooltip:{backgroundColor:'#111',titleColor:'#D4AF37',bodyColor:'#f0f0f0',callbacks:{label:c=>c.dataset.label.includes('%')?' Conv: '+c.parsed.y+'%':' '+c.dataset.label+': '+c.parsed.y}}},
+    scales:{x:{ticks:{font:{size:9},color:'#444',maxRotation:45},grid:{display:false}},
+      y:{position:'left',ticks:{font:{size:9},color:'#555'},grid:{color:'#1a1a1a'}},
+      y2:{position:'right',min:55,max:105,ticks:{font:{size:9},color:'#888',callback:v=>v+'%'},grid:{display:false}}}}});
+  const pk=sorted[0],bc=[...d].filter(x=>x.total>=30).sort((a,b)=>b.conv-a.conv)[0]||sorted[0],lc=[...d].sort((a,b)=>a.conv-b.conv)[0];
+  document.getElementById('slot-insight').innerHTML=
+    `<strong>Pico de volume:</strong> ${pk.label} com ${pk.total} atend. `+
+    `<strong>Melhor conversão</strong>: ${bc.label} com ${bc.conv}%. `+
+    `<strong>Menor conversão:</strong> ${lc.label} (${lc.conv}%).`;
+}
+
+function renderNC(){
+  const d = ANAL.motivo_nc[getAnalLoja()] || ANAL.motivo_nc['TODAS'];
+  const max=d[0]?.total||1, tot=d.reduce((a,x)=>a+x.total,0);
+  document.getElementById('nc-list').innerHTML=d.map(x=>`
+    <div class="nc-row">
+      <span class="nc-label">${x.label}</span>
+      <div class="nc-bar-wrap"><div class="nc-bar" style="width:${(x.total/max*100).toFixed(1)}%"></div></div>
+      <span class="nc-val">${x.total}</span>
+      <span class="nc-price">R$${(x.val_medio/1000).toFixed(1)}k</span>
+    </div>`).join('');
+  const top=d[0];
+  const priceNC=d.filter(x=>[2,5,8].includes(x.cod)).reduce((a,x)=>a+x.total,0);
+  document.getElementById('nc-insight').innerHTML=
+    `<strong>${top.label}</strong> lidera com ${top.total} casos (oferta média R$${(top.val_medio/1000).toFixed(1)}k). `+
+    `<strong>${(priceNC/tot*100).toFixed(0)}% por preço</strong> (motivos 2, 5 e 8) — oportunidade de negociação.`;
+}
+
+function renderHeatmap(){
+  const d = ANAL.slots[getAnalLoja()] || ANAL.slots['TODAS'];
+  // Aggregate by hour
+  const byH={};
+  d.forEach(s=>{ const h=Math.floor(s.SLOT/60); if(!byH[h]) byH[h]={H:h,total:0,compras:0}; byH[h].total+=s.total; byH[h].compras+=s.compras; });
+  const hArr=Object.values(byH).sort((a,b)=>a.H-b.H);
+  hArr.forEach(x=>x.conv=+(x.compras/x.total*100).toFixed(1));
+  const maxT=Math.max(...hArr.map(x=>x.total));
+  const ctx=document.getElementById('heatChart').getContext('2d');
+  if(heatChart){heatChart.destroy();heatChart=null;}
+  heatChart=new Chart(ctx,{type:'bar',data:{labels:hArr.map(x=>x.H+'h'),datasets:[
+    {label:'Atendimentos',data:hArr.map(x=>x.total),
+     backgroundColor:hArr.map(x=>{const p=x.total/maxT;return `rgba(212,175,55,${(0.15+p*0.8).toFixed(2)})`;}),
+     borderColor:'#8B6914',borderWidth:1,datalabels:{display:false}}
+  ]},options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},datalabels:{display:false},tooltip:{backgroundColor:'#111',titleColor:'#D4AF37',bodyColor:'#f0f0f0',
+      callbacks:{label:c=>{const x=hArr[c.dataIndex];return[' Atendimentos: '+x.total,' Compras: '+x.compras,' Conversão: '+x.conv+'%'];}}}},
+    scales:{x:{ticks:{font:{size:10},color:'#555'},grid:{display:false}},y:{ticks:{font:{size:9},color:'#444'},grid:{color:'#1a1a1a'}}}}});
+  const pk=hArr.reduce((a,b)=>b.total>a.total?b:a);
+  const bc=hArr.filter(x=>x.total>=30).reduce((a,b)=>b.conv>a.conv?b:a,hArr[0]);
+  const morn=hArr.filter(x=>x.H<=11).reduce((a,x)=>a+x.total,0);
+  const aftn=hArr.filter(x=>x.H>=12&&x.H<=17).reduce((a,x)=>a+x.total,0);
+  document.getElementById('heat-insight').innerHTML=
+    `<strong>Pico absoluto:</strong> ${pk.H}h com ${pk.total} atend. `+
+    `<strong>Melhor conv.</strong>: ${bc.H}h (${bc.conv}%). `+
+    `Manhã: ${morn} · Tarde: ${aftn} — tarde = <strong>${(aftn/(morn+aftn)*100).toFixed(0)}%</strong> do volume.`;
+}
+
+function updateAnalytics(){
+  renderFeedback();
+  renderSlots();
+  renderNC();
+  renderHeatmap();
+}
+
+updateAnalytics();
+
 function updateAll(){
   const data = getFilteredData();
   if(!data.length) return;
@@ -521,6 +633,7 @@ function updateAll(){
   renderValorChart(data);
   renderMetalBars(data);
   renderTable(data);
+  if(typeof updateAnalytics==="function") updateAnalytics();
 }
 
 function renderMainChart(data, mk){
@@ -844,98 +957,6 @@ document.querySelectorAll('[data-avsort]').forEach(c=>{
   });
 });
 renderAvCards();
-
-// ── ANALYTICS DATA ──
-const FB_DATA=[{"FEEDBACK":"R","total":4535,"compras":4161,"nc":374,"conv":91.8},{"FEEDBACK":"L","total":877,"compras":720,"nc":157,"conv":82.1},{"FEEDBACK":"G","total":613,"compras":551,"nc":62,"conv":89.9},{"FEEDBACK":"P","total":426,"compras":391,"nc":35,"conv":91.8},{"FEEDBACK":"I","total":355,"compras":317,"nc":38,"conv":89.3},{"FEEDBACK":"NSD","total":156,"compras":110,"nc":46,"conv":70.5},{"FEEDBACK":"MP","total":115,"compras":94,"nc":21,"conv":81.7},{"FEEDBACK":"SM","total":75,"compras":71,"nc":4,"conv":94.7},{"FEEDBACK":"P215","total":51,"compras":48,"nc":3,"conv":94.1},{"FEEDBACK":"MG","total":49,"compras":42,"nc":7,"conv":85.7},{"FEEDBACK":"ICB","total":46,"compras":42,"nc":4,"conv":91.3},{"FEEDBACK":"COM","total":42,"compras":42,"nc":0,"conv":100.0},{"FEEDBACK":"IE","total":51,"compras":40,"nc":11,"conv":78.4},{"FEEDBACK":"MPC","total":37,"compras":35,"nc":2,"conv":94.6},{"FEEDBACK":"BF","total":34,"compras":33,"nc":1,"conv":97.1},{"FEEDBACK":"LG","total":36,"compras":28,"nc":8,"conv":77.8},{"FEEDBACK":"MV","total":28,"compras":28,"nc":0,"conv":100.0},{"FEEDBACK":"M","total":31,"compras":28,"nc":3,"conv":90.3},{"FEEDBACK":"BP","total":27,"compras":27,"nc":0,"conv":100.0},{"FEEDBACK":"H","total":27,"compras":26,"nc":1,"conv":96.3},{"FEEDBACK":"V","total":26,"compras":25,"nc":1,"conv":96.2},{"FEEDBACK":"45","total":24,"compras":23,"nc":1,"conv":95.8},{"FEEDBACK":"MI","total":19,"compras":18,"nc":1,"conv":94.7},{"FEEDBACK":"O","total":22,"compras":18,"nc":4,"conv":81.8},{"FEEDBACK":"550","total":16,"compras":15,"nc":1,"conv":93.8},{"FEEDBACK":"COC","total":14,"compras":14,"nc":0,"conv":100.0},{"FEEDBACK":"PDP","total":14,"compras":14,"nc":0,"conv":100.0},{"FEEDBACK":"S","total":13,"compras":13,"nc":0,"conv":100.0},{"FEEDBACK":"T","total":13,"compras":13,"nc":0,"conv":100.0},{"FEEDBACK":"BM","total":10,"compras":10,"nc":0,"conv":100.0},{"FEEDBACK":"C","total":12,"compras":10,"nc":2,"conv":83.3},{"FEEDBACK":"MFL","total":10,"compras":9,"nc":1,"conv":90.0},{"FEEDBACK":"AK","total":10,"compras":8,"nc":2,"conv":80.0},{"FEEDBACK":"SF","total":12,"compras":4,"nc":8,"conv":33.3}];
-const SLOT_DATA=[{"SLOT":540,"total":166,"compras":108,"label":"09:00","conv":65.1},{"SLOT":570,"total":350,"compras":258,"label":"09:30","conv":73.7},{"SLOT":600,"total":465,"compras":325,"label":"10:00","conv":69.9},{"SLOT":630,"total":546,"compras":422,"label":"10:30","conv":77.3},{"SLOT":660,"total":613,"compras":464,"label":"11:00","conv":75.7},{"SLOT":690,"total":592,"compras":423,"label":"11:30","conv":71.5},{"SLOT":720,"total":634,"compras":483,"label":"12:00","conv":76.2},{"SLOT":750,"total":588,"compras":448,"label":"12:30","conv":76.2},{"SLOT":780,"total":601,"compras":467,"label":"13:00","conv":77.7},{"SLOT":810,"total":514,"compras":394,"label":"13:30","conv":76.7},{"SLOT":840,"total":470,"compras":359,"label":"14:00","conv":76.4},{"SLOT":870,"total":499,"compras":393,"label":"14:30","conv":78.8},{"SLOT":900,"total":498,"compras":384,"label":"15:00","conv":77.1},{"SLOT":930,"total":503,"compras":391,"label":"15:30","conv":77.7},{"SLOT":960,"total":563,"compras":424,"label":"16:00","conv":75.3},{"SLOT":990,"total":535,"compras":411,"label":"16:30","conv":76.8},{"SLOT":1020,"total":441,"compras":338,"label":"17:00","conv":76.6},{"SLOT":1050,"total":319,"compras":244,"label":"17:30","conv":76.5},{"SLOT":1080,"total":288,"compras":224,"label":"18:00","conv":77.8},{"SLOT":1110,"total":191,"compras":138,"label":"18:30","conv":72.3},{"SLOT":1140,"total":62,"compras":55,"label":"19:00","conv":88.7}];
-const HORA_H=[{"H":9,"total":516,"compras":366,"conv":70.9},{"H":10,"total":1011,"compras":747,"conv":73.9},{"H":11,"total":1205,"compras":887,"conv":73.6},{"H":12,"total":1222,"compras":931,"conv":76.2},{"H":13,"total":1115,"compras":861,"conv":77.2},{"H":14,"total":969,"compras":752,"conv":77.6},{"H":15,"total":1001,"compras":775,"conv":77.4},{"H":16,"total":1098,"compras":835,"conv":76.0},{"H":17,"total":760,"compras":582,"conv":76.6},{"H":18,"total":479,"compras":362,"conv":75.6},{"H":19,"total":64,"compras":57,"conv":89.1}];
-const NC_DATA=[{"cod":8,"label":"Preço de mercado","total":251,"val_medio":9816},{"cod":5,"label":"Preço muito baixo","total":166,"val_medio":7543},{"cod":7,"label":"Avaliação divergente","total":157,"val_medio":4960},{"cod":2,"label":"Preço abaixo esperado","total":55,"val_medio":6375},{"cod":10,"label":"Valor sentimental","total":49,"val_medio":4330},{"cod":9,"label":"Item c/ documentação","total":45,"val_medio":2139},{"cod":3,"label":"Metal com defeito","total":38,"val_medio":4663},{"cod":6,"label":"Não quer vender","total":17,"val_medio":5454},{"cod":11,"label":"Outros","total":17,"val_medio":9970},{"cod":1,"label":"Qualidade insatisfatória","total":4,"val_medio":12235}];
-
-let slotChart=null,heatChart=null;
-
-function renderFeedback(){
-  const maxC=FB_DATA[0].compras;
-  document.getElementById('fb-list').innerHTML=FB_DATA.slice(0,20).map(d=>{
-    const cc=d.conv>=93?'#4ade80':d.conv>=80?'#D4AF37':'#f87171';
-    return `<div class="fb-row">
-      <span class="fb-code">${d.FEEDBACK}</span>
-      <div class="fb-bar-wrap"><div class="fb-bar" style="width:${(d.compras/maxC*100).toFixed(1)}%;background:${cc}"></div></div>
-      <span class="fb-nums">${d.compras}/${d.total}</span>
-      <span class="fb-conv" style="color:${cc}">${d.conv}%</span>
-    </div>`;
-  }).join('');
-  const perfect=FB_DATA.filter(d=>d.conv===100&&d.total>=10);
-  const low=FB_DATA.filter(d=>d.conv<75&&d.total>=10);
-  const tot=FB_DATA.reduce((a,d)=>a+d.total,0);
-  document.getElementById('fb-insight').innerHTML=
-    `<strong>R</strong> domina com ${FB_DATA[0].total.toLocaleString('pt-BR')} atendimentos (${(FB_DATA[0].total/tot*100).toFixed(0)}% do volume) e ${FB_DATA[0].conv}% de conversão.`+
-    (perfect.length?` Conversão 100%: <strong>${perfect.map(d=>d.FEEDBACK).join(', ')}</strong>.`:'')+
-    (low.length?` Atenção — abaixo de 75%: <strong>${low.map(d=>d.FEEDBACK).join(', ')}</strong>.`:'');
-}
-
-function renderSlots(){
-  const sorted=[...SLOT_DATA].sort((a,b)=>b.total-a.total);
-  document.getElementById('slot-peaks').innerHTML=sorted.slice(0,3).map((s,i)=>`
-    <div class="slot-peak"><div class="slot-peak-time">${s.label}</div>
-    <div class="slot-peak-label">#${i+1} pico · ${s.total} atend.</div></div>`).join('');
-  const ctx=document.getElementById('slotChart').getContext('2d');
-  if(slotChart){slotChart.destroy();slotChart=null;}
-  slotChart=new Chart(ctx,{data:{labels:SLOT_DATA.map(d=>d.label),datasets:[
-    {type:'bar',label:'Atendimentos',data:SLOT_DATA.map(d=>d.total),backgroundColor:'#3a2f10cc',borderColor:'#6b5520',borderWidth:1,yAxisID:'y',order:2,datalabels:{display:false}},
-    {type:'bar',label:'Compras',data:SLOT_DATA.map(d=>d.compras),backgroundColor:'#6b5520cc',borderColor:'#D4AF37',borderWidth:1,yAxisID:'y',order:3,datalabels:{display:false}},
-    {type:'line',label:'Conversão %',data:SLOT_DATA.map(d=>d.conv),borderColor:'#fff',backgroundColor:'transparent',borderWidth:2,pointRadius:3,
-     pointBackgroundColor:SLOT_DATA.map(d=>d.conv>=78?'#4ade80':d.conv>=74?'#D4AF37':'#f87171'),tension:0.4,yAxisID:'y2',order:1,
-     datalabels:{anchor:'top',align:'top',offset:1,color:c=>SLOT_DATA[c.dataIndex].conv>=78?'#4ade80':SLOT_DATA[c.dataIndex].conv>=74?'#D4AF37':'#f87171',font:{size:8,weight:'700'},formatter:v=>v+'%'}}
-  ]},options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:22}},interaction:{mode:'index',intersect:false},
-    plugins:{legend:{display:false},datalabels:{display:true},tooltip:{backgroundColor:'#111',titleColor:'#D4AF37',bodyColor:'#f0f0f0',callbacks:{label:c=>c.dataset.label.includes('%')?' Conv: '+c.parsed.y+'%':' '+c.dataset.label+': '+c.parsed.y}}},
-    scales:{x:{ticks:{font:{size:9},color:'#444',maxRotation:45},grid:{display:false}},y:{position:'left',ticks:{font:{size:9},color:'#555'},grid:{color:'#1a1a1a'}},y2:{position:'right',min:55,max:100,ticks:{font:{size:9},color:'#888',callback:v=>v+'%'},grid:{display:false}}}}});
-  const pk=sorted[0],bc=[...SLOT_DATA].filter(d=>d.total>100).sort((a,b)=>b.conv-a.conv)[0],lc=[...SLOT_DATA].sort((a,b)=>a.conv-b.conv)[0];
-  document.getElementById('slot-insight').innerHTML=
-    `<strong>Pico de volume:</strong> ${pk.label} com ${pk.total} atendimentos. `+
-    `<strong>Melhor conversão</strong> (mín. 100 atend.): ${bc.label} com ${bc.conv}%. `+
-    `<strong>Menor conversão:</strong> ${lc.label} (${lc.conv}%) — abertura de loja, clientes mais indecisos.`;
-}
-
-function renderNC(){
-  const max=NC_DATA[0].total,tot=NC_DATA.reduce((a,d)=>a+d.total,0);
-  document.getElementById('nc-list').innerHTML=NC_DATA.map(d=>`
-    <div class="nc-row">
-      <span class="nc-label">${d.label}</span>
-      <div class="nc-bar-wrap"><div class="nc-bar" style="width:${(d.total/max*100).toFixed(1)}%"></div></div>
-      <span class="nc-val">${d.total}</span>
-      <span class="nc-price">R$${(d.val_medio/1000).toFixed(1)}k</span>
-    </div>`).join('');
-  const priceNC=NC_DATA.filter(d=>[5,8,2].includes(d.cod)).reduce((a,d)=>a+d.total,0);
-  document.getElementById('nc-insight').innerHTML=
-    `<strong>${NC_DATA[0].label}</strong> lidera com ${NC_DATA[0].total} casos (oferta média R$${(NC_DATA[0].val_medio/1000).toFixed(1)}k). `+
-    `<strong>${(priceNC/tot*100).toFixed(0)}% das perdas são por preço</strong> — oportunidade direta de negociação. `+
-    `Casos com valor sentimental ou documentação (${NC_DATA.find(d=>d.cod===10).total+NC_DATA.find(d=>d.cod===9).total}) raramente se recuperam.`;
-}
-
-function renderHeatmap(){
-  const ctx=document.getElementById('heatChart').getContext('2d');
-  if(heatChart){heatChart.destroy();heatChart=null;}
-  const maxT=Math.max(...HORA_H.map(d=>d.total));
-  heatChart=new Chart(ctx,{type:'bar',data:{labels:HORA_H.map(d=>d.H+'h'),datasets:[
-    {label:'Atendimentos',data:HORA_H.map(d=>d.total),
-     backgroundColor:HORA_H.map(d=>{const p=d.total/maxT;return `rgba(212,175,55,${(0.15+p*0.8).toFixed(2)})`;}),
-     borderColor:'#8B6914',borderWidth:1,datalabels:{display:false}}
-  ]},options:{responsive:true,maintainAspectRatio:false,
-    plugins:{legend:{display:false},datalabels:{display:false},tooltip:{backgroundColor:'#111',titleColor:'#D4AF37',bodyColor:'#f0f0f0',
-      callbacks:{label:c=>{const d=HORA_H[c.dataIndex];return[' Atendimentos: '+d.total,' Compras: '+d.compras,' Conversão: '+d.conv+'%'];}}}},
-    scales:{x:{ticks:{font:{size:10},color:'#555'},grid:{display:false}},y:{ticks:{font:{size:9},color:'#444'},grid:{color:'#1a1a1a'}}}}});
-  const pk=HORA_H.reduce((a,b)=>b.total>a.total?b:a),bc=HORA_H.filter(d=>d.total>200).reduce((a,b)=>b.conv>a.conv?b:a);
-  const morn=HORA_H.filter(d=>d.H<=11).reduce((a,d)=>a+d.total,0),aftn=HORA_H.filter(d=>d.H>=12&&d.H<=17).reduce((a,d)=>a+d.total,0);
-  document.getElementById('heat-insight').innerHTML=
-    `<strong>Pico absoluto:</strong> ${pk.H}h com ${pk.total} atendimentos. `+
-    `<strong>Melhor conversão</strong> (mín. 200 atend.): ${bc.H}h com ${bc.conv}%. `+
-    `Manhã 9–11h: ${morn} atend. · Tarde 12–17h: ${aftn} atend. — tarde representa <strong>${(aftn/(morn+aftn)*100).toFixed(0)}% do volume</strong>.`;
-}
-
-renderFeedback();
-renderSlots();
-renderNC();
-renderHeatmap();
 </script>
 </body>
 </html>
