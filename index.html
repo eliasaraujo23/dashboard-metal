@@ -278,31 +278,6 @@ body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color:
   </div>
 </div>
 
-<!-- TABLE -->
-<div class="table-section">
-  <div class="section-header" style="margin-bottom:8px">
-    <span class="section-title">Resumo Mensal Detalhado</span>
-    <span style="font-size:11px;color:#555">Clique no cabeçalho para ordenar</span>
-  </div>
-  <div class="tbl-wrap">
-  <table class="tbl" id="resumo-table">
-    <thead>
-      <tr>
-        <th class="th-sort" data-col="ANO_MES" data-dir="desc">Mês <span class="sort-icon" id="si-ANO_MES">↓</span></th>
-        <th>Loja</th>
-        <th class="th-sort" data-col="AVAL_S4" data-dir="asc" style="text-align:right">Aval s/4 <span class="sort-icon" id="si-AVAL_S4">⇅</span></th>
-        <th class="th-sort" data-col="COMPRAS" data-dir="asc" style="text-align:right">Compras <span class="sort-icon" id="si-COMPRAS">⇅</span></th>
-        <th class="th-sort" data-col="CONV" data-dir="asc" style="text-align:right">Conversão <span class="sort-icon" id="si-CONV">⇅</span></th>
-        <th class="th-sort" data-col="METAL" data-dir="asc" style="text-align:right">Metal (g) <span class="sort-icon" id="si-METAL">⇅</span></th>
-        <th class="th-sort" data-col="VALOR" data-dir="asc" style="text-align:right">Valor (R$) <span class="sort-icon" id="si-VALOR">⇅</span></th>
-        <th class="th-sort" data-col="TICKET_MEDIO" data-dir="asc" style="text-align:right">Ticket Médio <span class="sort-icon" id="si-TICKET_MEDIO">⇅</span></th>
-      </tr>
-    </thead>
-    <tbody id="tbl-body"></tbody>
-  </table>
-  </div>
-</div>
-
 <!-- AVALIADORES -->
 <div class="av-section">
   <div class="av-header">
@@ -345,6 +320,31 @@ body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color:
         <div style="height:160px"><canvas id="avd-chart"></canvas></div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- TABLE -->
+<div class="table-section">
+  <div class="section-header" style="margin-bottom:8px">
+    <span class="section-title">Resumo Mensal Detalhado</span>
+    <span style="font-size:11px;color:#555">Clique no cabeçalho para ordenar</span>
+  </div>
+  <div class="tbl-wrap">
+  <table class="tbl" id="resumo-table">
+    <thead>
+      <tr>
+        <th class="th-sort" data-col="ANO_MES" data-dir="desc">Mês <span class="sort-icon" id="si-ANO_MES">↓</span></th>
+        <th>Loja</th>
+        <th class="th-sort" data-col="AVAL_S4" data-dir="asc" style="text-align:right">Aval s/4 <span class="sort-icon" id="si-AVAL_S4">⇅</span></th>
+        <th class="th-sort" data-col="COMPRAS" data-dir="asc" style="text-align:right">Compras <span class="sort-icon" id="si-COMPRAS">⇅</span></th>
+        <th class="th-sort" data-col="CONV" data-dir="asc" style="text-align:right">Conversão <span class="sort-icon" id="si-CONV">⇅</span></th>
+        <th class="th-sort" data-col="METAL" data-dir="asc" style="text-align:right">Metal (g) <span class="sort-icon" id="si-METAL">⇅</span></th>
+        <th class="th-sort" data-col="VALOR" data-dir="asc" style="text-align:right">Valor (R$) <span class="sort-icon" id="si-VALOR">⇅</span></th>
+        <th class="th-sort" data-col="TICKET_MEDIO" data-dir="asc" style="text-align:right">Ticket Médio <span class="sort-icon" id="si-TICKET_MEDIO">⇅</span></th>
+      </tr>
+    </thead>
+    <tbody id="tbl-body"></tbody>
+  </table>
   </div>
 </div>
 
