@@ -700,6 +700,7 @@ function renderAvCards(){
       <div class="av-stat-row"><span class="av-stat-label">Compras</span><span class="av-stat-val">${fmtN(d.comp)}</span></div>
       <div class="av-stat-row"><span class="av-stat-label">Conversão</span><span class="av-stat-val" style="color:${convColor(d.conv)}">${d.conv.toFixed(1)}%</span></div>
       <div class="av-stat-row"><span class="av-stat-label">Metal</span><span class="av-stat-val">${d.metal.toFixed(0)}g</span></div>
+      <div class="av-stat-row"><span class="av-stat-label">Valor Gasto</span><span class="av-stat-val" style="color:var(--gold)">${fmtR(d.valor)}</span></div>
       <div class="av-stat-row"><span class="av-stat-label">Ticket Médio</span><span class="av-stat-val">${fmtR(d.ticket)}</span></div>
       <div class="av-conv-bar"><div class="av-conv-fill" style="width:${(d.comp/maxComp*100).toFixed(1)}%;background:${convColor(d.conv)}"></div></div>
       ${convBadge(d.conv)}
