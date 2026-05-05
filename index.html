@@ -3,524 +3,438 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard Metal</title>
+<title>Gold Tech — Dashboard</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', Arial, sans-serif; background: #1a1a2e; color: #e0e0e0; font-size: 13px; }
+:root {
+  --gold:     #D4AF37;
+  --gold-lt:  #F0D060;
+  --gold-dk:  #8B6914;
+  --gold-dim: #6b5520;
+  --bg:       #0a0a0a;
+  --bg2:      #111111;
+  --bg3:      #1a1a1a;
+  --bg4:      #222222;
+  --border:   #2a2a2a;
+  --border-g: #3a3020;
+  --white:    #f0f0f0;
+  --muted:    #666666;
+  --muted2:   #444444;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color: var(--white); font-size: 13px; min-height: 100vh; }
 
-  .top-bar {
-    background: #16213e;
-    border-bottom: 1px solid #0f3460;
-    padding: 10px 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  .top-title { font-size: 15px; font-weight: 600; color: #e2e8f0; letter-spacing: .02em; }
-  .top-period { font-size: 11px; color: #94a3b8; }
+/* ── HEADER ── */
+.header {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border-g);
+  padding: 14px 20px;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+}
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo-icon { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg,#D4AF37,#8B6914); display: flex; align-items: center; justify-content: center; font-size: 16px; }
+.logo-text { font-size: 17px; font-weight: 700; color: var(--gold); letter-spacing: .04em; }
+.logo-sub  { font-size: 11px; color: var(--muted); margin-top: 1px; }
+.header-right { font-size: 11px; color: var(--muted); }
 
-  .tab-bar {
-    display: flex;
-    gap: 4px;
-    padding: 0 16px;
-    background: #16213e;
-    border-bottom: 1px solid #0f3460;
-  }
-  .tab {
-    padding: 8px 16px;
-    font-size: 12px;
-    font-weight: 500;
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    color: #94a3b8;
-    transition: all .15s;
-    user-select: none;
-  }
-  .tab:hover { color: #e2e8f0; }
-  .tab.active { color: #fff; border-bottom-color: #3b82f6; }
-  .tab.active.t24k { border-bottom-color: #3b82f6; color: #93c5fd; }
-  .tab.active.tgti { border-bottom-color: #10b981; color: #6ee7b7; }
-  .tab.active.tgtt { border-bottom-color: #f97316; color: #fdba74; }
-  .tab.active.tall { border-bottom-color: #a78bfa; color: #c4b5fd; }
+/* ── FILTERS ── */
+.filters {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 20px;
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+.filter-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; white-space: nowrap; }
+.filter-group { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.chip {
+  padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 500;
+  cursor: pointer; border: 1px solid var(--border); color: var(--muted);
+  background: var(--bg3); transition: all .15s; user-select: none; white-space: nowrap;
+}
+.chip:hover { border-color: var(--gold-dk); color: var(--gold); }
+.chip.active { background: var(--gold-dim); border-color: var(--gold); color: var(--gold-lt); }
+.filter-divider { width: 1px; height: 24px; background: var(--border); margin: 0 4px; }
+select.fsel {
+  background: var(--bg3); border: 1px solid var(--border); color: var(--white);
+  font-size: 11px; padding: 4px 8px; border-radius: 6px; cursor: pointer; outline: none;
+}
+select.fsel:focus { border-color: var(--gold-dk); }
+.reset-btn {
+  margin-left: auto; padding: 4px 12px; border-radius: 6px; font-size: 11px;
+  cursor: pointer; background: transparent; border: 1px solid var(--border); color: var(--muted);
+}
+.reset-btn:hover { border-color: var(--gold-dk); color: var(--gold); }
 
-  .kpi-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    padding: 12px 16px 0;
-  }
-  .kpi {
-    background: #16213e;
-    border: 1px solid #0f3460;
-    border-radius: 8px;
-    padding: 10px 14px;
-  }
-  .kpi-label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px; }
-  .kpi-val { font-size: 22px; font-weight: 700; color: #e2e8f0; line-height: 1.1; }
-  .kpi-sub { font-size: 10px; color: #475569; margin-top: 3px; }
-  .kpi-up { color: #34d399; }
-  .kpi-dn { color: #f87171; }
+/* ── KPI ROW ── */
+.kpi-row { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 10px; padding: 14px 20px 0; }
+.kpi {
+  background: var(--bg2); border: 1px solid var(--border-g);
+  border-radius: 10px; padding: 12px 14px; position: relative; overflow: hidden;
+}
+.kpi::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background: linear-gradient(90deg,var(--gold-dk),var(--gold));
+}
+.kpi-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
+.kpi-val   { font-size: 20px; font-weight: 700; color: var(--gold); line-height: 1.1; }
+.kpi-sub   { font-size: 10px; color: var(--muted); margin-top: 4px; }
+.kpi-delta-up   { color: #4ade80; }
+.kpi-delta-down { color: #f87171; }
 
-  .chart-wrap {
-    padding: 12px 16px 16px;
-  }
-  .chart-title {
-    font-size: 11px;
-    color: #64748b;
-    text-transform: uppercase;
-    letter-spacing: .05em;
-    margin-bottom: 8px;
-  }
-  .chart-legend {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    margin-bottom: 8px;
-  }
-  .leg {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 11px;
-    color: #94a3b8;
-  }
-  .leg-sq { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
-  .leg-ln { width: 20px; height: 2px; border-radius: 1px; flex-shrink: 0; }
-  .chart-box { position: relative; width: 100%; height: 340px; }
+/* ── CHART AREA ── */
+.chart-section { padding: 14px 20px; }
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; flex-wrap: wrap; gap: 8px; }
+.section-title  { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+.legend { display: flex; gap: 16px; flex-wrap: wrap; }
+.leg    { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--muted); }
+.leg-sq { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+.leg-ln { width: 20px; height: 0; border-top: 2px solid; flex-shrink: 0; }
+.leg-ln.dashed { border-style: dashed; }
+.chart-box { position: relative; width: 100%; height: 340px; }
 
-  .dax-section { padding: 12px 16px 16px; }
-  .dax-header { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 10px; }
-  .dax-card {
-    background: #16213e;
-    border: 1px solid #0f3460;
-    border-radius: 8px;
-    margin-bottom: 8px;
-    overflow: hidden;
-  }
-  .dax-card-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 12px;
-    background: #0f3460;
-    cursor: pointer;
-  }
-  .dax-card-name { font-size: 12px; font-weight: 600; color: #93c5fd; }
-  .dax-badge { font-size: 10px; padding: 2px 7px; border-radius: 3px; font-weight: 600; }
-  .dax-code {
-    font-family: 'Consolas', 'Courier New', monospace;
-    font-size: 11px;
-    line-height: 1.65;
-    padding: 10px 12px;
-    color: #cbd5e1;
-    white-space: pre;
-    overflow-x: auto;
-    display: none;
-  }
-  .dax-code.open { display: block; }
-  .kw { color: #c084fc; }
-  .fn { color: #67e8f9; }
-  .str { color: #86efac; }
-  .num { color: #fbbf24; }
-  .cm { color: #475569; font-style: italic; }
-  .copy-btn {
-    font-size: 10px;
-    padding: 2px 8px;
-    cursor: pointer;
-    border-radius: 3px;
-    background: transparent;
-    border: 1px solid #334155;
-    color: #94a3b8;
-  }
-  .copy-btn:hover { background: #1e293b; }
+/* ── BOTTOM GRID ── */
+.bottom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 20px 14px; }
+.panel { background: var(--bg2); border: 1px solid var(--border-g); border-radius: 10px; padding: 14px; }
+.panel-title { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+.bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+.bar-label { font-size: 11px; color: var(--white); width: 60px; flex-shrink: 0; }
+.bar-track { flex: 1; height: 8px; background: var(--bg4); border-radius: 4px; overflow: hidden; }
+.bar-fill  { height: 100%; border-radius: 4px; background: linear-gradient(90deg,var(--gold-dk),var(--gold)); }
+.bar-val   { font-size: 11px; color: var(--gold); width: 52px; text-align: right; flex-shrink: 0; }
+.mini-box { height: 180px; }
 
-  .note-box {
-    margin: 0 16px 12px;
-    background: #0f3460;
-    border-left: 3px solid #3b82f6;
-    border-radius: 0 6px 6px 0;
-    padding: 8px 12px;
-    font-size: 11px;
-    color: #93c5fd;
-    line-height: 1.5;
-  }
+/* ── TABLE ── */
+.table-section { padding: 0 20px 20px; }
+.tbl { width: 100%; border-collapse: collapse; font-size: 11px; }
+.tbl th { background: var(--bg3); color: var(--gold); font-weight: 600; padding: 7px 10px; text-align: left; border-bottom: 1px solid var(--border-g); font-size: 10px; text-transform: uppercase; letter-spacing: .04em; }
+.tbl td { padding: 6px 10px; border-bottom: 1px solid var(--border); color: var(--white); }
+.tbl tr:hover td { background: var(--bg3); }
+.tbl td.num { text-align: right; color: var(--gold); font-weight: 500; }
+.tbl td.conv-high { color: #4ade80; font-weight: 600; text-align: right; }
+.tbl td.conv-mid  { color: var(--gold); font-weight: 600; text-align: right; }
+.tbl td.conv-low  { color: #f87171; font-weight: 600; text-align: right; }
+
+/* ── FOOTER ── */
+.footer { text-align: center; padding: 12px; font-size: 10px; color: var(--muted2); border-top: 1px solid var(--border); }
 </style>
 </head>
 <body>
 
-<div class="top-bar">
-  <span class="top-title">Dashboard de Avaliações de Metal</span>
-  <span class="top-period" id="periodo">Nov/2024 → Nov/2025 &nbsp;|&nbsp; 13 meses</span>
+<div class="header">
+  <div class="logo">
+    <div class="logo-icon">◈</div>
+    <div>
+      <div class="logo-text">GOLD TECH</div>
+      <div class="logo-sub">Dashboard de Avaliações de Metal</div>
+    </div>
+  </div>
+  <div class="header-right" id="hdr-period">—</div>
 </div>
 
-<div class="tab-bar">
-  <div class="tab active tall" onclick="setLoja('TODAS')">Todas as Lojas</div>
-  <div class="tab t24k" onclick="setLoja('24K')">24K — Meier</div>
-  <div class="tab tgti" onclick="setLoja('GTI')">GTI — Ipanema</div>
-  <div class="tab tgtt" onclick="setLoja('GTT')">GTT — Tijuca</div>
-  <div class="tab" onclick="setView('dax')" id="tab-dax">Medidas DAX</div>
+<!-- FILTERS -->
+<div class="filters">
+  <span class="filter-label">Loja</span>
+  <div class="filter-group" id="fg-loja">
+    <div class="chip active" data-group="loja" data-val="TODAS">Todas</div>
+    <div class="chip" data-group="loja" data-val="24K">24K — Meier</div>
+    <div class="chip" data-group="loja" data-val="GTI">GTI — Ipanema</div>
+    <div class="chip" data-group="loja" data-val="GTT">GTT — Tijuca</div>
+  </div>
+
+  <div class="filter-divider"></div>
+  <span class="filter-label">Ano</span>
+  <div class="filter-group" id="fg-ano">
+    <div class="chip active" data-group="ano" data-val="TODOS">Todos</div>
+    <div class="chip" data-group="ano" data-val="2024">2024</div>
+    <div class="chip" data-group="ano" data-val="2025">2025</div>
+  </div>
+
+  <div class="filter-divider"></div>
+  <span class="filter-label">Exibir metal</span>
+  <div class="filter-group" id="fg-metal">
+    <div class="chip active" data-group="metal" data-val="TOTAL">Total</div>
+    <div class="chip" data-group="metal" data-val="750">750 (18k)</div>
+    <div class="chip" data-group="metal" data-val="24K">24K</div>
+    <div class="chip" data-group="metal" data-val="PRATA">Prata</div>
+  </div>
+
+  <div class="filter-divider"></div>
+  <span class="filter-label">Meses</span>
+  <select class="fsel" id="sel-meses">
+    <option value="6">6 meses</option>
+    <option value="12">12 meses</option>
+    <option value="23" selected>Todos</option>
+  </select>
+
+  <button class="reset-btn" onclick="resetFiltros()">↺ Resetar</button>
 </div>
 
-<div id="view-chart">
-  <div class="kpi-row">
-    <div class="kpi"><div class="kpi-label">Avaliações s/4</div><div class="kpi-val" id="k-aval">—</div><div class="kpi-sub" id="k-aval-s">—</div></div>
-    <div class="kpi"><div class="kpi-label">Compras</div><div class="kpi-val" id="k-comp">—</div><div class="kpi-sub" id="k-comp-s">—</div></div>
-    <div class="kpi"><div class="kpi-label">Índice de Conversão</div><div class="kpi-val" id="k-conv">—</div><div class="kpi-sub" id="k-conv-s">—</div></div>
-    <div class="kpi"><div class="kpi-label">Metal Comprado</div><div class="kpi-val" id="k-metal">—</div><div class="kpi-sub" id="k-metal-s">—</div></div>
-  </div>
+<!-- KPIs -->
+<div class="kpi-row">
+  <div class="kpi"><div class="kpi-label">Avaliações s/4</div><div class="kpi-val" id="k-aval">—</div><div class="kpi-sub" id="k-aval-s">—</div></div>
+  <div class="kpi"><div class="kpi-label">Compras</div><div class="kpi-val" id="k-comp">—</div><div class="kpi-sub" id="k-comp-s">—</div></div>
+  <div class="kpi"><div class="kpi-label">Índice de Conversão</div><div class="kpi-val" id="k-conv">—</div><div class="kpi-sub" id="k-conv-s">—</div></div>
+  <div class="kpi"><div class="kpi-label">Metal Comprado</div><div class="kpi-val" id="k-metal">—</div><div class="kpi-sub" id="k-metal-s">—</div></div>
+  <div class="kpi"><div class="kpi-label">Ticket Médio</div><div class="kpi-val" id="k-ticket">—</div><div class="kpi-sub" id="k-ticket-s">—</div></div>
+</div>
 
-  <div class="chart-wrap">
-    <div class="chart-title">Avaliações s/4 | Compras | Índice de Conversão | Metal Comprado</div>
-    <div class="chart-legend">
-      <span class="leg"><span class="leg-sq" id="lq-aval"></span> Avaliações s/4</span>
-      <span class="leg"><span class="leg-sq" id="lq-comp"></span> Compras</span>
-      <span class="leg"><span class="leg-ln" style="background:#EF9F27"></span> Índice de Conversão</span>
-      <span class="leg"><span class="leg-ln" style="background:#4ade80;border-top:2px dashed #4ade80;height:0"></span> Metal Comprado (g)</span>
+<!-- MAIN CHART -->
+<div class="chart-section">
+  <div class="section-header">
+    <span class="section-title" id="chart-title">Avaliações | Compras | Conversão</span>
+    <div class="legend">
+      <span class="leg"><span class="leg-sq" style="background:#8B6914"></span> Avaliações s/4</span>
+      <span class="leg"><span class="leg-sq" style="background:#D4AF37"></span> Compras</span>
+      <span class="leg"><span class="leg-ln" style="border-color:#fff"></span> Índice de Conversão</span>
+      <span class="leg"><span class="leg-ln dashed" style="border-color:#D4AF37"></span> <span id="leg-metal-txt">Metal Total (g)</span></span>
     </div>
-    <div class="chart-box"><canvas id="mainChart" role="img" aria-label="Gráfico mensal de avaliações, compras e conversão"></canvas></div>
+  </div>
+  <div class="chart-box"><canvas id="mainChart"></canvas></div>
+</div>
+
+<!-- BOTTOM: mini charts -->
+<div class="bottom-grid">
+  <div class="panel">
+    <div class="panel-title">Distribuição de Metal por Tipo (período selecionado)</div>
+    <div id="metal-bars"></div>
+  </div>
+  <div class="panel">
+    <div class="panel-title">Valor Investido por Mês (R$)</div>
+    <div class="mini-box"><canvas id="valorChart"></canvas></div>
   </div>
 </div>
 
-<div id="view-dax" style="display:none">
-  <div class="note-box">
-    Crie cada medida separadamente no Power BI: clique com botão direito na tabela → <strong>Nova medida</strong> → cole apenas o bloco correspondente. Clique no título de cada card para expandir.
+<!-- TABLE -->
+<div class="table-section">
+  <div class="section-header" style="margin-bottom:8px">
+    <span class="section-title">Resumo Mensal Detalhado</span>
   </div>
-  <div class="dax-section">
-    <div class="dax-header">Medidas — criar uma por vez</div>
-
-    <div class="dax-card">
-      <div class="dax-card-head" onclick="toggleDax('d1')">
-        <span class="dax-card-name">Aval_s4_Meier &nbsp;<span style="color:#475569;font-weight:400;font-size:10px">→ tb_metal_meier</span></span>
-        <div style="display:flex;gap:6px;align-items:center"><span class="dax-badge" style="background:#1e3a5f;color:#93c5fd">Contagem</span><button class="copy-btn" onclick="event.stopPropagation();copyDax('d1c')">Copiar</button></div>
-      </div>
-      <div class="dax-code" id="d1"><span id="d1c"><span class="fn">Aval_s4_Meier</span> <span class="kw">=</span>
-<span class="kw">CALCULATE</span>(
-    <span class="kw">COUNTROWS</span>(tb_metal_meier),
-    <span class="kw">NOT</span>(
-        tb_metal_meier[TRANSACAO] <span class="kw">=</span> <span class="str">"NÃO COMPRA"</span>
-            <span class="kw">&&</span> tb_metal_meier[MOTIVO NC] <span class="kw">=</span> <span class="num">4</span>
-    )
-)</span></div>
-    </div>
-
-    <div class="dax-card">
-      <div class="dax-card-head" onclick="toggleDax('d2')">
-        <span class="dax-card-name">Aval_s4_Ipanema &nbsp;<span style="color:#475569;font-weight:400;font-size:10px">→ tb_metal_ipanema</span></span>
-        <div style="display:flex;gap:6px;align-items:center"><span class="dax-badge" style="background:#064e3b;color:#6ee7b7">Contagem</span><button class="copy-btn" onclick="event.stopPropagation();copyDax('d2c')">Copiar</button></div>
-      </div>
-      <div class="dax-code" id="d2"><span id="d2c"><span class="fn">Aval_s4_Ipanema</span> <span class="kw">=</span>
-<span class="kw">CALCULATE</span>(
-    <span class="kw">COUNTROWS</span>(tb_metal_ipanema),
-    <span class="kw">NOT</span>(
-        tb_metal_ipanema[TRANSACAO] <span class="kw">=</span> <span class="str">"NÃO COMPRA"</span>
-            <span class="kw">&&</span> tb_metal_ipanema[MOTIVO NC] <span class="kw">=</span> <span class="num">4</span>
-    )
-)</span></div>
-    </div>
-
-    <div class="dax-card">
-      <div class="dax-card-head" onclick="toggleDax('d3')">
-        <span class="dax-card-name">Aval_s4_Tijuca &nbsp;<span style="color:#475569;font-weight:400;font-size:10px">→ tb_metal_tijuca</span></span>
-        <div style="display:flex;gap:6px;align-items:center"><span class="dax-badge" style="background:#431407;color:#fdba74">Contagem</span><button class="copy-btn" onclick="event.stopPropagation();copyDax('d3c')">Copiar</button></div>
-      </div>
-      <div class="dax-code" id="d3"><span id="d3c"><span class="fn">Aval_s4_Tijuca</span> <span class="kw">=</span>
-<span class="kw">CALCULATE</span>(
-    <span class="kw">COUNTROWS</span>(tb_metal_tijuca),
-    <span class="kw">NOT</span>(
-        tb_metal_tijuca[TRANSACAO] <span class="kw">=</span> <span class="str">"NÃO COMPRA"</span>
-            <span class="kw">&&</span> tb_metal_tijuca[MOTIVO NC] <span class="kw">=</span> <span class="num">4</span>
-    )
-)</span></div>
-    </div>
-
-    <div class="dax-card">
-      <div class="dax-card-head" onclick="toggleDax('d4')">
-        <span class="dax-card-name">Compras_Meier &nbsp;<span style="color:#475569;font-weight:400;font-size:10px">→ tb_metal_meier</span></span>
-        <div style="display:flex;gap:6px;align-items:center"><span class="dax-badge" style="background:#1e3a5f;color:#93c5fd">Contagem</span><button class="copy-btn" onclick="event.stopPropagation();copyDax('d4c')">Copiar</button></div>
-      </div>
-      <div class="dax-code" id="d4"><span id="d4c"><span class="fn">Compras_Meier</span> <span class="kw">=</span>
-<span class="kw">CALCULATE</span>(
-    <span class="kw">COUNTROWS</span>(tb_metal_meier),
-    tb_metal_meier[TRANSACAO] <span class="kw">=</span> <span class="str">"COMPRA"</span>
-)</span></div>
-    </div>
-
-    <div class="dax-card">
-      <div class="dax-card-head" onclick="toggleDax('d5')">
-        <span class="dax-card-name">Compras_Ipanema &nbsp;<span style="color:#475569;font-weight:400;font-size:10px">→ tb_metal_ipanema</span></span>
-        <div style="display:flex;gap:6px;align-items:center"><span class="dax-badge" style="background:#064e3b;color:#6ee7b7">Contagem</span><button class="copy-btn" onclick="event.stopPropagation();copyDax('d5c')">Copiar</button></div>
-      </div>
-      <div class="dax-code" id="d5"><span id="d5c"><span class="fn">Compras_Ipanema</span> <span class="kw">=</span>
-<span class="kw">CALCULATE</span>(
-    <span class="kw">COUNTROWS</span>(tb_metal_ipanema),
-    tb_metal_ipanema[TRANSACAO] <span class="kw">=</span> <span class="str">"Compra"</span>
-)</span></div>
-    </div>
-
-    <div class="dax-card">
-      <div class="dax-card-head" onclick="toggleDax('d6')">
-        <span class="dax-card-name">Compras_Tijuca &nbsp;<span style="color:#475569;font-weight:400;font-size:10px">→ tb_metal_tijuca</span></span>
-        <div style="display:flex;gap:6px;align-items:center"><span class="dax-badge" style="background:#431407;color:#fdba74">Contagem</span><button class="copy-btn" onclick="event.stopPropagation();copyDax('d6c')">Copiar</button></div>
-      </div>
-      <div class="dax-code" id="d6"><span id="d6c"><span class="fn">Compras_Tijuca</span> <span class="kw">=</span>
-<span class="kw">CALCULATE</span>(
-    <span class="kw">COUNTROWS</span>(tb_metal_tijuca),
-    tb_metal_tijuca[TRANSACAO] <span class="kw">=</span> <span class="str">"COMPRA"</span>
-)</span></div>
-    </div>
-
-    <div class="dax-card">
-      <div class="dax-card-head" onclick="toggleDax('d7')">
-        <span class="dax-card-name">IndConv_Meier / Ipanema / Tijuca</span>
-        <div style="display:flex;gap:6px;align-items:center"><span class="dax-badge" style="background:#1c1917;color:#fbbf24">% Conversão</span><button class="copy-btn" onclick="event.stopPropagation();copyDax('d7c')">Copiar</button></div>
-      </div>
-      <div class="dax-code" id="d7"><span id="d7c"><span class="fn">IndConv_Meier</span> <span class="kw">=</span> <span class="kw">DIVIDE</span>([Compras_Meier], [Aval_s4_Meier], <span class="num">0</span>)
-
-<span class="fn">IndConv_Ipanema</span> <span class="kw">=</span> <span class="kw">DIVIDE</span>([Compras_Ipanema], [Aval_s4_Ipanema], <span class="num">0</span>)
-
-<span class="fn">IndConv_Tijuca</span> <span class="kw">=</span> <span class="kw">DIVIDE</span>([Compras_Tijuca], [Aval_s4_Tijuca], <span class="num">0</span>)</span></div>
-    </div>
-
-    <div class="dax-card">
-      <div class="dax-card-head" onclick="toggleDax('d8')">
-        <span class="dax-card-name">Metal_Meier / Ipanema / Tijuca &nbsp;(gramas)</span>
-        <div style="display:flex;gap:6px;align-items:center"><span class="dax-badge" style="background:#14532d;color:#86efac">Soma</span><button class="copy-btn" onclick="event.stopPropagation();copyDax('d8c')">Copiar</button></div>
-      </div>
-      <div class="dax-code" id="d8"><span id="d8c"><span class="fn">Metal_Meier</span> <span class="kw">=</span>
-<span class="kw">CALCULATE</span>(<span class="kw">SUM</span>(tb_metal_meier[PESO TOTAL]), tb_metal_meier[TRANSACAO] <span class="kw">=</span> <span class="str">"COMPRA"</span>)
-
-<span class="fn">Metal_Ipanema</span> <span class="kw">=</span>
-<span class="kw">CALCULATE</span>(<span class="kw">SUM</span>(tb_metal_ipanema[PESO TOTAL]), tb_metal_ipanema[TRANSACAO] <span class="kw">=</span> <span class="str">"Compra"</span>)
-
-<span class="fn">Metal_Tijuca</span> <span class="kw">=</span>
-<span class="kw">CALCULATE</span>(<span class="kw">SUM</span>(tb_metal_tijuca[PESO TOTAL]), tb_metal_tijuca[TRANSACAO] <span class="kw">=</span> <span class="str">"COMPRA"</span>)</span></div>
-    </div>
-
-    <div class="dax-card">
-      <div class="dax-card-head" onclick="toggleDax('d9')">
-        <span class="dax-card-name">Valor_Meier / Ipanema / Tijuca &nbsp;(R$)</span>
-        <div style="display:flex;gap:6px;align-items:center"><span class="dax-badge" style="background:#14532d;color:#86efac">Soma</span><button class="copy-btn" onclick="event.stopPropagation();copyDax('d9c')">Copiar</button></div>
-      </div>
-      <div class="dax-code" id="d9"><span id="d9c"><span class="fn">Valor_Meier</span> <span class="kw">=</span>
-<span class="kw">CALCULATE</span>(<span class="kw">SUM</span>(tb_metal_meier[VALOR GASTO/OFERTA]), tb_metal_meier[TRANSACAO] <span class="kw">=</span> <span class="str">"COMPRA"</span>)
-
-<span class="fn">Valor_Ipanema</span> <span class="kw">=</span>
-<span class="kw">CALCULATE</span>(<span class="kw">SUM</span>(tb_metal_ipanema[VALOR GASTO/OFERTA]), tb_metal_ipanema[TRANSACAO] <span class="kw">=</span> <span class="str">"Compra"</span>)
-
-<span class="fn">Valor_Tijuca</span> <span class="kw">=</span>
-<span class="kw">CALCULATE</span>(<span class="kw">SUM</span>(tb_metal_tijuca[VALOR GASTO/OFERTA]), tb_metal_tijuca[TRANSACAO] <span class="kw">=</span> <span class="str">"COMPRA"</span>)</span></div>
-    </div>
-
-    <div class="dax-card">
-      <div class="dax-card-head" onclick="toggleDax('d10')">
-        <span class="dax-card-name">Totais Consolidados — todas as lojas</span>
-        <div style="display:flex;gap:6px;align-items:center"><span class="dax-badge" style="background:#2e1065;color:#c4b5fd">Consolidado</span><button class="copy-btn" onclick="event.stopPropagation();copyDax('d10c')">Copiar</button></div>
-      </div>
-      <div class="dax-code" id="d10"><span id="d10c"><span class="fn">Total_Aval_s4</span> <span class="kw">=</span> [Aval_s4_Meier] <span class="kw">+</span> [Aval_s4_Ipanema] <span class="kw">+</span> [Aval_s4_Tijuca]
-
-<span class="fn">Total_Compras</span> <span class="kw">=</span> [Compras_Meier] <span class="kw">+</span> [Compras_Ipanema] <span class="kw">+</span> [Compras_Tijuca]
-
-<span class="fn">Total_IndConv</span> <span class="kw">=</span> <span class="kw">DIVIDE</span>([Total_Compras], [Total_Aval_s4], <span class="num">0</span>)
-
-<span class="fn">Total_Metal</span> <span class="kw">=</span> [Metal_Meier] <span class="kw">+</span> [Metal_Ipanema] <span class="kw">+</span> [Metal_Tijuca]
-
-<span class="fn">Total_Valor</span> <span class="kw">=</span> [Valor_Meier] <span class="kw">+</span> [Valor_Ipanema] <span class="kw">+</span> [Valor_Tijuca]</span></div>
-    </div>
-
-    <div class="dax-card">
-      <div class="dax-card-head" onclick="toggleDax('d11')">
-        <span class="dax-card-name">Coluna AnoMes — criar em cada tabela</span>
-        <div style="display:flex;gap:6px;align-items:center"><span class="dax-badge" style="background:#1c1917;color:#fbbf24">Coluna</span><button class="copy-btn" onclick="event.stopPropagation();copyDax('d11c')">Copiar</button></div>
-      </div>
-      <div class="dax-code" id="d11"><span id="d11c"><span class="cm">-- Coluna para eixo X do gráfico (texto)</span>
-<span class="fn">AnoMes</span> <span class="kw">=</span> <span class="kw">FORMAT</span>(tb_metal_meier[DATA], <span class="str">"YYYY/MM"</span>)
-
-<span class="cm">-- Coluna de ordenação (número) — classificar AnoMes por esta</span>
-<span class="fn">AnoMes_Ord</span> <span class="kw">=</span> <span class="kw">VALUE</span>(<span class="kw">FORMAT</span>(tb_metal_meier[DATA], <span class="str">"YYYYMM"</span>))</span></div>
-    </div>
-
-  </div>
+  <table class="tbl" id="resumo-table">
+    <thead>
+      <tr>
+        <th>Mês</th><th>Loja</th>
+        <th style="text-align:right">Aval s/4</th>
+        <th style="text-align:right">Compras</th>
+        <th style="text-align:right">Conversão</th>
+        <th style="text-align:right">Metal (g)</th>
+        <th style="text-align:right">Valor (R$)</th>
+        <th style="text-align:right">Ticket Médio</th>
+      </tr>
+    </thead>
+    <tbody id="tbl-body"></tbody>
+  </table>
 </div>
+
+<div class="footer">Gold Tech — Dashboard gerado com dados dos bancos 24K · GTI · GTT &nbsp;|&nbsp; Nov/2024 → Nov/2025</div>
 
 <script>
-const DATA = {
-  "24K": [{"ANO_MES":"2024-11","AVAL_S4":163,"COMPRAS":148,"CONV":90.8,"METAL":1529.39,"VALOR":264132},{"ANO_MES":"2024-12","AVAL_S4":154,"COMPRAS":150,"CONV":97.4,"METAL":984.84,"VALOR":178112},{"ANO_MES":"2025-01","AVAL_S4":183,"COMPRAS":177,"CONV":96.72,"METAL":1843.7,"VALOR":402186},{"ANO_MES":"2025-02","AVAL_S4":168,"COMPRAS":161,"CONV":95.83,"METAL":1526.1,"VALOR":318285},{"ANO_MES":"2025-03","AVAL_S4":216,"COMPRAS":205,"CONV":94.91,"METAL":1926.6,"VALOR":484582},{"ANO_MES":"2025-04","AVAL_S4":160,"COMPRAS":153,"CONV":95.62,"METAL":1338.4,"VALOR":380795},{"ANO_MES":"2025-05","AVAL_S4":173,"COMPRAS":164,"CONV":94.8,"METAL":1342.2,"VALOR":335150},{"ANO_MES":"2025-06","AVAL_S4":166,"COMPRAS":155,"CONV":93.37,"METAL":1996,"VALOR":505030},{"ANO_MES":"2025-07","AVAL_S4":186,"COMPRAS":176,"CONV":94.62,"METAL":1943,"VALOR":374383},{"ANO_MES":"2025-08","AVAL_S4":173,"COMPRAS":156,"CONV":90.17,"METAL":1274.5,"VALOR":271117},{"ANO_MES":"2025-09","AVAL_S4":202,"COMPRAS":192,"CONV":95.05,"METAL":2972.3,"VALOR":476092},{"ANO_MES":"2025-10","AVAL_S4":210,"COMPRAS":194,"CONV":92.38,"METAL":1865.6,"VALOR":471364},{"ANO_MES":"2025-11","AVAL_S4":172,"COMPRAS":164,"CONV":95.35,"METAL":1686,"VALOR":373029}],
-  "GTI": [{"ANO_MES":"2024-11","AVAL_S4":123,"COMPRAS":107,"CONV":86.99,"METAL":2563.87,"VALOR":553718},{"ANO_MES":"2024-12","AVAL_S4":95,"COMPRAS":84,"CONV":88.42,"METAL":1929.7,"VALOR":459412},{"ANO_MES":"2025-01","AVAL_S4":133,"COMPRAS":123,"CONV":92.48,"METAL":2344.48,"VALOR":671068},{"ANO_MES":"2025-02","AVAL_S4":122,"COMPRAS":107,"CONV":87.7,"METAL":2592.78,"VALOR":774781},{"ANO_MES":"2025-03","AVAL_S4":163,"COMPRAS":145,"CONV":88.96,"METAL":2489.53,"VALOR":683699},{"ANO_MES":"2025-04","AVAL_S4":114,"COMPRAS":105,"CONV":92.11,"METAL":2368.42,"VALOR":676845},{"ANO_MES":"2025-05","AVAL_S4":178,"COMPRAS":162,"CONV":91.01,"METAL":2940.22,"VALOR":856380},{"ANO_MES":"2025-06","AVAL_S4":116,"COMPRAS":107,"CONV":92.24,"METAL":1849.42,"VALOR":532506},{"ANO_MES":"2025-07","AVAL_S4":160,"COMPRAS":142,"CONV":88.75,"METAL":4077.47,"VALOR":1181494},{"ANO_MES":"2025-08","AVAL_S4":130,"COMPRAS":113,"CONV":86.92,"METAL":1920.1,"VALOR":463486},{"ANO_MES":"2025-09","AVAL_S4":143,"COMPRAS":130,"CONV":90.91,"METAL":2294.95,"VALOR":589990},{"ANO_MES":"2025-10","AVAL_S4":189,"COMPRAS":165,"CONV":87.3,"METAL":2906.83,"VALOR":817336},{"ANO_MES":"2025-11","AVAL_S4":139,"COMPRAS":123,"CONV":88.49,"METAL":2527.56,"VALOR":751356}],
-  "GTT": [{"ANO_MES":"2024-11","AVAL_S4":329,"COMPRAS":298,"CONV":90.58,"METAL":4595.18,"VALOR":836344},{"ANO_MES":"2024-12","AVAL_S4":303,"COMPRAS":278,"CONV":91.75,"METAL":3928.86,"VALOR":692402},{"ANO_MES":"2025-01","AVAL_S4":331,"COMPRAS":281,"CONV":84.89,"METAL":3144.1,"VALOR":598185},{"ANO_MES":"2025-02","AVAL_S4":335,"COMPRAS":283,"CONV":84.48,"METAL":3676.2,"VALOR":868547},{"ANO_MES":"2025-03","AVAL_S4":343,"COMPRAS":295,"CONV":86.01,"METAL":3380.9,"VALOR":666086},{"ANO_MES":"2025-04","AVAL_S4":352,"COMPRAS":306,"CONV":86.93,"METAL":3189.9,"VALOR":720579},{"ANO_MES":"2025-05","AVAL_S4":373,"COMPRAS":311,"CONV":83.38,"METAL":3691.4,"VALOR":939244},{"ANO_MES":"2025-06","AVAL_S4":345,"COMPRAS":294,"CONV":85.22,"METAL":2831.9,"VALOR":670390},{"ANO_MES":"2025-07","AVAL_S4":401,"COMPRAS":340,"CONV":84.79,"METAL":4144.8,"VALOR":867892},{"ANO_MES":"2025-08","AVAL_S4":392,"COMPRAS":331,"CONV":84.44,"METAL":4477.9,"VALOR":1013538},{"ANO_MES":"2025-09","AVAL_S4":355,"COMPRAS":318,"CONV":89.58,"METAL":4050.1,"VALOR":892069},{"ANO_MES":"2025-10","AVAL_S4":419,"COMPRAS":356,"CONV":84.96,"METAL":4428.1,"VALOR":1115109},{"ANO_MES":"2025-11","AVAL_S4":379,"COMPRAS":326,"CONV":86.02,"METAL":4044.7,"VALOR":1150052}],
-  "TODAS": [{"ANO_MES":"2024-11","AVAL_S4":615,"COMPRAS":553,"CONV":89.92,"METAL":8688.44,"VALOR":1654194},{"ANO_MES":"2024-12","AVAL_S4":552,"COMPRAS":512,"CONV":92.75,"METAL":6843.4,"VALOR":1329926},{"ANO_MES":"2025-01","AVAL_S4":647,"COMPRAS":581,"CONV":89.8,"METAL":7332.28,"VALOR":1671439},{"ANO_MES":"2025-02","AVAL_S4":625,"COMPRAS":551,"CONV":88.16,"METAL":7795.08,"VALOR":1961613},{"ANO_MES":"2025-03","AVAL_S4":722,"COMPRAS":645,"CONV":89.34,"METAL":7797.03,"VALOR":1834367},{"ANO_MES":"2025-04","AVAL_S4":626,"COMPRAS":564,"CONV":90.1,"METAL":6896.72,"VALOR":1778219},{"ANO_MES":"2025-05","AVAL_S4":724,"COMPRAS":637,"CONV":87.98,"METAL":7973.82,"VALOR":2130774},{"ANO_MES":"2025-06","AVAL_S4":627,"COMPRAS":556,"CONV":88.68,"METAL":6677.32,"VALOR":1707926},{"ANO_MES":"2025-07","AVAL_S4":747,"COMPRAS":658,"CONV":88.09,"METAL":10165.27,"VALOR":2423769},{"ANO_MES":"2025-08","AVAL_S4":695,"COMPRAS":600,"CONV":86.33,"METAL":7672.5,"VALOR":1748141},{"ANO_MES":"2025-09","AVAL_S4":700,"COMPRAS":640,"CONV":91.43,"METAL":9317.35,"VALOR":1958151},{"ANO_MES":"2025-10","AVAL_S4":818,"COMPRAS":715,"CONV":87.41,"METAL":9200.53,"VALOR":2403809},{"ANO_MES":"2025-11","AVAL_S4":690,"COMPRAS":613,"CONV":88.84,"METAL":8258.26,"VALOR":2274437}]
-};
-
-const PALETTE = {
-  "TODAS": { aval:"#7c3aed", comp:"#a78bfa", label:"Todas as Lojas" },
-  "24K":   { aval:"#1d4ed8", comp:"#60a5fa", label:"24K — Meier" },
-  "GTI":   { aval:"#065f46", comp:"#34d399", label:"GTI — Ipanema" },
-  "GTT":   { aval:"#9a3412", comp:"#fb923c", label:"GTT — Tijuca" }
-};
-
-let currentLoja = "TODAS";
-let chart = null;
 Chart.register(ChartDataLabels);
 
-function fmtMes(s) {
-  const [y,m] = s.split('-');
-  return y+'/'+m;
-}
-function fmtNum(n) { return n.toLocaleString('pt-BR'); }
-function fmtR(n) { return 'R$ '+(n/1000).toFixed(0)+'k'; }
+const RAW = {"24K":[{"ANO_MES":"2024-01","AVAL_S4":178,"COMPRAS":159,"METAL":1949.44,"VALOR":274867.5,"METAL_750":1187.86,"METAL_24K":13.94,"METAL_PRATA":370.02,"TICKET_MEDIO":1784.85,"CONV":89.33},{"ANO_MES":"2024-02","AVAL_S4":153,"COMPRAS":140,"METAL":1681,"VALOR":245928,"METAL_750":921.28,"METAL_24K":96.75,"METAL_PRATA":481.58,"TICKET_MEDIO":1863.09,"CONV":91.5},{"ANO_MES":"2024-03","AVAL_S4":154,"COMPRAS":139,"METAL":1736.04,"VALOR":262290,"METAL_750":1026.42,"METAL_24K":0,"METAL_PRATA":867.6,"TICKET_MEDIO":1972.11,"CONV":90.26},{"ANO_MES":"2024-04","AVAL_S4":173,"COMPRAS":162,"METAL":1401.37,"VALOR":206236,"METAL_750":795.13,"METAL_24K":0,"METAL_PRATA":232.3,"TICKET_MEDIO":1305.29,"CONV":93.64},{"ANO_MES":"2024-05","AVAL_S4":204,"COMPRAS":188,"METAL":1734.27,"VALOR":322977,"METAL_750":1280.95,"METAL_24K":0,"METAL_PRATA":447.69,"TICKET_MEDIO":1814.48,"CONV":92.16},{"ANO_MES":"2024-06","AVAL_S4":154,"COMPRAS":142,"METAL":1363.04,"VALOR":228085,"METAL_750":793.15,"METAL_24K":0,"METAL_PRATA":138.79,"TICKET_MEDIO":1640.9,"CONV":92.21},{"ANO_MES":"2024-07","AVAL_S4":177,"COMPRAS":165,"METAL":1923.65,"VALOR":322290,"METAL_750":1074,"METAL_24K":1,"METAL_PRATA":868.6,"TICKET_MEDIO":2026.98,"CONV":93.22},{"ANO_MES":"2024-08","AVAL_S4":165,"COMPRAS":157,"METAL":1788.16,"VALOR":312676,"METAL_750":1282.85,"METAL_24K":0,"METAL_PRATA":611.35,"TICKET_MEDIO":2127.05,"CONV":95.15},{"ANO_MES":"2024-09","AVAL_S4":176,"COMPRAS":162,"METAL":1443.76,"VALOR":254930,"METAL_750":950.72,"METAL_24K":25,"METAL_PRATA":348.07,"TICKET_MEDIO":1688.28,"CONV":92.05},{"ANO_MES":"2024-10","AVAL_S4":183,"COMPRAS":170,"METAL":1566.1,"VALOR":289948,"METAL_750":1246.23,"METAL_24K":0,"METAL_PRATA":105.4,"TICKET_MEDIO":1746.67,"CONV":92.9},{"ANO_MES":"2024-11","AVAL_S4":163,"COMPRAS":148,"METAL":1529.39,"VALOR":264132,"METAL_750":974.1,"METAL_24K":0,"METAL_PRATA":633.5,"TICKET_MEDIO":1927.97,"CONV":90.8},{"ANO_MES":"2024-12","AVAL_S4":154,"COMPRAS":150,"METAL":984.84,"VALOR":178112,"METAL_750":681.14,"METAL_24K":0,"METAL_PRATA":175.67,"TICKET_MEDIO":1236.89,"CONV":97.4},{"ANO_MES":"2025-01","AVAL_S4":183,"COMPRAS":177,"METAL":1843.7,"VALOR":402186,"METAL_750":1296.8,"METAL_24K":10,"METAL_PRATA":141.5,"TICKET_MEDIO":2351.96,"CONV":96.72},{"ANO_MES":"2025-02","AVAL_S4":168,"COMPRAS":161,"METAL":1526.1,"VALOR":318285,"METAL_750":1056.9,"METAL_24K":0,"METAL_PRATA":316.5,"TICKET_MEDIO":2053.45,"CONV":95.83},{"ANO_MES":"2025-03","AVAL_S4":216,"COMPRAS":205,"METAL":1926.6,"VALOR":484582,"METAL_750":1296.3,"METAL_24K":19.3,"METAL_PRATA":109.2,"TICKET_MEDIO":2387.1,"CONV":94.91},{"ANO_MES":"2025-04","AVAL_S4":160,"COMPRAS":153,"METAL":1338.4,"VALOR":380795,"METAL_750":926.8,"METAL_24K":0,"METAL_PRATA":422.3,"TICKET_MEDIO":2590.44,"CONV":95.62},{"ANO_MES":"2025-05","AVAL_S4":173,"COMPRAS":164,"METAL":1342.2,"VALOR":335150,"METAL_750":836.3,"METAL_24K":10,"METAL_PRATA":8.5,"TICKET_MEDIO":2056.13,"CONV":94.8},{"ANO_MES":"2025-06","AVAL_S4":166,"COMPRAS":155,"METAL":1996,"VALOR":505030,"METAL_750":1342.8,"METAL_24K":0,"METAL_PRATA":448,"TICKET_MEDIO":3322.57,"CONV":93.37},{"ANO_MES":"2025-07","AVAL_S4":186,"COMPRAS":176,"METAL":1943,"VALOR":374383,"METAL_750":1430,"METAL_24K":20,"METAL_PRATA":171.6,"TICKET_MEDIO":2164.06,"CONV":94.62},{"ANO_MES":"2025-08","AVAL_S4":173,"COMPRAS":156,"METAL":1274.5,"VALOR":271117,"METAL_750":936.9,"METAL_24K":0,"METAL_PRATA":218.3,"TICKET_MEDIO":1760.5,"CONV":90.17},{"ANO_MES":"2025-09","AVAL_S4":202,"COMPRAS":192,"METAL":2972.3,"VALOR":476092,"METAL_750":2312,"METAL_24K":0,"METAL_PRATA":41.4,"TICKET_MEDIO":2519,"CONV":95.05},{"ANO_MES":"2025-10","AVAL_S4":210,"COMPRAS":194,"METAL":1865.6,"VALOR":471364,"METAL_750":1515.6,"METAL_24K":2,"METAL_PRATA":608.3,"TICKET_MEDIO":2507.26,"CONV":92.38},{"ANO_MES":"2025-11","AVAL_S4":172,"COMPRAS":164,"METAL":1686,"VALOR":373029,"METAL_750":1171.5,"METAL_24K":5,"METAL_PRATA":72.7,"TICKET_MEDIO":2288.52,"CONV":95.35}],"GTI":[{"ANO_MES":"2024-01","AVAL_S4":94,"COMPRAS":78,"METAL":1937.6,"VALOR":344767,"METAL_750":1383.34,"METAL_24K":10,"METAL_PRATA":649.08,"TICKET_MEDIO":4536.41,"CONV":82.98},{"ANO_MES":"2024-02","AVAL_S4":98,"COMPRAS":76,"METAL":1232.3,"VALOR":237748,"METAL_750":785.99,"METAL_24K":110,"METAL_PRATA":102.2,"TICKET_MEDIO":3212.81,"CONV":77.55},{"ANO_MES":"2024-03","AVAL_S4":102,"COMPRAS":91,"METAL":1887.21,"VALOR":356046,"METAL_750":687.63,"METAL_24K":168,"METAL_PRATA":4.75,"TICKET_MEDIO":3956.07,"CONV":89.22},{"ANO_MES":"2024-04","AVAL_S4":109,"COMPRAS":92,"METAL":2163.63,"VALOR":417139,"METAL_750":1375.11,"METAL_24K":5,"METAL_PRATA":574,"TICKET_MEDIO":4740.22,"CONV":84.4},{"ANO_MES":"2024-05","AVAL_S4":127,"COMPRAS":106,"METAL":2178.11,"VALOR":478234,"METAL_750":1769.36,"METAL_24K":11.97,"METAL_PRATA":263.26,"TICKET_MEDIO":4643.05,"CONV":83.46},{"ANO_MES":"2024-06","AVAL_S4":111,"COMPRAS":89,"METAL":1536.07,"VALOR":317204,"METAL_750":1072.29,"METAL_24K":125.98,"METAL_PRATA":0,"TICKET_MEDIO":3564.09,"CONV":80.18},{"ANO_MES":"2024-07","AVAL_S4":101,"COMPRAS":83,"METAL":1869.66,"VALOR":360406,"METAL_750":1240.88,"METAL_24K":166,"METAL_PRATA":0,"TICKET_MEDIO":4342.24,"CONV":82.18},{"ANO_MES":"2024-08","AVAL_S4":118,"COMPRAS":104,"METAL":1850.81,"VALOR":447359,"METAL_750":1463.58,"METAL_24K":30,"METAL_PRATA":691.4,"TICKET_MEDIO":4385.87,"CONV":88.14},{"ANO_MES":"2024-09","AVAL_S4":144,"COMPRAS":128,"METAL":3429.72,"VALOR":619940,"METAL_750":2383.47,"METAL_24K":203.48,"METAL_PRATA":3520.9,"TICKET_MEDIO":4959.52,"CONV":88.89},{"ANO_MES":"2024-10","AVAL_S4":110,"COMPRAS":92,"METAL":2351.48,"VALOR":520313,"METAL_750":1699.31,"METAL_24K":5,"METAL_PRATA":10,"TICKET_MEDIO":5655.58,"CONV":83.64},{"ANO_MES":"2024-11","AVAL_S4":123,"COMPRAS":107,"METAL":2563.87,"VALOR":553718,"METAL_750":1848.25,"METAL_24K":2,"METAL_PRATA":69.81,"TICKET_MEDIO":5324.21,"CONV":86.99},{"ANO_MES":"2024-12","AVAL_S4":95,"COMPRAS":84,"METAL":1929.7,"VALOR":459412,"METAL_750":1638.89,"METAL_24K":0,"METAL_PRATA":6.8,"TICKET_MEDIO":5535.08,"CONV":88.42},{"ANO_MES":"2025-01","AVAL_S4":133,"COMPRAS":123,"METAL":2344.48,"VALOR":671068,"METAL_750":1705.75,"METAL_24K":50,"METAL_PRATA":27,"TICKET_MEDIO":5455.83,"CONV":92.48},{"ANO_MES":"2025-02","AVAL_S4":122,"COMPRAS":107,"METAL":2592.78,"VALOR":774781,"METAL_750":1547.27,"METAL_24K":0,"METAL_PRATA":3.3,"TICKET_MEDIO":7240.94,"CONV":87.7},{"ANO_MES":"2025-03","AVAL_S4":163,"COMPRAS":145,"METAL":2489.53,"VALOR":683699,"METAL_750":1903.16,"METAL_24K":1,"METAL_PRATA":118.9,"TICKET_MEDIO":4747.91,"CONV":88.96},{"ANO_MES":"2025-04","AVAL_S4":114,"COMPRAS":105,"METAL":2368.42,"VALOR":676845,"METAL_750":1961.61,"METAL_24K":17.4,"METAL_PRATA":0,"TICKET_MEDIO":6446.14,"CONV":92.11},{"ANO_MES":"2025-05","AVAL_S4":178,"COMPRAS":162,"METAL":2940.22,"VALOR":856380,"METAL_750":2089.4,"METAL_24K":30.1,"METAL_PRATA":119,"TICKET_MEDIO":5286.3,"CONV":91.01},{"ANO_MES":"2025-06","AVAL_S4":116,"COMPRAS":107,"METAL":1849.42,"VALOR":532506,"METAL_750":1218.4,"METAL_24K":100.1,"METAL_PRATA":18.6,"TICKET_MEDIO":4976.69,"CONV":92.24},{"ANO_MES":"2025-07","AVAL_S4":160,"COMPRAS":142,"METAL":4077.47,"VALOR":1181494,"METAL_750":2930.22,"METAL_24K":0,"METAL_PRATA":173.9,"TICKET_MEDIO":8379.39,"CONV":88.75},{"ANO_MES":"2025-08","AVAL_S4":130,"COMPRAS":113,"METAL":1920.1,"VALOR":463486,"METAL_750":1655.99,"METAL_24K":0,"METAL_PRATA":17.6,"TICKET_MEDIO":4138.27,"CONV":86.92},{"ANO_MES":"2025-09","AVAL_S4":143,"COMPRAS":130,"METAL":2294.95,"VALOR":589990,"METAL_750":1728.3,"METAL_24K":12.6,"METAL_PRATA":91.5,"TICKET_MEDIO":4538.38,"CONV":90.91},{"ANO_MES":"2025-10","AVAL_S4":189,"COMPRAS":165,"METAL":2906.83,"VALOR":817336,"METAL_750":2233.23,"METAL_24K":50,"METAL_PRATA":171.17,"TICKET_MEDIO":5014.33,"CONV":87.3},{"ANO_MES":"2025-11","AVAL_S4":139,"COMPRAS":123,"METAL":2527.56,"VALOR":751356,"METAL_750":1344.5,"METAL_24K":224.7,"METAL_PRATA":58.8,"TICKET_MEDIO":6158.66,"CONV":88.49}],"GTT":[{"ANO_MES":"2024-01","AVAL_S4":331,"COMPRAS":289,"METAL":4173.41,"VALOR":579624,"METAL_750":2430.25,"METAL_24K":21.03,"METAL_PRATA":431.15,"TICKET_MEDIO":2062.72,"CONV":87.31},{"ANO_MES":"2024-02","AVAL_S4":276,"COMPRAS":236,"METAL":3325.39,"VALOR":502092,"METAL_750":1998.13,"METAL_24K":1,"METAL_PRATA":1528.89,"TICKET_MEDIO":2183.01,"CONV":85.51},{"ANO_MES":"2024-03","AVAL_S4":275,"COMPRAS":235,"METAL":2999.51,"VALOR":407116,"METAL_750":1703.29,"METAL_24K":0,"METAL_PRATA":350.01,"TICKET_MEDIO":1777.8,"CONV":85.45},{"ANO_MES":"2024-04","AVAL_S4":285,"COMPRAS":253,"METAL":3907.71,"VALOR":652903,"METAL_750":1735.76,"METAL_24K":57.2,"METAL_PRATA":569.03,"TICKET_MEDIO":2664.91,"CONV":88.77},{"ANO_MES":"2024-05","AVAL_S4":297,"COMPRAS":266,"METAL":3486.97,"VALOR":515685,"METAL_750":1777.85,"METAL_24K":0,"METAL_PRATA":254,"TICKET_MEDIO":1983.4,"CONV":89.56},{"ANO_MES":"2024-06","AVAL_S4":263,"COMPRAS":233,"METAL":2675.1,"VALOR":430253,"METAL_750":1573.82,"METAL_24K":5,"METAL_PRATA":254.7,"TICKET_MEDIO":1862.57,"CONV":88.59},{"ANO_MES":"2024-07","AVAL_S4":286,"COMPRAS":254,"METAL":2644.31,"VALOR":409858,"METAL_750":1393.96,"METAL_24K":0,"METAL_PRATA":159.61,"TICKET_MEDIO":1666.09,"CONV":88.81},{"ANO_MES":"2024-08","AVAL_S4":313,"COMPRAS":264,"METAL":3876.08,"VALOR":609822,"METAL_750":1659.75,"METAL_24K":50,"METAL_PRATA":376.51,"TICKET_MEDIO":2327.56,"CONV":84.35},{"ANO_MES":"2024-09","AVAL_S4":286,"COMPRAS":256,"METAL":4869.58,"VALOR":878893,"METAL_750":2487.94,"METAL_24K":148.3,"METAL_PRATA":577.35,"TICKET_MEDIO":3543.92,"CONV":89.51},{"ANO_MES":"2024-10","AVAL_S4":321,"COMPRAS":284,"METAL":3309.58,"VALOR":592278,"METAL_750":1999.51,"METAL_24K":20,"METAL_PRATA":174.3,"TICKET_MEDIO":2153.74,"CONV":88.47},{"ANO_MES":"2024-11","AVAL_S4":329,"COMPRAS":298,"METAL":4595.18,"VALOR":836344,"METAL_750":2167.86,"METAL_24K":0,"METAL_PRATA":710.9,"TICKET_MEDIO":2934.54,"CONV":90.58},{"ANO_MES":"2024-12","AVAL_S4":303,"COMPRAS":278,"METAL":3928.86,"VALOR":692402,"METAL_750":1818.18,"METAL_24K":26,"METAL_PRATA":284.28,"TICKET_MEDIO":2536.27,"CONV":91.75},{"ANO_MES":"2025-01","AVAL_S4":331,"COMPRAS":281,"METAL":3144.1,"VALOR":598185,"METAL_750":1531.9,"METAL_24K":50,"METAL_PRATA":325.4,"TICKET_MEDIO":2175.22,"CONV":84.89},{"ANO_MES":"2025-02","AVAL_S4":335,"COMPRAS":283,"METAL":3676.2,"VALOR":868547,"METAL_750":2054.3,"METAL_24K":100,"METAL_PRATA":133,"TICKET_MEDIO":3090.91,"CONV":84.48},{"ANO_MES":"2025-03","AVAL_S4":343,"COMPRAS":295,"METAL":3380.9,"VALOR":666086,"METAL_750":1756.6,"METAL_24K":0,"METAL_PRATA":97.8,"TICKET_MEDIO":2281.12,"CONV":86.01},{"ANO_MES":"2025-04","AVAL_S4":352,"COMPRAS":306,"METAL":3189.9,"VALOR":720579,"METAL_750":1723.3,"METAL_24K":0,"METAL_PRATA":320.9,"TICKET_MEDIO":2386.02,"CONV":86.93},{"ANO_MES":"2025-05","AVAL_S4":373,"COMPRAS":311,"METAL":3691.4,"VALOR":939244,"METAL_750":1980.1,"METAL_24K":10,"METAL_PRATA":311.7,"TICKET_MEDIO":3059.43,"CONV":83.38},{"ANO_MES":"2025-06","AVAL_S4":345,"COMPRAS":294,"METAL":2831.9,"VALOR":670390,"METAL_750":1597.3,"METAL_24K":16.8,"METAL_PRATA":282.1,"TICKET_MEDIO":2319.69,"CONV":85.22},{"ANO_MES":"2025-07","AVAL_S4":401,"COMPRAS":340,"METAL":4144.8,"VALOR":867892,"METAL_750":2099.4,"METAL_24K":100,"METAL_PRATA":475.2,"TICKET_MEDIO":2590.72,"CONV":84.79},{"ANO_MES":"2025-08","AVAL_S4":392,"COMPRAS":331,"METAL":4477.9,"VALOR":1013538,"METAL_750":2258.3,"METAL_24K":175.3,"METAL_PRATA":242.6,"TICKET_MEDIO":3080.66,"CONV":84.44},{"ANO_MES":"2025-09","AVAL_S4":355,"COMPRAS":318,"METAL":4050.1,"VALOR":892069,"METAL_750":2107.9,"METAL_24K":25,"METAL_PRATA":592,"TICKET_MEDIO":2868.39,"CONV":89.58},{"ANO_MES":"2025-10","AVAL_S4":419,"COMPRAS":356,"METAL":4428.1,"VALOR":1115109,"METAL_750":2323.2,"METAL_24K":0,"METAL_PRATA":74.2,"TICKET_MEDIO":3167.92,"CONV":84.96},{"ANO_MES":"2025-11","AVAL_S4":379,"COMPRAS":326,"METAL":4044.7,"VALOR":1150052,"METAL_750":2288.7,"METAL_24K":128.2,"METAL_PRATA":147.6,"TICKET_MEDIO":3560.53,"CONV":86.02}]};
 
-function updateKPIs(data) {
-  const aval = data.reduce((a,r)=>a+r.AVAL_S4,0);
-  const comp = data.reduce((a,r)=>a+r.COMPRAS,0);
-  const conv = (comp/aval*100).toFixed(2);
-  const metal = data.reduce((a,r)=>a+r.METAL,0);
+let F = { loja:'TODAS', ano:'TODOS', metal:'TOTAL', meses:23 };
+let mainChart=null, valorChart=null;
+
+function fmtN(n){ return Math.round(n).toLocaleString('pt-BR'); }
+function fmtR(n){ return 'R$ '+Math.round(n).toLocaleString('pt-BR'); }
+function fmtMes(s){ const[y,m]=s.split('-'); return y+'/'+m; }
+
+function getMetalKey(){ return {TOTAL:'METAL',750:'METAL_750','24K':'METAL_24K',PRATA:'METAL_PRATA'}[F.metal]||'METAL'; }
+function getMetalLabel(){ return {TOTAL:'Metal Total (g)',750:'Ouro 750/18k (g)','24K':'Ouro 24K (g)',PRATA:'Prata (g)'}[F.metal]||'Metal (g)'; }
+
+function getFilteredData(){
+  const lojas = F.loja==='TODAS' ? ['24K','GTI','GTT'] : [F.loja];
+  const combined = {};
+  lojas.forEach(l=>{
+    let rows = RAW[l];
+    if(F.ano!=='TODOS') rows = rows.filter(r=>r.ANO_MES.startsWith(F.ano));
+    rows.forEach(r=>{
+      if(!combined[r.ANO_MES]) combined[r.ANO_MES]={ANO_MES:r.ANO_MES,AVAL_S4:0,COMPRAS:0,METAL:0,VALOR:0,METAL_750:0,METAL_24K:0,METAL_PRATA:0,TICKET_SUM:0,TICKET_CNT:0};
+      const c=combined[r.ANO_MES];
+      c.AVAL_S4+=r.AVAL_S4; c.COMPRAS+=r.COMPRAS;
+      c.METAL+=r.METAL; c.VALOR+=r.VALOR;
+      c.METAL_750+=r.METAL_750; c.METAL_24K+=r.METAL_24K; c.METAL_PRATA+=r.METAL_PRATA;
+      c.TICKET_SUM+=r.TICKET_MEDIO*r.COMPRAS; c.TICKET_CNT+=r.COMPRAS;
+    });
+  });
+  let arr = Object.values(combined).sort((a,b)=>a.ANO_MES.localeCompare(b.ANO_MES));
+  arr.forEach(r=>{ r.CONV=r.AVAL_S4>0?+(r.COMPRAS/r.AVAL_S4*100).toFixed(2):0; r.TICKET_MEDIO=r.TICKET_CNT>0?+(r.TICKET_SUM/r.TICKET_CNT).toFixed(0):0; });
+  if(F.meses<arr.length) arr=arr.slice(arr.length-F.meses);
+  return arr;
+}
+
+function updateAll(){
+  const data = getFilteredData();
+  if(!data.length) return;
+  const mk = getMetalKey();
+
+  // header
+  document.getElementById('hdr-period').textContent = fmtMes(data[0].ANO_MES)+' → '+fmtMes(data[data.length-1].ANO_MES)+' | '+data.length+' meses';
+  document.getElementById('leg-metal-txt').textContent = getMetalLabel();
+  document.getElementById('chart-title').textContent = (F.loja==='TODAS'?'Todas as Lojas':F.loja)+' — Avaliações | Compras | Conversão';
+
+  // KPIs
+  const aval  = data.reduce((a,r)=>a+r.AVAL_S4,0);
+  const comp  = data.reduce((a,r)=>a+r.COMPRAS,0);
+  const metal = data.reduce((a,r)=>a+r[mk],0);
   const valor = data.reduce((a,r)=>a+r.VALOR,0);
-  const last = data[data.length-1];
-  const prev = data[data.length-2];
+  const ticket= data.reduce((a,r)=>a+r.TICKET_SUM,0)/Math.max(1,data.reduce((a,r)=>a+r.TICKET_CNT,0));
+  const conv  = (comp/aval*100).toFixed(2);
+  const last=data[data.length-1], prev=data[data.length-2]||last;
+  const dd=(last.CONV-prev.CONV).toFixed(2);
 
-  document.getElementById('k-aval').textContent = fmtNum(aval);
-  document.getElementById('k-aval-s').textContent = data.length+' meses';
-  document.getElementById('k-comp').textContent = fmtNum(comp);
+  document.getElementById('k-aval').textContent   = fmtN(aval);
+  document.getElementById('k-aval-s').textContent = data.length+' meses | '+Math.round(aval/data.length)+'/mês';
+  document.getElementById('k-comp').textContent   = fmtN(comp);
   document.getElementById('k-comp-s').textContent = 'média '+Math.round(comp/data.length)+'/mês';
-  document.getElementById('k-conv').textContent = conv+'%';
-  const diff = last && prev ? (last.CONV - prev.CONV).toFixed(2) : 0;
-  const cls = diff >= 0 ? 'kpi-up' : 'kpi-dn';
-  const sig = diff >= 0 ? '+' : '';
-  document.getElementById('k-conv-s').innerHTML = '<span class="'+cls+'">'+sig+diff+'pp último mês</span>';
-  document.getElementById('k-metal').textContent = metal.toFixed(0)+'g';
-  document.getElementById('k-metal-s').textContent = fmtR(valor)+' total';
+  document.getElementById('k-conv').textContent   = conv+'%';
+  document.getElementById('k-conv-s').innerHTML   = '<span class="kpi-delta-'+(dd>=0?'up':'down')+'">'+(dd>=0?'+':'')+dd+'pp vs mês ant.</span>';
+  document.getElementById('k-metal').textContent  = metal.toFixed(0)+'g';
+  document.getElementById('k-metal-s').textContent= getMetalLabel().replace(' (g)','');
+  document.getElementById('k-ticket').textContent = fmtR(ticket);
+  document.getElementById('k-ticket-s').textContent= fmtR(valor)+' total';
+
+  renderMainChart(data, mk);
+  renderValorChart(data);
+  renderMetalBars(data);
+  renderTable(data);
 }
 
-function renderChart() {
-  const data = DATA[currentLoja];
-  const p = PALETTE[currentLoja];
+function renderMainChart(data, mk){
   const labels = data.map(r=>fmtMes(r.ANO_MES));
-
-  document.getElementById('lq-aval').style.background = p.aval;
-  document.getElementById('lq-comp').style.background = p.comp;
-  updateKPIs(data);
-
   const ctx = document.getElementById('mainChart').getContext('2d');
-  if(chart) chart.destroy();
-
-  chart = new Chart(ctx, {
-    data: {
+  if(mainChart) mainChart.destroy();
+  mainChart = new Chart(ctx,{
+    data:{
       labels,
-      datasets: [
-        {
-          type:'bar', label:'Avaliações s/4', data:data.map(r=>r.AVAL_S4),
-          backgroundColor:p.aval+'99', borderWidth:0, yAxisID:'y', order:3,
-          datalabels:{
-            anchor:'end', align:'end', offset:2,
-            color: p.aval === '#9a3412' ? '#fdba74' : (p.aval === '#065f46' ? '#6ee7b7' : (p.aval === '#7c3aed' ? '#c4b5fd' : '#93c5fd')),
-            font:{ size:10, weight:'600' },
-            formatter: v => v
-          }
+      datasets:[
+        { type:'bar', label:'Avaliações s/4', data:data.map(r=>r.AVAL_S4),
+          backgroundColor:'#3a2f10', borderColor:'#8B6914', borderWidth:1,
+          yAxisID:'y', order:3,
+          datalabels:{ anchor:'end', align:'end', offset:1, color:'#8B6914', font:{size:9,weight:'600'}, formatter:v=>v }
         },
-        {
-          type:'bar', label:'Compras', data:data.map(r=>r.COMPRAS),
-          backgroundColor:p.comp+'cc', borderWidth:0, yAxisID:'y', order:2,
-          datalabels:{
-            anchor:'center', align:'center',
-            color:'#fff',
-            font:{ size:10, weight:'700' },
-            formatter: v => v
-          }
+        { type:'bar', label:'Compras', data:data.map(r=>r.COMPRAS),
+          backgroundColor:'#6b5520', borderColor:'#D4AF37', borderWidth:1,
+          yAxisID:'y', order:2,
+          datalabels:{ anchor:'center', align:'center', color:'#F0D060', font:{size:9,weight:'700'}, formatter:v=>v }
         },
-        {
-          type:'line', label:'Índice de Conversão', data:data.map(r=>r.CONV),
-          borderColor:'#EF9F27', backgroundColor:'transparent',
-          borderWidth:2.5, pointRadius:5,
-          pointBackgroundColor:'#1a1a2e', pointBorderColor:'#EF9F27', pointBorderWidth:2,
-          tension:0.3, yAxisID:'y2', order:1,
-          datalabels:{
-            anchor:'end', align:'top', offset:4,
-            color:'#EF9F27',
-            font:{ size:10, weight:'700' },
-            formatter: v => v.toFixed(2)+'%'
-          }
+        { type:'line', label:'Índice de Conversão', data:data.map(r=>r.CONV),
+          borderColor:'#ffffff', backgroundColor:'transparent',
+          borderWidth:2, pointRadius:4, pointBackgroundColor:'#0a0a0a',
+          pointBorderColor:'#fff', pointBorderWidth:2, tension:0.3,
+          yAxisID:'y2', order:1,
+          datalabels:{ anchor:'end', align:'top', offset:4, color:'#fff', font:{size:9,weight:'700'}, formatter:v=>v.toFixed(2)+'%' }
         },
-        {
-          type:'line', label:'Metal (g)', data:data.map(r=>r.METAL),
-          borderColor:'#4ade80', backgroundColor:'transparent',
-          borderWidth:1.5, borderDash:[4,3],
-          pointRadius:3, pointBackgroundColor:'#4ade80',
+        { type:'line', label:getMetalLabel(), data:data.map(r=>r[mk]),
+          borderColor:'#D4AF37', backgroundColor:'transparent',
+          borderWidth:1.5, borderDash:[4,3], pointRadius:3, pointBackgroundColor:'#D4AF37',
           tension:0.3, yAxisID:'y3', order:0,
-          datalabels:{
-            anchor:'end', align:'top', offset:3,
-            color:'#4ade80',
-            font:{ size:9 },
-            formatter: v => v.toFixed(0)+'g'
-          }
+          datalabels:{ anchor:'end', align:'bottom', offset:3, color:'#D4AF37', font:{size:8}, formatter:v=>v.toFixed(0)+'g' }
         }
       ]
     },
-    options: {
+    options:{
       responsive:true, maintainAspectRatio:false,
-      layout:{ padding:{ top:28 } },
+      layout:{ padding:{ top:30, bottom:5 } },
       interaction:{ mode:'index', intersect:false },
       plugins:{
         legend:{ display:false },
         datalabels:{ display:true },
         tooltip:{
-          backgroundColor:'#0f172a',
-          borderColor:'#1e3a5f',
-          borderWidth:1,
-          titleColor:'#94a3b8',
-          bodyColor:'#e2e8f0',
-          callbacks:{
-            label: ctx => {
-              const v = ctx.parsed.y;
-              if(ctx.dataset.label.includes('Conversão')) return ' '+ctx.dataset.label+': '+v.toFixed(2)+'%';
-              if(ctx.dataset.label.includes('Metal')) return ' '+ctx.dataset.label+': '+v.toFixed(1)+'g';
-              return ' '+ctx.dataset.label+': '+fmtNum(v);
-            }
-          }
+          backgroundColor:'#111', borderColor:'#3a2f10', borderWidth:1,
+          titleColor:'#D4AF37', bodyColor:'#f0f0f0',
+          callbacks:{ label:ctx=>{ const v=ctx.parsed.y; if(ctx.dataset.label.includes('Conversão')) return ' '+ctx.dataset.label+': '+v.toFixed(2)+'%'; if(ctx.dataset.label.includes('g)')) return ' '+ctx.dataset.label+': '+v.toFixed(1)+'g'; return ' '+ctx.dataset.label+': '+fmtN(v); } }
         }
       },
       scales:{
-        x:{ ticks:{ autoSkip:false, maxRotation:45, font:{size:10}, color:'#475569' }, grid:{ color:'#1e293b' } },
-        y:{ position:'left', ticks:{ font:{size:10}, color:'#475569' }, grid:{ color:'#1e293b' } },
-        y2:{ position:'right', min:75, max:100, ticks:{ font:{size:10}, color:'#EF9F27', callback:v=>v+'%' }, grid:{ display:false } },
+        x:{ ticks:{ autoSkip:false, maxRotation:45, font:{size:10}, color:'#555' }, grid:{ color:'#1a1a1a' } },
+        y:{ position:'left', ticks:{ font:{size:10}, color:'#555' }, grid:{ color:'#1a1a1a' } },
+        y2:{ position:'right', min:70, max:100, ticks:{ font:{size:10}, color:'#888', callback:v=>v+'%' }, grid:{ display:false } },
         y3:{ display:false }
       }
     }
   });
 }
 
-function setLoja(loja) {
-  currentLoja = loja;
-  document.querySelectorAll('.tab').forEach(t => {
-    t.classList.remove('active');
-    if(t.getAttribute('onclick') === "setLoja('"+loja+"')") t.classList.add('active');
+function renderValorChart(data){
+  const ctx = document.getElementById('valorChart').getContext('2d');
+  if(valorChart) valorChart.destroy();
+  valorChart = new Chart(ctx,{
+    type:'bar',
+    data:{ labels:data.map(r=>fmtMes(r.ANO_MES)), datasets:[{ data:data.map(r=>r.VALOR), backgroundColor:'#3a2f10', borderColor:'#D4AF37', borderWidth:1 }] },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false}, datalabels:{display:false}, tooltip:{ backgroundColor:'#111', titleColor:'#D4AF37', bodyColor:'#f0f0f0', callbacks:{ label:ctx=>' '+fmtR(ctx.parsed.y) } } },
+      scales:{ x:{ ticks:{ font:{size:9}, color:'#444', maxRotation:45 }, grid:{display:false} }, y:{ ticks:{ font:{size:9}, color:'#444', callback:v=>'R$'+(v/1000).toFixed(0)+'k' }, grid:{ color:'#1a1a1a' } } }
+    }
   });
-  document.getElementById('view-chart').style.display = '';
-  document.getElementById('view-dax').style.display = 'none';
-  document.getElementById('tab-dax').classList.remove('active');
-  renderChart();
 }
 
-function setView(v) {
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById('tab-dax').classList.add('active');
-  document.getElementById('view-chart').style.display = 'none';
-  document.getElementById('view-dax').style.display = '';
+function renderMetalBars(data){
+  const t750  = data.reduce((a,r)=>a+r.METAL_750,0);
+  const t24k  = data.reduce((a,r)=>a+r.METAL_24K,0);
+  const tPrat = data.reduce((a,r)=>a+r.METAL_PRATA,0);
+  const tTot  = data.reduce((a,r)=>a+r.METAL,0);
+  const outros= Math.max(0, tTot - t750 - t24k - tPrat);
+  const items = [['750 / 18K',t750],['24K',t24k],['Prata',tPrat],['Outros',outros]];
+  const max = Math.max(...items.map(i=>i[1]));
+  document.getElementById('metal-bars').innerHTML = items.map(([l,v])=>`
+    <div class="bar-row">
+      <span class="bar-label">${l}</span>
+      <div class="bar-track"><div class="bar-fill" style="width:${max>0?(v/max*100).toFixed(1):0}%"></div></div>
+      <span class="bar-val">${v.toFixed(0)}g</span>
+    </div>`).join('');
 }
 
-function toggleDax(id) {
-  const el = document.getElementById(id);
-  el.classList.toggle('open');
+function renderTable(data){
+  const lojas = F.loja==='TODAS' ? ['24K','GTI','GTT'] : [F.loja];
+  let rows = [];
+  lojas.forEach(l=>{
+    let d = RAW[l];
+    if(F.ano!=='TODOS') d=d.filter(r=>r.ANO_MES.startsWith(F.ano));
+    if(F.meses<data.length){ const ref=data[0].ANO_MES; d=d.filter(r=>r.ANO_MES>=ref); }
+    d.forEach(r=>rows.push({...r,LOJA:l}));
+  });
+  rows.sort((a,b)=>b.ANO_MES.localeCompare(a.ANO_MES)||a.LOJA.localeCompare(b.LOJA));
+  const lojaColors={'24K':'#93c5fd','GTI':'#6ee7b7','GTT':'#fdba74'};
+  document.getElementById('tbl-body').innerHTML = rows.map(r=>{
+    const cc = r.CONV>=93?'conv-high':r.CONV>=85?'conv-mid':'conv-low';
+    return `<tr>
+      <td>${fmtMes(r.ANO_MES)}</td>
+      <td><span style="color:${lojaColors[r.LOJA]||'#fff'};font-weight:600">${r.LOJA}</span></td>
+      <td class="num">${fmtN(r.AVAL_S4)}</td>
+      <td class="num">${fmtN(r.COMPRAS)}</td>
+      <td class="${cc}">${r.CONV.toFixed(2)}%</td>
+      <td class="num">${r.METAL.toFixed(1)}g</td>
+      <td class="num">${fmtR(r.VALOR)}</td>
+      <td class="num">${fmtR(r.TICKET_MEDIO)}</td>
+    </tr>`;
+  }).join('');
 }
 
-function copyDax(id) {
-  const el = document.getElementById(id);
-  navigator.clipboard.writeText(el.innerText);
+// Chip filter logic
+document.querySelectorAll('.chip').forEach(chip=>{
+  chip.addEventListener('click',()=>{
+    const g=chip.dataset.group, v=chip.dataset.val;
+    document.querySelectorAll(`.chip[data-group="${g}"]`).forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    if(g==='loja') F.loja=v;
+    else if(g==='ano') F.ano=v;
+    else if(g==='metal') F.metal=v;
+    updateAll();
+  });
+});
+document.getElementById('sel-meses').addEventListener('change',function(){ F.meses=+this.value; updateAll(); });
+
+function resetFiltros(){
+  F={loja:'TODAS',ano:'TODOS',metal:'TOTAL',meses:23};
+  document.querySelectorAll('.chip').forEach(c=>{ c.classList.remove('active'); if(c.dataset.val==='TODAS'||c.dataset.val==='TODOS'||c.dataset.val==='TOTAL') c.classList.add('active'); });
+  document.getElementById('sel-meses').value='23';
+  updateAll();
 }
 
-renderChart();
+updateAll();
 </script>
 </body>
 </html>
