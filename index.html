@@ -235,7 +235,7 @@ body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color:
     <div class="chip" data-group="metal" data-val="750">750 / 18k</div>
     <div class="chip" data-group="metal" data-val="24K">24K</div>
     <div class="chip" data-group="metal" data-val="22K">22K</div>
-    <div class="chip" data-group="metal" data-val="PT">Platinado</div>
+    <div class="chip" data-group="metal" data-val="PT">Platina</div>
     <div class="chip" data-group="metal" data-val="720">720</div>
     <div class="chip" data-group="metal" data-val="BX">Baixo teor</div>
   </div>
@@ -366,7 +366,7 @@ function fmtR(n){ return 'R$ '+Math.round(n).toLocaleString('pt-BR'); }
 function fmtMes(s){ const[y,m]=s.split('-'); return y+'/'+m; }
 
 function getMetalKey(){ return {TOTAL:'METAL',750:'METAL_750','24K':'METAL_24K','22K':'METAL_22K',PT:'METAL_PT',720:'METAL_720',BX:'METAL_BX'}[F.metal]||'METAL'; }
-function getMetalLabel(){ return {TOTAL:'Total Ouro (g)',750:'Ouro 750/18k (g)','24K':'Ouro 24K (g)','22K':'Ouro 22K (g)',PT:'Platinado (g)',720:'Ouro 720 (g)',BX:'Baixo Teor (g)'}[F.metal]||'Metal (g)'; }
+function getMetalLabel(){ return {TOTAL:'Total Ouro (g)',750:'Ouro 750/18k (g)','24K':'Ouro 24K (g)','22K':'Ouro 22K (g)',PT:'Platina (g)',720:'Ouro 720 (g)',BX:'Baixo Teor (g)'}[F.metal]||'Metal (g)'; }
 
 function getLast13Window(){
   const t = new Date();
@@ -588,7 +588,7 @@ function renderMetalBars(data){
   const tPT  = data.reduce((a,r)=>a+r.METAL_PT,0);
   const t720 = data.reduce((a,r)=>a+r.METAL_720,0);
   const tBX  = data.reduce((a,r)=>a+r.METAL_BX,0);
-  const items = [['750 / 18K',t750],['720',t720],['Baixo Teor',tBX],['22K',t22k],['Platinado',tPT],['24K',t24k]];
+  const items = [['750 / 18K',t750],['720',t720],['Baixo Teor',tBX],['22K',t22k],['Platina',tPT],['24K',t24k]];
   items.sort((a,b)=>b[1]-a[1]);
   const total = items.reduce((a,i)=>a+i[1],0);
   const max   = items[0][1];
@@ -717,7 +717,7 @@ function openAvDetail(av){
     <div class="kpi"><div class="kpi-label">Conversão</div><div class="kpi-val" style="color:${convColor(d.conv)}">${d.conv.toFixed(1)}%</div><div class="kpi-sub">${convBadge(d.conv)}</div></div>
     <div class="kpi"><div class="kpi-label">Metal Total</div><div class="kpi-val">${d.metal.toFixed(0)}g</div><div class="kpi-sub">sem prata</div></div>
     <div class="kpi"><div class="kpi-label">Ticket Médio</div><div class="kpi-val">${fmtR(d.ticket)}</div><div class="kpi-sub">${fmtR(d.valor)} total</div></div>`;
-  const metals=[['750/18K',d.m750],['Baixo Teor',d.mbx],['720',d.m720],['22K',d.m22k],['Platinado',d.mpt],['24K',d.m24k]].sort((a,b)=>b[1]-a[1]);
+  const metals=[['750/18K',d.m750],['Baixo Teor',d.mbx],['720',d.m720],['22K',d.m22k],['Platina',d.mpt],['24K',d.m24k]].sort((a,b)=>b[1]-a[1]);
   const mtot=metals.reduce((s,m)=>s+m[1],0),mmax=metals[0][1]||1;
   document.getElementById('avd-metal-bars').innerHTML=metals.map(([l,v])=>`
     <div class="bar-row">
