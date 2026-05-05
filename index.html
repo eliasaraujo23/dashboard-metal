@@ -117,6 +117,51 @@ body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color:
 .tbl td.conv-mid  { color: var(--gold); font-weight: 600; text-align: right; }
 .tbl td.conv-low  { color: #f87171; font-weight: 600; text-align: right; }
 
+/* ── AVALIADORES ── */
+.av-section { padding: 0 16px 20px; }
+.av-header { display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:14px; padding-top:4px; border-top:1px solid var(--border-g); padding-top:14px; }
+.av-sort-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.av-period { font-size:10px; color:var(--muted); margin-left:10px; }
+.av-cards { display:grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap:10px; margin-bottom:14px; }
+.av-card {
+  background:var(--bg2); border:1px solid var(--border-g); border-radius:10px;
+  padding:14px; cursor:pointer; transition:border-color .15s, transform .1s;
+  position:relative; overflow:hidden;
+}
+.av-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--gold-dk),var(--gold)); }
+.av-card:hover { border-color:var(--gold); transform:translateY(-2px); }
+.av-card.selected { border-color:var(--gold); background:var(--bg3); }
+.av-card-name { font-size:13px; font-weight:700; color:var(--gold); margin-bottom:2px; }
+.av-card-loja { font-size:10px; color:var(--muted); margin-bottom:10px; }
+.av-card-rank { position:absolute; top:10px; right:12px; font-size:11px; font-weight:700; color:var(--gold-dk); }
+.av-stat-row { display:flex; justify-content:space-between; margin-bottom:5px; }
+.av-stat-label { font-size:9px; color:var(--muted); text-transform:uppercase; letter-spacing:.04em; }
+.av-stat-val { font-size:11px; font-weight:600; color:var(--white); }
+.av-conv-bar { height:4px; background:var(--bg4); border-radius:2px; margin-top:8px; overflow:hidden; }
+.av-conv-fill { height:100%; border-radius:2px; transition:width .4s; }
+.av-badge { display:inline-block; font-size:9px; padding:2px 6px; border-radius:3px; font-weight:700; margin-top:6px; }
+.av-badge-high { background:#14532d; color:#86efac; }
+.av-badge-mid  { background:var(--gold-dim); color:var(--gold-lt); }
+.av-badge-low  { background:#450a0a; color:#fca5a5; }
+
+/* DETAIL */
+.av-detail { background:var(--bg2); border:1px solid var(--gold-dk); border-radius:12px; padding:18px; margin-top:4px; }
+.av-detail-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; flex-wrap:wrap; gap:8px; }
+.av-detail-name { font-size:18px; font-weight:700; color:var(--gold); }
+.av-detail-loja { font-size:11px; color:var(--muted); background:var(--bg3); padding:3px 10px; border-radius:20px; margin-left:10px; }
+.av-close { background:transparent; border:1px solid var(--border); color:var(--muted); padding:5px 12px; border-radius:6px; cursor:pointer; font-size:11px; }
+.av-close:hover { border-color:var(--gold-dk); color:var(--gold); }
+.av-detail-kpis { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:8px; margin-bottom:14px; }
+.av-detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+
+@media (max-width:600px){
+  .av-cards { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .av-detail-kpis { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .av-detail-kpis .kpi:last-child { grid-column:span 2; }
+  .av-detail-grid { grid-template-columns:1fr; }
+  .av-header { flex-direction:column; }
+}
+
 /* ── FOOTER ── */
 .footer { text-align: center; padding: 12px; font-size: 10px; color: var(--muted2); border-top: 1px solid var(--border); }
 
@@ -212,7 +257,7 @@ body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color:
   <div class="section-header">
     <span class="section-title" id="chart-title">Avaliações | Compras | Conversão</span>
     <div class="legend">
-      <span class="leg"><span class="leg-sq" style="background:#2a2008;border:1px solid #6b5520"></span> Avaliações s/4</span>
+      <span class="leg"><span class="leg-sq" style="background:#2a2008;border:1px solid #6b5520"></span> Avaliações s/4 <span style="font-size:9px;color:var(--muted2)" title="Exclui não-compras por bijuteria (Motivo NC = 4)">(bijuterias excluídas)</span></span>
       <span class="leg"><span class="leg-sq" style="background:#5a4010;border:1px solid #D4AF37"></span> Compras</span>
       <span class="leg"><span class="leg-sq" style="background:rgba(212,175,55,0.35);border:1px solid #D4AF37"></span> <span id="leg-metal-txt">Metal Total (g)</span></span>
       <span class="leg"><span class="leg-ln" style="border-color:#fff"></span> Índice de Conversão</span>
@@ -258,6 +303,51 @@ body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color:
   </div>
 </div>
 
+<!-- AVALIADORES -->
+<div class="av-section">
+  <div class="av-header">
+    <div>
+      <span class="section-title">Desempenho por Avaliador</span>
+      <span class="av-period" id="av-period"></span>
+    </div>
+    <div class="av-sort-row">
+      <span class="filter-label">Ordenar por</span>
+      <div class="filter-group">
+        <div class="chip active" data-avsort="comp">Compras</div>
+        <div class="chip" data-avsort="conv">Conversão</div>
+        <div class="chip" data-avsort="metal">Metal</div>
+        <div class="chip" data-avsort="valor">Valor</div>
+        <div class="chip" data-avsort="ticket">Ticket Médio</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RANKING CARDS -->
+  <div class="av-cards" id="av-cards"></div>
+
+  <!-- DETAIL PANEL -->
+  <div class="av-detail" id="av-detail" style="display:none">
+    <div class="av-detail-header">
+      <div>
+        <span class="av-detail-name" id="avd-name"></span>
+        <span class="av-detail-loja" id="avd-loja"></span>
+      </div>
+      <button class="av-close" onclick="closeAvDetail()">✕ Fechar</button>
+    </div>
+    <div class="av-detail-kpis" id="avd-kpis"></div>
+    <div class="av-detail-grid">
+      <div class="panel">
+        <div class="panel-title">Distribuição por Tipo de Metal</div>
+        <div id="avd-metal-bars"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Conversão Mensal (%)</div>
+        <div style="height:160px"><canvas id="avd-chart"></canvas></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="footer">Gold Tech — Dashboard gerado com dados dos bancos 24K · GTI · GTT &nbsp;|&nbsp; Últimos 13 meses (atualizado automaticamente)</div>
 
 <script>
@@ -269,15 +359,7 @@ let F = { loja:'TODAS', metal:'TOTAL' };
 let mainChart=null, valorChart=null;
 
 // Dynamic last-13-months window based on today
-function getLast13Window(){
-  const today = new Date();
-  const endY = today.getMonth()===0 ? today.getFullYear()-1 : today.getFullYear();
-  const endM = today.getMonth()===0 ? 12 : today.getMonth(); // last completed month
-  const end = `${endY}-${String(endM).padStart(2,'0')}`;
-  const startD = new Date(endY, endM-13, 1);
-  const start = `${startD.getFullYear()}-${String(startD.getMonth()+1).padStart(2,'0')}`;
-  return { start, end };
-}
+
 
 function fmtN(n){ return Math.round(n).toLocaleString('pt-BR'); }
 function fmtR(n){ return 'R$ '+Math.round(n).toLocaleString('pt-BR'); }
@@ -521,45 +603,7 @@ function renderMetalBars(data){
   }).join('');
 }
 
-function renderValorChart(data){
-  const { start, end } = getLast13Window();
-  const labels = data.map(r=>fmtMes(r.ANO_MES));
-  const lojaColors = { '24K':'#1d4ed8', 'GTI':'#065f46', 'GTT':'#9a3412' };
-  const lojaBorder = { '24K':'#60a5fa', 'GTI':'#34d399', 'GTT':'#fb923c' };
-  const lojas = F.loja==='TODAS' ? ['24K','GTI','GTT'] : [F.loja];
 
-  const datasets = lojas.map(l=>{
-    const byMes = {};
-    RAW[l].filter(r=>r.ANO_MES>=start&&r.ANO_MES<=end).forEach(r=>{ byMes[r.ANO_MES]=r.VALOR; });
-    return {
-      label: l,
-      data: data.map(r=>byMes[r.ANO_MES]||0),
-      backgroundColor: lojaColors[l]+'cc',
-      borderColor: lojaBorder[l],
-      borderWidth: 1
-    };
-  });
-
-  const ctx = document.getElementById('valorChart').getContext('2d');
-  if(valorChart) valorChart.destroy();
-  valorChart = new Chart(ctx,{
-    type:'bar',
-    data:{ labels, datasets },
-    options:{
-      responsive:true, maintainAspectRatio:false,
-      plugins:{
-        legend:{ display: lojas.length>1, labels:{ color:'#666', font:{size:10}, boxWidth:10 } },
-        datalabels:{ display:false },
-        tooltip:{ backgroundColor:'#111', titleColor:'#D4AF37', bodyColor:'#f0f0f0',
-          callbacks:{ label:ctx=>' '+ctx.dataset.label+': '+fmtR(ctx.parsed.y) } }
-      },
-      scales:{
-        x:{ stacked:true, ticks:{ font:{size:9}, color:'#444', maxRotation:45 }, grid:{display:false} },
-        y:{ stacked:true, ticks:{ font:{size:9}, color:'#444', callback:v=>'R$'+(v/1000).toFixed(0)+'k' }, grid:{ color:'#1a1a1a' } }
-      }
-    }
-  });
-}
 
 let tblSort = { col:'ANO_MES', dir:'desc' };
 
@@ -604,6 +648,15 @@ function renderTable(data){
   }).join('');
 }
 
+function resetFiltros(){
+  F={ loja:'TODAS', metal:'TOTAL' };
+  document.querySelectorAll('.chip').forEach(c=>{
+    c.classList.remove('active');
+    if(c.dataset.val==='TODAS'||c.dataset.val==='TOTAL') c.classList.add('active');
+  });
+  updateAll();
+}
+
 // Chip filter logic
 document.querySelectorAll('.chip').forEach(chip=>{
   chip.addEventListener('click',()=>{
@@ -627,13 +680,70 @@ document.addEventListener('click', e=>{
   renderTable(getFilteredData());
 });
 
-function resetFiltros(){
-  F={ loja:'TODAS', metal:'TOTAL' };
-  document.querySelectorAll('.chip').forEach(c=>{ c.classList.remove('active'); if(c.dataset.val==='TODAS'||c.dataset.val==='TOTAL') c.classList.add('active'); });
-  updateAll();
-}
-
 updateAll();
+
+// ── AVALIADORES ──
+const AV_DATA=[{"av":"Andressa","loja":"GTT","aval":1485,"comp":1276,"conv":85.9,"metal":15244.4,"valor":3496728,"ticket":2779,"m750":7574.1,"m720":2821.1,"mbx":3560.7,"m22k":364.0,"mpt":681.1,"m24k":174.4,"monthly":{"2025-04":{"aval":124,"comp":109,"conv":87.9,"metal":1242.8,"valor":270293},"2025-05":{"aval":98,"comp":82,"conv":83.7,"metal":1023.8,"valor":216872},"2025-06":{"aval":121,"comp":100,"conv":82.6,"metal":744.8,"valor":167218},"2025-07":{"aval":131,"comp":103,"conv":78.6,"metal":1538.1,"valor":270892},"2025-08":{"aval":149,"comp":129,"conv":86.6,"metal":1747.8,"valor":382218},"2025-09":{"aval":147,"comp":132,"conv":89.8,"metal":1572.5,"valor":336050},"2025-10":{"aval":163,"comp":139,"conv":85.3,"metal":1702.5,"valor":416202},"2025-11":{"aval":124,"comp":106,"conv":85.5,"metal":1305.7,"valor":394372},"2025-12":{"aval":89,"comp":72,"conv":80.9,"metal":604.4,"valor":119939},"2026-01":{"aval":99,"comp":88,"conv":88.9,"metal":1147.0,"valor":282680},"2026-02":{"aval":48,"comp":40,"conv":83.3,"metal":402.8,"valor":123033},"2026-03":{"aval":106,"comp":92,"conv":86.8,"metal":910.9,"valor":222212},"2026-04":{"aval":86,"comp":84,"conv":97.7,"metal":1301.3,"valor":294747}}},{"av":"Clara","loja":"GTT","aval":1404,"comp":1238,"conv":88.2,"metal":14449.2,"valor":3824046,"ticket":3129,"m750":8596.1,"m720":2341.9,"mbx":2587.4,"m22k":481.4,"mpt":204.4,"m24k":134.0,"monthly":{"2025-04":{"aval":117,"comp":107,"conv":91.5,"metal":1117.4,"valor":276295},"2025-05":{"aval":115,"comp":93,"conv":80.9,"metal":973.2,"valor":269510},"2025-06":{"aval":94,"comp":88,"conv":93.6,"metal":955.5,"valor":258546},"2025-07":{"aval":135,"comp":117,"conv":86.7,"metal":1095.4,"valor":272501},"2025-08":{"aval":126,"comp":105,"conv":83.3,"metal":1148.9,"valor":301359},"2025-09":{"aval":115,"comp":98,"conv":85.2,"metal":1236.5,"valor":337316},"2025-10":{"aval":157,"comp":137,"conv":87.3,"metal":1907.0,"valor":523137},"2025-11":{"aval":117,"comp":107,"conv":91.5,"metal":1282.0,"valor":348515},"2025-12":{"aval":110,"comp":97,"conv":88.2,"metal":990.7,"valor":224914},"2026-01":{"aval":63,"comp":57,"conv":90.5,"metal":686.5,"valor":207400},"2026-02":{"aval":81,"comp":72,"conv":88.9,"metal":1087.6,"valor":338162},"2026-03":{"aval":72,"comp":64,"conv":88.9,"metal":884.0,"valor":195100},"2026-04":{"aval":102,"comp":96,"conv":94.1,"metal":1084.5,"valor":271291}}},{"av":"Daiana","loja":"GTT","aval":1308,"comp":1168,"conv":89.3,"metal":14348.2,"valor":3420050,"ticket":2963,"m750":7481.3,"m720":2181.7,"mbx":3812.9,"m22k":267.0,"mpt":361.0,"m24k":193.1,"monthly":{"2025-04":{"aval":99,"comp":85,"conv":85.9,"metal":763.2,"valor":163161},"2025-05":{"aval":135,"comp":120,"conv":88.9,"metal":1545.6,"valor":391979},"2025-06":{"aval":111,"comp":95,"conv":85.6,"metal":1256.7,"valor":286766},"2025-07":{"aval":115,"comp":103,"conv":89.6,"metal":1186.8,"valor":271369},"2025-08":{"aval":144,"comp":123,"conv":85.4,"metal":1712.3,"valor":366751},"2025-09":{"aval":118,"comp":112,"conv":94.9,"metal":1501.8,"valor":313143},"2025-10":{"aval":79,"comp":67,"conv":84.8,"metal":796.1,"valor":181558},"2025-11":{"aval":109,"comp":95,"conv":87.2,"metal":1147.5,"valor":307572},"2025-12":{"aval":103,"comp":93,"conv":90.3,"metal":1319.5,"valor":346520},"2026-01":{"aval":67,"comp":60,"conv":89.6,"metal":862.1,"valor":221939},"2026-02":{"aval":71,"comp":67,"conv":94.4,"metal":663.3,"valor":190402},"2026-03":{"aval":82,"comp":77,"conv":93.9,"metal":753.3,"valor":174235},"2026-04":{"aval":75,"comp":71,"conv":94.7,"metal":840.0,"valor":204655}}},{"av":"Paula","loja":"24K","aval":1073,"comp":1005,"conv":93.7,"metal":9248.0,"valor":2443410,"ticket":2493,"m750":6447.4,"m720":1210.6,"mbx":1203.8,"m22k":152.5,"mpt":154.4,"m24k":14.0,"monthly":{"2025-04":{"aval":83,"comp":78,"conv":94.0,"metal":497.9,"valor":140645},"2025-05":{"aval":109,"comp":106,"conv":97.2,"metal":927.5,"valor":261105},"2025-06":{"aval":82,"comp":72,"conv":87.8,"metal":694.9,"valor":205406},"2025-07":{"aval":107,"comp":99,"conv":92.5,"metal":767.6,"valor":202553},"2025-08":{"aval":36,"comp":32,"conv":88.9,"metal":221.4,"valor":61745},"2025-09":{"aval":129,"comp":121,"conv":93.8,"metal":1505.7,"valor":298646},"2025-10":{"aval":104,"comp":97,"conv":93.3,"metal":897.1,"valor":235036},"2025-11":{"aval":101,"comp":93,"conv":92.1,"metal":903.1,"valor":235340},"2025-12":{"aval":99,"comp":96,"conv":97.0,"metal":961.5,"valor":289991},"2026-01":{"aval":58,"comp":50,"conv":86.2,"metal":539.0,"valor":142826},"2026-02":{"aval":47,"comp":46,"conv":97.9,"metal":424.2,"valor":115144},"2026-03":{"aval":59,"comp":58,"conv":98.3,"metal":417.8,"valor":111755},"2026-04":{"aval":59,"comp":57,"conv":96.6,"metal":490.3,"valor":143218}}},{"av":"Clarisse","loja":"24K","aval":939,"comp":896,"conv":95.4,"metal":10643.5,"valor":2291208,"ticket":2600,"m750":7519.0,"m720":1387.7,"mbx":1419.0,"m22k":76.3,"mpt":99.2,"m24k":27.0,"monthly":{"2025-04":{"aval":67,"comp":64,"conv":95.5,"metal":808.9,"valor":229555},"2025-05":{"aval":65,"comp":60,"conv":92.3,"metal":532.4,"valor":131075},"2025-06":{"aval":70,"comp":68,"conv":97.1,"metal":986.2,"valor":231554},"2025-07":{"aval":84,"comp":82,"conv":97.6,"metal":1271.1,"valor":197920},"2025-08":{"aval":89,"comp":84,"conv":94.4,"metal":833.9,"valor":153587},"2025-09":{"aval":77,"comp":75,"conv":97.4,"metal":1559.9,"valor":206030},"2025-10":{"aval":110,"comp":102,"conv":92.7,"metal":1063.6,"valor":267462},"2025-11":{"aval":81,"comp":78,"conv":96.3,"metal":835.5,"valor":171222},"2025-12":{"aval":66,"comp":60,"conv":90.9,"metal":556.5,"valor":135168},"2026-01":{"aval":50,"comp":50,"conv":100.0,"metal":402.9,"valor":91900},"2026-02":{"aval":46,"comp":43,"conv":93.5,"metal":511.9,"valor":157260},"2026-03":{"aval":71,"comp":68,"conv":95.8,"metal":687.5,"valor":171600},"2026-04":{"aval":63,"comp":62,"conv":98.4,"metal":593.2,"valor":146875}}},{"av":"Thays","loja":"GTI","aval":719,"comp":641,"conv":89.2,"metal":11105.1,"valor":2796071,"ticket":4389,"m750":7626.0,"m720":1200.0,"mbx":1324.2,"m22k":709.8,"mpt":77.3,"m24k":97.0,"monthly":{"2025-04":{"aval":59,"comp":53,"conv":89.8,"metal":819.7,"valor":207975},"2025-05":{"aval":87,"comp":77,"conv":88.5,"metal":1438.0,"valor":441842},"2025-06":{"aval":64,"comp":58,"conv":90.6,"metal":642.2,"valor":111094},"2025-07":{"aval":78,"comp":70,"conv":89.7,"metal":1444.8,"valor":384976},"2025-08":{"aval":73,"comp":63,"conv":86.3,"metal":861.3,"valor":218476},"2025-09":{"aval":59,"comp":55,"conv":93.2,"metal":1100.0,"valor":228408},"2025-10":{"aval":95,"comp":84,"conv":88.4,"metal":1172.9,"valor":338131},"2025-11":{"aval":72,"comp":63,"conv":87.5,"metal":1508.2,"valor":358715},"2025-12":{"aval":44,"comp":37,"conv":84.1,"metal":658.2,"valor":149045},"2026-01":{"aval":27,"comp":25,"conv":92.6,"metal":560.5,"valor":143518},"2026-02":{"aval":4,"comp":4,"conv":100.0,"metal":44.5,"valor":12747},"2026-03":{"aval":26,"comp":23,"conv":88.5,"metal":562.1,"valor":125909},"2026-04":{"aval":31,"comp":29,"conv":93.5,"metal":292.6,"valor":75235}}},{"av":"Caroline","loja":"GTI","aval":680,"comp":618,"conv":90.9,"metal":12701.0,"valor":3664678,"ticket":5958,"m750":9915.8,"m720":1482.5,"mbx":452.6,"m22k":265.5,"mpt":133.3,"m24k":322.6,"monthly":{"2025-04":{"aval":54,"comp":50,"conv":92.6,"metal":1440.1,"valor":423773},"2025-05":{"aval":96,"comp":89,"conv":92.7,"metal":1373.4,"valor":366888},"2025-06":{"aval":63,"comp":58,"conv":92.1,"metal":1210.1,"valor":388297},"2025-07":{"aval":79,"comp":70,"conv":88.6,"metal":2712.3,"valor":790788},"2025-08":{"aval":58,"comp":49,"conv":84.5,"metal":852.0,"valor":161527},"2025-09":{"aval":41,"comp":38,"conv":92.7,"metal":642.7,"valor":160517},"2025-10":{"aval":85,"comp":73,"conv":85.9,"metal":1545.7,"valor":414675},"2025-11":{"aval":62,"comp":56,"conv":90.3,"metal":900.0,"valor":338497},"2025-12":{"aval":42,"comp":41,"conv":97.6,"metal":634.8,"valor":228186},"2026-01":{"aval":17,"comp":16,"conv":94.1,"metal":352.5,"valor":95817},"2026-02":{"aval":40,"comp":36,"conv":90.0,"metal":429.2,"valor":127378},"2026-03":{"aval":17,"comp":17,"conv":100.0,"metal":362.3,"valor":114425},"2026-04":{"aval":26,"comp":25,"conv":96.2,"metal":246.0,"valor":53910}}},{"av":"Larissa","loja":"GTT","aval":211,"comp":184,"conv":87.2,"metal":1927.7,"valor":607198,"ticket":3336,"m750":1312.4,"m720":366.0,"mbx":148.9,"m22k":68.4,"mpt":2.8,"m24k":25.0,"monthly":{"2025-12":{"aval":2,"comp":2,"conv":100.0,"metal":43.0,"valor":15450},"2026-01":{"aval":43,"comp":38,"conv":88.4,"metal":249.4,"valor":83150},"2026-02":{"aval":70,"comp":61,"conv":87.1,"metal":486.5,"valor":162938},"2026-03":{"aval":53,"comp":46,"conv":86.8,"metal":651.9,"valor":208009},"2026-04":{"aval":43,"comp":37,"conv":86.0,"metal":496.9,"valor":137651}}},{"av":"Ana Clara","loja":"GTT","aval":101,"comp":86,"conv":85.1,"metal":837.1,"valor":200651,"ticket":2360,"m750":518.0,"m720":171.2,"mbx":71.1,"m22k":67.8,"mpt":9.0,"m24k":0.0,"monthly":{"2025-04":{"aval":14,"comp":13,"conv":92.9,"metal":97.2,"valor":24215},"2025-05":{"aval":9,"comp":7,"conv":77.8,"metal":77.7,"valor":21803},"2025-06":{"aval":11,"comp":11,"conv":100.0,"metal":68.1,"valor":10915},"2025-07":{"aval":12,"comp":11,"conv":91.7,"metal":109.6,"valor":20760},"2025-08":{"aval":9,"comp":7,"conv":77.8,"metal":28.6,"valor":7780},"2025-09":{"aval":3,"comp":2,"conv":66.7,"metal":9.7,"valor":930},"2025-10":{"aval":18,"comp":12,"conv":66.7,"metal":73.5,"valor":13672},"2025-11":{"aval":14,"comp":12,"conv":85.7,"metal":284.3,"valor":85304},"2025-12":{"aval":11,"comp":11,"conv":100.0,"metal":88.4,"valor":15272}}},{"av":"Helton","loja":"GTI","aval":30,"comp":30,"conv":100.0,"metal":1036.3,"valor":453428,"ticket":15114,"m750":828.9,"m720":21.6,"mbx":38.6,"m22k":0.0,"mpt":0.0,"m24k":147.1,"monthly":{"2025-04":{"aval":3,"comp":3,"conv":100.0,"metal":39.0,"valor":11807},"2025-05":{"aval":1,"comp":1,"conv":100.0,"metal":13.2,"valor":2000},"2025-06":{"aval":4,"comp":4,"conv":100.0,"metal":66.7,"valor":31080},"2025-07":{"aval":1,"comp":1,"conv":100.0,"metal":25.1,"valor":7000},"2025-08":{"aval":4,"comp":4,"conv":100.0,"metal":72.2,"valor":22170},"2025-09":{"aval":3,"comp":3,"conv":100.0,"metal":39.3,"valor":14195},"2025-10":{"aval":3,"comp":3,"conv":100.0,"metal":32.1,"valor":9936},"2025-11":{"aval":1,"comp":1,"conv":100.0,"metal":25.1,"valor":13000},"2025-12":{"aval":4,"comp":4,"conv":100.0,"metal":215.3,"valor":76360},"2026-01":{"aval":3,"comp":3,"conv":100.0,"metal":267.0,"valor":134330},"2026-02":{"aval":1,"comp":1,"conv":100.0,"metal":182.7,"valor":97000},"2026-03":{"aval":1,"comp":1,"conv":100.0,"metal":31.1,"valor":21150},"2026-04":{"aval":1,"comp":1,"conv":100.0,"metal":27.4,"valor":13400}}}];
+
+let avSort='comp',avSelected=null,avChart=null;
+function convBadge(c){return c>=93?'<span class="av-badge av-badge-high">★ Alta conversão</span>':c>=85?'<span class="av-badge av-badge-mid">● Boa conversão</span>':'<span class="av-badge av-badge-low">▼ Atenção</span>';}
+function convColor(c){return c>=93?'#4ade80':c>=85?'#D4AF37':'#f87171';}
+function lojaTag(l){return l+' — '+({'24K':'Meier','GTI':'Ipanema','GTT':'Tijuca'}[l]||l);}
+function renderAvCards(){
+  const sorted=[...AV_DATA].sort((a,b)=>avSort==='conv'?b.conv-a.conv:avSort==='metal'?b.metal-a.metal:avSort==='valor'?b.valor-a.valor:avSort==='ticket'?b.ticket-a.ticket:b.comp-a.comp);
+  const maxComp=sorted[0]?.comp||1;
+  document.getElementById('av-cards').innerHTML=sorted.map((d,i)=>`
+    <div class="av-card${avSelected===d.av?' selected':''}" onclick="openAvDetail('${d.av}')">
+      <div class="av-card-rank">#${i+1}</div>
+      <div class="av-card-name">${d.av}</div>
+      <div class="av-card-loja">${lojaTag(d.loja)}</div>
+      <div class="av-stat-row"><span class="av-stat-label">Compras</span><span class="av-stat-val">${fmtN(d.comp)}</span></div>
+      <div class="av-stat-row"><span class="av-stat-label">Conversão</span><span class="av-stat-val" style="color:${convColor(d.conv)}">${d.conv.toFixed(1)}%</span></div>
+      <div class="av-stat-row"><span class="av-stat-label">Metal</span><span class="av-stat-val">${d.metal.toFixed(0)}g</span></div>
+      <div class="av-stat-row"><span class="av-stat-label">Ticket Médio</span><span class="av-stat-val">${fmtR(d.ticket)}</span></div>
+      <div class="av-conv-bar"><div class="av-conv-fill" style="width:${(d.comp/maxComp*100).toFixed(1)}%;background:${convColor(d.conv)}"></div></div>
+      ${convBadge(d.conv)}
+    </div>`).join('');
+}
+function openAvDetail(av){
+  const d=AV_DATA.find(x=>x.av===av);if(!d)return;
+  avSelected=av;renderAvCards();
+  document.getElementById('avd-name').textContent=d.av;
+  document.getElementById('avd-loja').textContent=lojaTag(d.loja);
+  document.getElementById('avd-kpis').innerHTML=`
+    <div class="kpi"><div class="kpi-label">Avaliações</div><div class="kpi-val">${fmtN(d.aval)}</div><div class="kpi-sub">registros</div></div>
+    <div class="kpi"><div class="kpi-label">Compras</div><div class="kpi-val">${fmtN(d.comp)}</div><div class="kpi-sub">concluídas</div></div>
+    <div class="kpi"><div class="kpi-label">Conversão</div><div class="kpi-val" style="color:${convColor(d.conv)}">${d.conv.toFixed(1)}%</div><div class="kpi-sub">${convBadge(d.conv)}</div></div>
+    <div class="kpi"><div class="kpi-label">Metal Total</div><div class="kpi-val">${d.metal.toFixed(0)}g</div><div class="kpi-sub">sem prata</div></div>
+    <div class="kpi"><div class="kpi-label">Ticket Médio</div><div class="kpi-val">${fmtR(d.ticket)}</div><div class="kpi-sub">${fmtR(d.valor)} total</div></div>`;
+  const metals=[['750/18K',d.m750],['Baixo Teor',d.mbx],['720',d.m720],['22K',d.m22k],['Platinado',d.mpt],['24K',d.m24k]].sort((a,b)=>b[1]-a[1]);
+  const mtot=metals.reduce((s,m)=>s+m[1],0),mmax=metals[0][1]||1;
+  document.getElementById('avd-metal-bars').innerHTML=metals.map(([l,v])=>`
+    <div class="bar-row">
+      <span class="bar-label">${l}</span>
+      <div class="bar-track"><div class="bar-fill" style="width:${(v/mmax*100).toFixed(1)}%"></div></div>
+      <span class="bar-val">${v.toFixed(0)}g</span>
+      <span style="font-size:10px;color:var(--gold-dk);width:36px;text-align:right;flex-shrink:0">${mtot>0?(v/mtot*100).toFixed(1):0}%</span>
+    </div>`).join('');
+  const meses=Object.keys(d.monthly).sort(),convs=meses.map(m=>d.monthly[m].conv);
+  const ctx2=document.getElementById('avd-chart').getContext('2d');
+  if(avChart){avChart.destroy();avChart=null;}
+  avChart=new Chart(ctx2,{type:'line',data:{labels:meses.map(m=>{const[y,mo]=m.split('-');return y+'/'+mo;}),datasets:[{data:convs,borderColor:'#D4AF37',backgroundColor:'rgba(212,175,55,0.12)',borderWidth:2.5,pointRadius:5,fill:true,pointBackgroundColor:convs.map(c=>convColor(c)),pointBorderColor:'#0a0a0a',pointBorderWidth:1.5,tension:0.3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},datalabels:{anchor:'top',align:'top',offset:3,color:c=>convColor(c.dataset.data[c.dataIndex]),font:{size:9,weight:'700'},formatter:v=>v.toFixed(1)+'%'},tooltip:{backgroundColor:'#111',titleColor:'#D4AF37',bodyColor:'#f0f0f0',callbacks:{label:c=>' Conversão: '+c.parsed.y.toFixed(1)+'%'}}},scales:{x:{ticks:{font:{size:9},color:'#555',maxRotation:45},grid:{color:'#1a1a1a'}},y:{min:60,max:105,ticks:{font:{size:9},color:'#555',callback:v=>v+'%'},grid:{color:'#1a1a1a'}}}}});
+  document.getElementById('av-detail').style.display='block';
+  setTimeout(()=>document.getElementById('av-detail').scrollIntoView({behavior:'smooth',block:'start'}),50);
+}
+function closeAvDetail(){
+  avSelected=null;if(avChart){avChart.destroy();avChart=null;}
+  document.getElementById('av-detail').style.display='none';
+  renderAvCards();
+}
+document.querySelectorAll('[data-avsort]').forEach(c=>{
+  c.addEventListener('click',()=>{
+    document.querySelectorAll('[data-avsort]').forEach(x=>x.classList.remove('active'));
+    c.classList.add('active');avSort=c.dataset.avsort;renderAvCards();
+  });
+});
+renderAvCards();
 </script>
 </body>
 </html>
