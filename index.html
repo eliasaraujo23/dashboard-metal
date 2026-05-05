@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard Metal</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Segoe UI', Arial, sans-serif; background: #1a1a2e; color: #e0e0e0; font-size: 13px; }
@@ -89,7 +90,7 @@
   }
   .leg-sq { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
   .leg-ln { width: 20px; height: 2px; border-radius: 1px; flex-shrink: 0; }
-  .chart-box { position: relative; width: 100%; height: 280px; }
+  .chart-box { position: relative; width: 100%; height: 340px; }
 
   .dax-section { padding: 12px 16px 16px; }
   .dax-header { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 10px; }
@@ -362,6 +363,7 @@ const PALETTE = {
 
 let currentLoja = "TODAS";
 let chart = null;
+Chart.register(ChartDataLabels);
 
 function fmtMes(s) {
   const [y,m] = s.split('-');
@@ -408,17 +410,61 @@ function renderChart() {
     data: {
       labels,
       datasets: [
-        { type:'bar', label:'Avaliações s/4', data:data.map(r=>r.AVAL_S4), backgroundColor:p.aval+'99', borderWidth:0, yAxisID:'y', order:3 },
-        { type:'bar', label:'Compras', data:data.map(r=>r.COMPRAS), backgroundColor:p.comp+'cc', borderWidth:0, yAxisID:'y', order:2 },
-        { type:'line', label:'Índice de Conversão', data:data.map(r=>r.CONV), borderColor:'#EF9F27', backgroundColor:'transparent', borderWidth:2.5, pointRadius:5, pointBackgroundColor:'#1a1a2e', pointBorderColor:'#EF9F27', pointBorderWidth:2, tension:0.3, yAxisID:'y2', order:1 },
-        { type:'line', label:'Metal (g)', data:data.map(r=>r.METAL), borderColor:'#4ade80', backgroundColor:'transparent', borderWidth:1.5, borderDash:[4,3], pointRadius:3, pointBackgroundColor:'#4ade80', tension:0.3, yAxisID:'y3', order:0 }
+        {
+          type:'bar', label:'Avaliações s/4', data:data.map(r=>r.AVAL_S4),
+          backgroundColor:p.aval+'99', borderWidth:0, yAxisID:'y', order:3,
+          datalabels:{
+            anchor:'end', align:'end', offset:2,
+            color: p.aval === '#9a3412' ? '#fdba74' : (p.aval === '#065f46' ? '#6ee7b7' : (p.aval === '#7c3aed' ? '#c4b5fd' : '#93c5fd')),
+            font:{ size:10, weight:'600' },
+            formatter: v => v
+          }
+        },
+        {
+          type:'bar', label:'Compras', data:data.map(r=>r.COMPRAS),
+          backgroundColor:p.comp+'cc', borderWidth:0, yAxisID:'y', order:2,
+          datalabels:{
+            anchor:'center', align:'center',
+            color:'#fff',
+            font:{ size:10, weight:'700' },
+            formatter: v => v
+          }
+        },
+        {
+          type:'line', label:'Índice de Conversão', data:data.map(r=>r.CONV),
+          borderColor:'#EF9F27', backgroundColor:'transparent',
+          borderWidth:2.5, pointRadius:5,
+          pointBackgroundColor:'#1a1a2e', pointBorderColor:'#EF9F27', pointBorderWidth:2,
+          tension:0.3, yAxisID:'y2', order:1,
+          datalabels:{
+            anchor:'end', align:'top', offset:4,
+            color:'#EF9F27',
+            font:{ size:10, weight:'700' },
+            formatter: v => v.toFixed(2)+'%'
+          }
+        },
+        {
+          type:'line', label:'Metal (g)', data:data.map(r=>r.METAL),
+          borderColor:'#4ade80', backgroundColor:'transparent',
+          borderWidth:1.5, borderDash:[4,3],
+          pointRadius:3, pointBackgroundColor:'#4ade80',
+          tension:0.3, yAxisID:'y3', order:0,
+          datalabels:{
+            anchor:'end', align:'top', offset:3,
+            color:'#4ade80',
+            font:{ size:9 },
+            formatter: v => v.toFixed(0)+'g'
+          }
+        }
       ]
     },
     options: {
       responsive:true, maintainAspectRatio:false,
+      layout:{ padding:{ top:28 } },
       interaction:{ mode:'index', intersect:false },
       plugins:{
         legend:{ display:false },
+        datalabels:{ display:true },
         tooltip:{
           backgroundColor:'#0f172a',
           borderColor:'#1e3a5f',
