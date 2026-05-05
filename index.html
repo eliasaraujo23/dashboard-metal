@@ -31,6 +31,8 @@ body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color:
   border-bottom: 1px solid var(--border-g);
   padding: 12px 16px;
   display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.7);
 }
 .logo { display: flex; align-items: center; gap: 10px; }
 .logo-icon { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg,#D4AF37,#8B6914); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink:0; }
@@ -44,6 +46,8 @@ body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color:
   border-bottom: 1px solid var(--border);
   padding: 8px 16px;
   display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  position: sticky; top: 57px; z-index: 99;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
 }
 .filter-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; white-space: nowrap; }
 .filter-group { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
@@ -162,12 +166,44 @@ body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color:
   .av-header { flex-direction:column; }
 }
 
+/* ── ANALYTICS ── */
+.analytics-section { padding: 0 16px 20px; border-top: 1px solid var(--border-g); margin-top: 8px; padding-top: 14px; }
+.analytics-grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-top: 12px; }
+.analytics-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+.analytics-header { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:14px; }
+.insight-box { background:var(--bg3); border-left:3px solid var(--gold); border-radius:0 6px 6px 0; padding:8px 12px; font-size:11px; color:var(--white); line-height:1.6; margin-top:10px; }
+.insight-box strong { color:var(--gold); }
+.fb-row { display:flex; align-items:center; gap:8px; margin-bottom:6px; cursor:pointer; padding:4px 6px; border-radius:6px; transition:background .12s; }
+.fb-row:hover { background:var(--bg3); }
+.fb-code { font-size:11px; font-weight:700; color:var(--gold); width:42px; flex-shrink:0; }
+.fb-bar-wrap { flex:1; height:7px; background:var(--bg4); border-radius:4px; overflow:hidden; }
+.fb-bar { height:100%; border-radius:4px; }
+.fb-nums { font-size:10px; color:var(--muted); width:90px; text-align:right; flex-shrink:0; }
+.fb-conv { font-size:10px; font-weight:700; width:38px; text-align:right; flex-shrink:0; }
+.heat-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; margin-top:8px; }
+.heat-cell { height:28px; border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:600; }
+.nc-row { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+.nc-label { font-size:10px; color:var(--white); width:160px; flex-shrink:0; }
+.nc-bar-wrap { flex:1; height:8px; background:var(--bg4); border-radius:4px; overflow:hidden; }
+.nc-bar { height:100%; border-radius:4px; background:linear-gradient(90deg,#450a0a,#f87171); }
+.nc-val { font-size:10px; color:#f87171; width:30px; text-align:right; flex-shrink:0; }
+.nc-price { font-size:10px; color:var(--muted); width:70px; text-align:right; flex-shrink:0; }
+.slot-peak { background:rgba(212,175,55,0.15); border:1px solid var(--gold-dk); border-radius:6px; padding:6px 10px; text-align:center; }
+.slot-peak-time { font-size:14px; font-weight:700; color:var(--gold); }
+.slot-peak-label { font-size:9px; color:var(--muted); margin-top:2px; }
+@media(max-width:600px){
+  .analytics-grid-3 { grid-template-columns:1fr; }
+  .analytics-grid-2 { grid-template-columns:1fr; }
+  .nc-label { width:120px; font-size:9px; }
+}
+
 /* ── FOOTER ── */
 .footer { text-align: center; padding: 12px; font-size: 10px; color: var(--muted2); border-top: 1px solid var(--border); }
 
 /* ── MOBILE ── */
 @media (max-width: 600px) {
-  .header { padding: 10px 12px; }
+  .header { padding: 10px 12px; top: 0; }
+  .filters { top: 52px; }
   .logo-text { font-size: 14px; }
   .logo-sub { display: none; }
   .header-right { font-size: 9px; }
@@ -327,7 +363,16 @@ body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color:
 <div class="table-section">
   <div class="section-header" style="margin-bottom:8px">
     <span class="section-title">Resumo Mensal Detalhado</span>
-    <span style="font-size:11px;color:#555">Clique no cabeçalho para ordenar</span>
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <span style="font-size:11px;color:#555">Mostrar:</span>
+      <div style="display:flex;gap:4px" id="tbl-limit-btns">
+        <button class="chip active" data-limit="6" onclick="setTblLimit(6,this)">6 meses</button>
+        <button class="chip" data-limit="13" onclick="setTblLimit(13,this)">13 meses</button>
+        <button class="chip" data-limit="999" onclick="setTblLimit(999,this)">Tudo</button>
+      </div>
+      <span style="font-size:11px;color:#555" id="tbl-count"></span>
+      <span style="font-size:11px;color:#555">· Clique no cabeçalho para ordenar</span>
+    </div>
   </div>
   <div class="tbl-wrap">
   <table class="tbl" id="resumo-table">
@@ -345,6 +390,46 @@ body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color:
     </thead>
     <tbody id="tbl-body"></tbody>
   </table>
+  </div>
+</div>
+
+<!-- ANALYTICS -->
+<div class="analytics-section">
+  <div class="analytics-header">
+    <span class="section-title">Análise Operacional — Feedback · Horário · Motivo de Não Compra</span>
+  </div>
+
+  <div class="analytics-grid-3">
+    <!-- FEEDBACK -->
+    <div class="panel" style="grid-column:span 1">
+      <div class="panel-title">Feedback — Conversão por Tipo</div>
+      <div id="fb-list"></div>
+      <div class="insight-box" id="fb-insight"></div>
+    </div>
+
+    <!-- HORÁRIO -->
+    <div class="panel" style="grid-column:span 2">
+      <div class="panel-title">Movimentação por Horário — Intervalos de 30 min</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px" id="slot-peaks"></div>
+      <div style="height:200px"><canvas id="slotChart"></canvas></div>
+      <div class="insight-box" id="slot-insight"></div>
+    </div>
+  </div>
+
+  <div class="analytics-grid-2" style="margin-top:10px">
+    <!-- MOTIVO NC -->
+    <div class="panel">
+      <div class="panel-title">Motivo de Não Compra — Análise de Perda</div>
+      <div id="nc-list"></div>
+      <div class="insight-box" id="nc-insight"></div>
+    </div>
+
+    <!-- HEATMAP HORA x DIA SEMANA -->
+    <div class="panel">
+      <div class="panel-title">Heatmap — Volume por Hora do Dia</div>
+      <div style="height:200px"><canvas id="heatChart"></canvas></div>
+      <div class="insight-box" id="heat-insight"></div>
+    </div>
   </div>
 </div>
 
@@ -606,6 +691,14 @@ function renderMetalBars(data){
 
 
 let tblSort = { col:'ANO_MES', dir:'desc' };
+let tblLimit = 6;
+
+function setTblLimit(n, btn){
+  tblLimit = n;
+  document.querySelectorAll('#tbl-limit-btns .chip').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  renderTable(getFilteredData());
+}
 
 function renderTable(data){
   const { start, end } = getLast13Window();
@@ -617,6 +710,12 @@ function renderTable(data){
   });
 
   // Sort
+  // Apply limit — take most recent N months
+  const allMonths = [...new Set(rows.map(r=>r.ANO_MES))].sort((a,b)=>b.localeCompare(a));
+  const limitedMonths = new Set(allMonths.slice(0, tblLimit));
+  rows = rows.filter(r=>limitedMonths.has(r.ANO_MES));
+  document.getElementById('tbl-count').textContent = `${limitedMonths.size} meses · ${rows.length} linhas`;
+
   rows.sort((a,b)=>{
     const va = a[tblSort.col], vb = b[tblSort.col];
     const cmp = typeof va==='string' ? va.localeCompare(vb) : va-vb;
@@ -745,6 +844,98 @@ document.querySelectorAll('[data-avsort]').forEach(c=>{
   });
 });
 renderAvCards();
+
+// ── ANALYTICS DATA ──
+const FB_DATA=[{"FEEDBACK":"R","total":4535,"compras":4161,"nc":374,"conv":91.8},{"FEEDBACK":"L","total":877,"compras":720,"nc":157,"conv":82.1},{"FEEDBACK":"G","total":613,"compras":551,"nc":62,"conv":89.9},{"FEEDBACK":"P","total":426,"compras":391,"nc":35,"conv":91.8},{"FEEDBACK":"I","total":355,"compras":317,"nc":38,"conv":89.3},{"FEEDBACK":"NSD","total":156,"compras":110,"nc":46,"conv":70.5},{"FEEDBACK":"MP","total":115,"compras":94,"nc":21,"conv":81.7},{"FEEDBACK":"SM","total":75,"compras":71,"nc":4,"conv":94.7},{"FEEDBACK":"P215","total":51,"compras":48,"nc":3,"conv":94.1},{"FEEDBACK":"MG","total":49,"compras":42,"nc":7,"conv":85.7},{"FEEDBACK":"ICB","total":46,"compras":42,"nc":4,"conv":91.3},{"FEEDBACK":"COM","total":42,"compras":42,"nc":0,"conv":100.0},{"FEEDBACK":"IE","total":51,"compras":40,"nc":11,"conv":78.4},{"FEEDBACK":"MPC","total":37,"compras":35,"nc":2,"conv":94.6},{"FEEDBACK":"BF","total":34,"compras":33,"nc":1,"conv":97.1},{"FEEDBACK":"LG","total":36,"compras":28,"nc":8,"conv":77.8},{"FEEDBACK":"MV","total":28,"compras":28,"nc":0,"conv":100.0},{"FEEDBACK":"M","total":31,"compras":28,"nc":3,"conv":90.3},{"FEEDBACK":"BP","total":27,"compras":27,"nc":0,"conv":100.0},{"FEEDBACK":"H","total":27,"compras":26,"nc":1,"conv":96.3},{"FEEDBACK":"V","total":26,"compras":25,"nc":1,"conv":96.2},{"FEEDBACK":"45","total":24,"compras":23,"nc":1,"conv":95.8},{"FEEDBACK":"MI","total":19,"compras":18,"nc":1,"conv":94.7},{"FEEDBACK":"O","total":22,"compras":18,"nc":4,"conv":81.8},{"FEEDBACK":"550","total":16,"compras":15,"nc":1,"conv":93.8},{"FEEDBACK":"COC","total":14,"compras":14,"nc":0,"conv":100.0},{"FEEDBACK":"PDP","total":14,"compras":14,"nc":0,"conv":100.0},{"FEEDBACK":"S","total":13,"compras":13,"nc":0,"conv":100.0},{"FEEDBACK":"T","total":13,"compras":13,"nc":0,"conv":100.0},{"FEEDBACK":"BM","total":10,"compras":10,"nc":0,"conv":100.0},{"FEEDBACK":"C","total":12,"compras":10,"nc":2,"conv":83.3},{"FEEDBACK":"MFL","total":10,"compras":9,"nc":1,"conv":90.0},{"FEEDBACK":"AK","total":10,"compras":8,"nc":2,"conv":80.0},{"FEEDBACK":"SF","total":12,"compras":4,"nc":8,"conv":33.3}];
+const SLOT_DATA=[{"SLOT":540,"total":166,"compras":108,"label":"09:00","conv":65.1},{"SLOT":570,"total":350,"compras":258,"label":"09:30","conv":73.7},{"SLOT":600,"total":465,"compras":325,"label":"10:00","conv":69.9},{"SLOT":630,"total":546,"compras":422,"label":"10:30","conv":77.3},{"SLOT":660,"total":613,"compras":464,"label":"11:00","conv":75.7},{"SLOT":690,"total":592,"compras":423,"label":"11:30","conv":71.5},{"SLOT":720,"total":634,"compras":483,"label":"12:00","conv":76.2},{"SLOT":750,"total":588,"compras":448,"label":"12:30","conv":76.2},{"SLOT":780,"total":601,"compras":467,"label":"13:00","conv":77.7},{"SLOT":810,"total":514,"compras":394,"label":"13:30","conv":76.7},{"SLOT":840,"total":470,"compras":359,"label":"14:00","conv":76.4},{"SLOT":870,"total":499,"compras":393,"label":"14:30","conv":78.8},{"SLOT":900,"total":498,"compras":384,"label":"15:00","conv":77.1},{"SLOT":930,"total":503,"compras":391,"label":"15:30","conv":77.7},{"SLOT":960,"total":563,"compras":424,"label":"16:00","conv":75.3},{"SLOT":990,"total":535,"compras":411,"label":"16:30","conv":76.8},{"SLOT":1020,"total":441,"compras":338,"label":"17:00","conv":76.6},{"SLOT":1050,"total":319,"compras":244,"label":"17:30","conv":76.5},{"SLOT":1080,"total":288,"compras":224,"label":"18:00","conv":77.8},{"SLOT":1110,"total":191,"compras":138,"label":"18:30","conv":72.3},{"SLOT":1140,"total":62,"compras":55,"label":"19:00","conv":88.7}];
+const HORA_H=[{"H":9,"total":516,"compras":366,"conv":70.9},{"H":10,"total":1011,"compras":747,"conv":73.9},{"H":11,"total":1205,"compras":887,"conv":73.6},{"H":12,"total":1222,"compras":931,"conv":76.2},{"H":13,"total":1115,"compras":861,"conv":77.2},{"H":14,"total":969,"compras":752,"conv":77.6},{"H":15,"total":1001,"compras":775,"conv":77.4},{"H":16,"total":1098,"compras":835,"conv":76.0},{"H":17,"total":760,"compras":582,"conv":76.6},{"H":18,"total":479,"compras":362,"conv":75.6},{"H":19,"total":64,"compras":57,"conv":89.1}];
+const NC_DATA=[{"cod":8,"label":"Preço de mercado","total":251,"val_medio":9816},{"cod":5,"label":"Preço muito baixo","total":166,"val_medio":7543},{"cod":7,"label":"Avaliação divergente","total":157,"val_medio":4960},{"cod":2,"label":"Preço abaixo esperado","total":55,"val_medio":6375},{"cod":10,"label":"Valor sentimental","total":49,"val_medio":4330},{"cod":9,"label":"Item c/ documentação","total":45,"val_medio":2139},{"cod":3,"label":"Metal com defeito","total":38,"val_medio":4663},{"cod":6,"label":"Não quer vender","total":17,"val_medio":5454},{"cod":11,"label":"Outros","total":17,"val_medio":9970},{"cod":1,"label":"Qualidade insatisfatória","total":4,"val_medio":12235}];
+
+let slotChart=null,heatChart=null;
+
+function renderFeedback(){
+  const maxC=FB_DATA[0].compras;
+  document.getElementById('fb-list').innerHTML=FB_DATA.slice(0,20).map(d=>{
+    const cc=d.conv>=93?'#4ade80':d.conv>=80?'#D4AF37':'#f87171';
+    return `<div class="fb-row">
+      <span class="fb-code">${d.FEEDBACK}</span>
+      <div class="fb-bar-wrap"><div class="fb-bar" style="width:${(d.compras/maxC*100).toFixed(1)}%;background:${cc}"></div></div>
+      <span class="fb-nums">${d.compras}/${d.total}</span>
+      <span class="fb-conv" style="color:${cc}">${d.conv}%</span>
+    </div>`;
+  }).join('');
+  const perfect=FB_DATA.filter(d=>d.conv===100&&d.total>=10);
+  const low=FB_DATA.filter(d=>d.conv<75&&d.total>=10);
+  const tot=FB_DATA.reduce((a,d)=>a+d.total,0);
+  document.getElementById('fb-insight').innerHTML=
+    `<strong>R</strong> domina com ${FB_DATA[0].total.toLocaleString('pt-BR')} atendimentos (${(FB_DATA[0].total/tot*100).toFixed(0)}% do volume) e ${FB_DATA[0].conv}% de conversão.`+
+    (perfect.length?` Conversão 100%: <strong>${perfect.map(d=>d.FEEDBACK).join(', ')}</strong>.`:'')+
+    (low.length?` Atenção — abaixo de 75%: <strong>${low.map(d=>d.FEEDBACK).join(', ')}</strong>.`:'');
+}
+
+function renderSlots(){
+  const sorted=[...SLOT_DATA].sort((a,b)=>b.total-a.total);
+  document.getElementById('slot-peaks').innerHTML=sorted.slice(0,3).map((s,i)=>`
+    <div class="slot-peak"><div class="slot-peak-time">${s.label}</div>
+    <div class="slot-peak-label">#${i+1} pico · ${s.total} atend.</div></div>`).join('');
+  const ctx=document.getElementById('slotChart').getContext('2d');
+  if(slotChart){slotChart.destroy();slotChart=null;}
+  slotChart=new Chart(ctx,{data:{labels:SLOT_DATA.map(d=>d.label),datasets:[
+    {type:'bar',label:'Atendimentos',data:SLOT_DATA.map(d=>d.total),backgroundColor:'#3a2f10cc',borderColor:'#6b5520',borderWidth:1,yAxisID:'y',order:2,datalabels:{display:false}},
+    {type:'bar',label:'Compras',data:SLOT_DATA.map(d=>d.compras),backgroundColor:'#6b5520cc',borderColor:'#D4AF37',borderWidth:1,yAxisID:'y',order:3,datalabels:{display:false}},
+    {type:'line',label:'Conversão %',data:SLOT_DATA.map(d=>d.conv),borderColor:'#fff',backgroundColor:'transparent',borderWidth:2,pointRadius:3,
+     pointBackgroundColor:SLOT_DATA.map(d=>d.conv>=78?'#4ade80':d.conv>=74?'#D4AF37':'#f87171'),tension:0.4,yAxisID:'y2',order:1,
+     datalabels:{anchor:'top',align:'top',offset:1,color:c=>SLOT_DATA[c.dataIndex].conv>=78?'#4ade80':SLOT_DATA[c.dataIndex].conv>=74?'#D4AF37':'#f87171',font:{size:8,weight:'700'},formatter:v=>v+'%'}}
+  ]},options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:22}},interaction:{mode:'index',intersect:false},
+    plugins:{legend:{display:false},datalabels:{display:true},tooltip:{backgroundColor:'#111',titleColor:'#D4AF37',bodyColor:'#f0f0f0',callbacks:{label:c=>c.dataset.label.includes('%')?' Conv: '+c.parsed.y+'%':' '+c.dataset.label+': '+c.parsed.y}}},
+    scales:{x:{ticks:{font:{size:9},color:'#444',maxRotation:45},grid:{display:false}},y:{position:'left',ticks:{font:{size:9},color:'#555'},grid:{color:'#1a1a1a'}},y2:{position:'right',min:55,max:100,ticks:{font:{size:9},color:'#888',callback:v=>v+'%'},grid:{display:false}}}}});
+  const pk=sorted[0],bc=[...SLOT_DATA].filter(d=>d.total>100).sort((a,b)=>b.conv-a.conv)[0],lc=[...SLOT_DATA].sort((a,b)=>a.conv-b.conv)[0];
+  document.getElementById('slot-insight').innerHTML=
+    `<strong>Pico de volume:</strong> ${pk.label} com ${pk.total} atendimentos. `+
+    `<strong>Melhor conversão</strong> (mín. 100 atend.): ${bc.label} com ${bc.conv}%. `+
+    `<strong>Menor conversão:</strong> ${lc.label} (${lc.conv}%) — abertura de loja, clientes mais indecisos.`;
+}
+
+function renderNC(){
+  const max=NC_DATA[0].total,tot=NC_DATA.reduce((a,d)=>a+d.total,0);
+  document.getElementById('nc-list').innerHTML=NC_DATA.map(d=>`
+    <div class="nc-row">
+      <span class="nc-label">${d.label}</span>
+      <div class="nc-bar-wrap"><div class="nc-bar" style="width:${(d.total/max*100).toFixed(1)}%"></div></div>
+      <span class="nc-val">${d.total}</span>
+      <span class="nc-price">R$${(d.val_medio/1000).toFixed(1)}k</span>
+    </div>`).join('');
+  const priceNC=NC_DATA.filter(d=>[5,8,2].includes(d.cod)).reduce((a,d)=>a+d.total,0);
+  document.getElementById('nc-insight').innerHTML=
+    `<strong>${NC_DATA[0].label}</strong> lidera com ${NC_DATA[0].total} casos (oferta média R$${(NC_DATA[0].val_medio/1000).toFixed(1)}k). `+
+    `<strong>${(priceNC/tot*100).toFixed(0)}% das perdas são por preço</strong> — oportunidade direta de negociação. `+
+    `Casos com valor sentimental ou documentação (${NC_DATA.find(d=>d.cod===10).total+NC_DATA.find(d=>d.cod===9).total}) raramente se recuperam.`;
+}
+
+function renderHeatmap(){
+  const ctx=document.getElementById('heatChart').getContext('2d');
+  if(heatChart){heatChart.destroy();heatChart=null;}
+  const maxT=Math.max(...HORA_H.map(d=>d.total));
+  heatChart=new Chart(ctx,{type:'bar',data:{labels:HORA_H.map(d=>d.H+'h'),datasets:[
+    {label:'Atendimentos',data:HORA_H.map(d=>d.total),
+     backgroundColor:HORA_H.map(d=>{const p=d.total/maxT;return `rgba(212,175,55,${(0.15+p*0.8).toFixed(2)})`;}),
+     borderColor:'#8B6914',borderWidth:1,datalabels:{display:false}}
+  ]},options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},datalabels:{display:false},tooltip:{backgroundColor:'#111',titleColor:'#D4AF37',bodyColor:'#f0f0f0',
+      callbacks:{label:c=>{const d=HORA_H[c.dataIndex];return[' Atendimentos: '+d.total,' Compras: '+d.compras,' Conversão: '+d.conv+'%'];}}}},
+    scales:{x:{ticks:{font:{size:10},color:'#555'},grid:{display:false}},y:{ticks:{font:{size:9},color:'#444'},grid:{color:'#1a1a1a'}}}}});
+  const pk=HORA_H.reduce((a,b)=>b.total>a.total?b:a),bc=HORA_H.filter(d=>d.total>200).reduce((a,b)=>b.conv>a.conv?b:a);
+  const morn=HORA_H.filter(d=>d.H<=11).reduce((a,d)=>a+d.total,0),aftn=HORA_H.filter(d=>d.H>=12&&d.H<=17).reduce((a,d)=>a+d.total,0);
+  document.getElementById('heat-insight').innerHTML=
+    `<strong>Pico absoluto:</strong> ${pk.H}h com ${pk.total} atendimentos. `+
+    `<strong>Melhor conversão</strong> (mín. 200 atend.): ${bc.H}h com ${bc.conv}%. `+
+    `Manhã 9–11h: ${morn} atend. · Tarde 12–17h: ${aftn} atend. — tarde representa <strong>${(aftn/(morn+aftn)*100).toFixed(0)}% do volume</strong>.`;
+}
+
+renderFeedback();
+renderSlots();
+renderNC();
+renderHeatmap();
 </script>
 </body>
 </html>
