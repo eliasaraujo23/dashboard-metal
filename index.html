@@ -94,7 +94,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
 .av-detail-kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-bottom:14px}
 .av-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .analytics-section{padding:0 16px 20px;border-top:1px solid var(--border-g);margin-top:8px;padding-top:14px}
-.analytics-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.analytics-grid-3{display:grid;grid-template-columns:1fr 2fr;gap:10px;margin-top:12px}
 .analytics-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
 .insight-box{background:var(--bg3);border-left:3px solid var(--gold);border-radius:0 6px 6px 0;padding:8px 12px;font-size:11px;color:var(--white);line-height:1.6;margin-top:10px}
 .insight-box strong{color:var(--gold)}
@@ -293,7 +293,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
     </div>
     <div class="panel" style="margin-top:10px">
       <div class="panel-title" style="display:flex;align-items:center;gap:0">Movimentacao por Horario (periodo selecionado)<span class="tip" data-tip="Horários de atendimento desta avaliadora&#10;no período filtrado.&#10;Mostra em que horas ela mais trabalha e converte.">i</span></div>
-      <div style="height:180px"><canvas id="avd-slot-chart"></canvas></div>
+      <div style="height:220px"><canvas id="avd-slot-chart"></canvas></div>
     </div>
   </div>
 </div>
@@ -303,16 +303,17 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
     <span class="section-title" style="display:flex;align-items:center;gap:0">Analise Operacional -- Feedback - Horario - Motivo NC<span class="tip" data-tip="Visão operacional do atendimento:&#10;• Qual feedback traz mais conversão&#10;• Quais horários são mais movimentados&#10;• Por que os clientes não fecharam">i</span></span>
   </div>
   <div class="analytics-grid-3">
-    <div class="panel" style="grid-column:span 1">
+    <!-- Painel Feedback -->
+    <div class="panel" style="overflow:hidden">
       <div class="panel-title" style="display:flex;align-items:center;gap:0">Feedback -- Conversao por Tipo<span class="tip" data-tip="Cada linha = um código de feedback do cliente.&#10;Mostra quantos atendimentos tiveram aquele feedback&#10;e qual % deles resultou em fechamento.">i</span></div>
       <div id="fb-list"></div>
       <div class="insight-box" id="fb-insight"></div>
     </div>
-    <div class="panel" style="grid-column:span 2">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-      <div class="panel-title" style="border:none;padding:0;margin:0;display:flex;align-items:center;gap:0">Movimentacao por Horario -- Intervalos de 30 min<span class="tip" data-tip="Barras: atendimentos e fechamentos a cada 30 minutos.&#10;Linha branca: taxa de fechamento naquele slot.&#10;Ex: 09:00 = atendimentos entre 09:00 e 09:29.">i</span></div>
+    <!-- Painel Horario -->
+    <div class="panel">
+      <div class="panel-title" style="display:flex;align-items:center;gap:0;margin-bottom:10px">Movimentacao por Horario -- Intervalos de 30 min<span class="tip" data-tip="Barras: atendimentos e fechamentos a cada 30 minutos.&#10;Linha branca: taxa de fechamento naquele slot.&#10;Ex: 09:00 = atendimentos entre 09:00 e 09:29.">i</span></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px" id="slot-peaks"></div>
-      <div style="height:200px"><canvas id="slotChart"></canvas></div>
+      <div style="height:280px;width:100%"><canvas id="slotChart"></canvas></div>
       <div class="insight-box" id="slot-insight"></div>
     </div>
   </div>
@@ -659,7 +660,7 @@ function getAnalLoja(){return F.loja==='TODAS'?'TODAS':F.loja;}
 function renderFeedback(){
   var d=ANAL.feedback[getAnalLoja()]||ANAL.feedback['TODAS'];
   var maxC=d[0]?d[0].compras:1,tot=d.reduce(function(a,x){return a+x.total;},0);
-  document.getElementById('fb-list').innerHTML=d.slice(0,20).map(function(x){
+  document.getElementById('fb-list').innerHTML=d.slice(0,12).map(function(x){
     var cc=x.conv>=93?'#4ade80':x.conv>=80?'#D4AF37':'#f87171';
     return '<div class="fb-row"><span class="fb-code">'+x.FEEDBACK+'</span><div class="fb-bar-wrap"><div class="fb-bar" style="width:'+(x.compras/maxC*100).toFixed(1)+'%;background:'+cc+'"></div></div><span class="fb-nums">'+x.compras+'/'+x.total+'</span><span class="fb-conv" style="color:'+cc+'">'+x.conv+'%</span></div>';
   }).join('');
@@ -698,32 +699,84 @@ function renderSlots(){
     return '<div class="slot-peak"><div class="slot-peak-time">'+s.label+'</div>'
       +'<div class="slot-peak-label">#'+(i+1)+' pico - '+s.total+' atend.</div></div>';
   }).join('');
+
   var ctx=document.getElementById('slotChart').getContext('2d');
   if(slotChart){slotChart.destroy();slotChart=null;}
+
+  // Datalabels de conversão: mostrar só se não houver sobreposição
+  // Mostrar apenas em slots com total >= media (evita poluição visual)
+  var avgTotal=d.reduce(function(a,x){return a+x.total;},0)/d.length;
+  var maxConv=Math.max.apply(null,d.map(function(x){return x.conv;}));
+  var minConv=Math.min.apply(null,d.map(function(x){return x.conv;}));
+  var convRange=maxConv-minConv;
+
   slotChart=new Chart(ctx,{data:{labels:d.map(function(x){return x.label;}),datasets:[
-    {type:'bar',label:'Atend.',data:d.map(function(x){return x.total;}),backgroundColor:'#3a2f10cc',borderColor:'#6b5520',borderWidth:1,yAxisID:'y',order:2,datalabels:{display:false}},
-    {type:'bar',label:'Compras',data:d.map(function(x){return x.compras;}),backgroundColor:'#6b5520cc',borderColor:'#D4AF37',borderWidth:1,yAxisID:'y',order:3,datalabels:{display:false}},
-    {type:'line',label:'Conv %',data:d.map(function(x){return x.conv;}),borderColor:'#fff',backgroundColor:'transparent',borderWidth:2,pointRadius:3,
-      pointBackgroundColor:d.map(function(x){return x.conv>=90?'#4ade80':x.conv>=82?'#D4AF37':'#f87171';}),
+    {type:'bar',label:'Atend.',data:d.map(function(x){return x.total;}),
+      backgroundColor:'#3a2f10cc',borderColor:'#6b5520',borderWidth:1,
+      yAxisID:'y',order:2,datalabels:{display:false}},
+    {type:'bar',label:'Fechou',data:d.map(function(x){return x.compras;}),
+      backgroundColor:'#6b5520cc',borderColor:'#D4AF37',borderWidth:1,
+      yAxisID:'y',order:3,datalabels:{display:false}},
+    {type:'line',label:'Conv %',data:d.map(function(x){return x.conv;}),
+      borderColor:'#fff',backgroundColor:'transparent',borderWidth:2,
+      pointRadius:function(c){return d[c.dataIndex].total>=avgTotal?4:3;},
+      pointBackgroundColor:d.map(function(x){
+        return x.conv>=90?'#4ade80':x.conv>=82?'#D4AF37':'#f87171';}),
+      pointBorderColor:'#0a0a0a',pointBorderWidth:1,
       tension:0.4,yAxisID:'y2',order:1,
-      datalabels:{anchor:'top',align:'top',offset:1,
-        color:function(c){return d[c.dataIndex].conv>=90?'#4ade80':d[c.dataIndex].conv>=82?'#D4AF37':'#f87171';},
-        font:{size:8,weight:'700'},formatter:function(v){return v+'%';}}}
-  ]},options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:22}},
+      datalabels:{
+        display:function(c){
+          // Mostrar label só nos pontos extremos (max, min) e nos picos de volume
+          var v=d[c.dataIndex];
+          var isMaxConv=Math.abs(v.conv-maxConv)<0.01;
+          var isMinConv=Math.abs(v.conv-minConv)<0.01;
+          var isPico=v.total===sorted[0].total;
+          // Sempre mostrar se convRange pequeno (dados escassos — mostrar tudo)
+          var showAll=d.length<=14;
+          return showAll||isMaxConv||isMinConv||isPico;
+        },
+        anchor:'top',align:'top',offset:2,
+        color:function(c){var v=d[c.dataIndex].conv;return v>=90?'#4ade80':v>=82?'#D4AF37':'#f87171';},
+        font:{size:8,weight:'700'},
+        formatter:function(v){return v.toFixed(1)+'%';},
+        backgroundColor:'rgba(10,10,10,0.7)',borderRadius:3,
+        padding:{top:1,bottom:1,left:3,right:3}
+      }}
+  ]},options:{responsive:true,maintainAspectRatio:false,
+    layout:{padding:{top:28,right:8,bottom:4,left:4}},
     interaction:{mode:'index',intersect:false},
     plugins:{legend:{display:false},datalabels:{display:true},
       tooltip:{backgroundColor:'#111',titleColor:'#D4AF37',bodyColor:'#f0f0f0',
-        callbacks:{label:function(c){
-          var x=d[c.dataIndex];
-          if(c.datasetIndex===2) return ' Conv: '+x.conv+'%';
-          if(c.datasetIndex===1) return ' Compras: '+x.compras;
-          return ' Atend.: '+x.total+' | NC: '+x.nc;
-        }}}},
-    scales:{x:{ticks:{font:{size:9},color:'#444',maxRotation:45},grid:{display:false}},
+        callbacks:{
+          title:function(items){return slotLabel(items[0].label);},
+          label:function(c){
+            var x=d[c.dataIndex];
+            if(c.datasetIndex===2) return ' Conv: '+x.conv.toFixed(1)+'%';
+            if(c.datasetIndex===1) return ' Fechou: '+x.compras;
+            return ' Atend.: '+x.total+' | NC: '+x.nc;
+          }}}},
+    scales:{
+      x:{
+        ticks:{
+          font:{size:9},color:'#555',maxRotation:45,
+          // Mostrar só algumas labels quando há muitos slots
+          callback:function(val,i){
+            if(d.length<=14) return d[i].label;
+            // Mostrar a cada hora (a cada 2 slots de 30min)
+            return i%2===0?d[i].label:'';
+          }
+        },
+        grid:{display:false}
+      },
       y:{position:'left',ticks:{font:{size:9},color:'#555'},grid:{color:'#1a1a1a'}},
-      y2:{position:'right',min:55,max:105,ticks:{font:{size:9},color:'#888',callback:function(v){return v+'%';}},grid:{display:false}}}}});
+      y2:{position:'right',min:55,max:105,
+        ticks:{font:{size:9},color:'#888',callback:function(v){return v+'%';}},
+        grid:{display:false}}
+    }}});
+
   var pk=sorted[0];
-  document.getElementById('slot-insight').innerHTML='<strong>Pico de volume:</strong> '+pk.label+' com '+pk.total+' atend. ('+pk.conv+'% conv.)';
+  document.getElementById('slot-insight').innerHTML=
+    '<strong>Pico:</strong> '+pk.label+' com '+pk.total+' atend. ('+pk.conv.toFixed(1)+'% conv.)';
 }
 function getMotivosData(){
   var MLABELS={1:'Melhor preco concorrente',2:'Imagina preco melhor',3:'Elo emocional',
