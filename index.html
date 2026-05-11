@@ -181,25 +181,40 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
 </div>
 
 <div class="kpi-row" style="grid-template-columns:repeat(6,minmax(0,1fr))">
-  <div class="kpi"><div class="kpi-label">Avaliacoes s/4</div><div class="kpi-val" id="k-aval">--</div><div class="kpi-sub" id="k-aval-s">--</div></div>
-  <div class="kpi"><div class="kpi-label">Nao Compras</div><div class="kpi-val" id="k-nc" style="color:#f87171">--</div><div class="kpi-sub" id="k-nc-s">--</div></div>
-  <div class="kpi"><div class="kpi-label">Compras</div><div class="kpi-val" id="k-comp">--</div><div class="kpi-sub" id="k-comp-s">--</div></div>
-  <div class="kpi"><div class="kpi-label">Indice de Conversao</div><div class="kpi-val" id="k-conv">--</div><div class="kpi-sub" id="k-conv-s">--</div></div>
+  <div class="kpi"><div class="kpi-label">Atendimentos</div><div class="kpi-val" id="k-aval">--</div><div class="kpi-sub" id="k-aval-s">--</div></div>
+  <div class="kpi"><div class="kpi-label">Nao Fecharam</div><div class="kpi-val" id="k-nc" style="color:#f87171">--</div><div class="kpi-sub" id="k-nc-s">--</div></div>
+  <div class="kpi"><div class="kpi-label">Fechamentos</div><div class="kpi-val" id="k-comp">--</div><div class="kpi-sub" id="k-comp-s">--</div></div>
+  <div class="kpi"><div class="kpi-label">Taxa de Fechamento</div><div class="kpi-val" id="k-conv">--</div><div class="kpi-sub" id="k-conv-s">--</div></div>
   <div class="kpi"><div class="kpi-label">Metal Comprado</div><div class="kpi-val" id="k-metal">--</div><div class="kpi-sub" id="k-metal-s">--</div></div>
   <div class="kpi"><div class="kpi-label">Ticket Medio</div><div class="kpi-val" id="k-ticket">--</div><div class="kpi-sub" id="k-ticket-s">--</div></div>
 </div>
 
 <div class="chart-section">
-  <div class="section-header">
-    <span class="section-title" id="chart-title">Avaliacoes | Compras | Conversao</span>
-    <div class="legend">
-      <span class="leg"><span class="leg-sq" style="background:#2a2008;border:1px solid #6b5520"></span> Aval s/4</span>
-      <span class="leg"><span class="leg-sq" style="background:#5a4010;border:1px solid #D4AF37"></span> Compras</span>
-      <span class="leg"><span class="leg-sq" style="background:rgba(212,175,55,.35);border:1px solid #D4AF37"></span> <span id="leg-metal-txt">Metal (g)</span></span>
-      <span class="leg"><span class="leg-ln" style="border-color:#fff"></span> Conversao %</span>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <!-- Grafico 1: Volume + Conversao -->
+    <div>
+      <div class="section-header" style="margin-bottom:6px">
+        <span class="section-title" id="chart-title">Atendimentos &amp; Fechamentos</span>
+        <div class="legend">
+          <span class="leg"><span class="leg-sq" style="background:#2a2008;border:1px solid #6b5520"></span> Atendimentos</span>
+          <span class="leg"><span class="leg-sq" style="background:#5a4010;border:1px solid #D4AF37"></span> Fechamentos</span>
+          <span class="leg"><span class="leg-ln" style="border-color:#fff"></span> Taxa Fechamento</span>
+        </div>
+      </div>
+      <div class="chart-box" style="height:260px"><canvas id="mainChart"></canvas></div>
+    </div>
+    <!-- Grafico 2: Metal + Valor -->
+    <div>
+      <div class="section-header" style="margin-bottom:6px">
+        <span class="section-title">Metal Comprado (g) &amp; Valor Investido (R$)</span>
+        <div class="legend">
+          <span class="leg"><span class="leg-sq" style="background:rgba(212,175,55,.35);border:1px solid #D4AF37"></span> Metal (g)</span>
+          <span class="leg"><span class="leg-sq" style="background:#1a3a1a;border:1px solid #4ade80"></span> Valor (R$)</span>
+        </div>
+      </div>
+      <div class="chart-box" style="height:260px"><canvas id="metalValorChart"></canvas></div>
     </div>
   </div>
-  <div class="chart-box"><canvas id="mainChart"></canvas></div>
 </div>
 
 <div class="bottom-grid">
@@ -209,7 +224,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
   </div>
   <div class="panel">
     <div class="panel-title">Valor Investido por Mes (R$) -- por loja</div>
-    <div class="mini-box"><canvas id="valorChart"></canvas></div>
+    <div style="height:220px"><canvas id="valorChart"></canvas></div>
   </div>
 </div>
 
@@ -288,7 +303,13 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
       <div class="insight-box" id="fb-insight"></div>
     </div>
     <div class="panel" style="grid-column:span 2">
-      <div class="panel-title">Movimentacao por Horario -- Intervalos de 30 min</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div class="panel-title" style="border:none;padding:0;margin:0">Movimentacao por Horario</div>
+      <div style="display:flex;gap:4px">
+        <div class="chip active" id="slot-toggle-h" onclick="setSlotMode('hora')" style="font-size:10px;padding:2px 8px">Por Hora</div>
+        <div class="chip" id="slot-toggle-30" onclick="setSlotMode('30min')" style="font-size:10px;padding:2px 8px">30 min</div>
+      </div>
+    </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px" id="slot-peaks"></div>
       <div style="height:200px"><canvas id="slotChart"></canvas></div>
       <div class="insight-box" id="slot-insight"></div>
@@ -297,7 +318,14 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
   <div class="analytics-grid-2" style="margin-top:10px">
     <div class="panel">
       <div class="panel-title">Motivo de Nao Compra -- Analise de Perda</div>
-      <div id="nc-list"></div>
+      <div style="display:flex;gap:10px">
+        <div style="flex:1"><div id="nc-list"></div></div>
+        <div style="width:140px;flex-shrink:0">
+          <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;text-align:center">Por Categoria</div>
+          <div style="height:130px"><canvas id="nc-donut"></canvas></div>
+          <div id="nc-donut-legend" style="margin-top:6px"></div>
+        </div>
+      </div>
       <div class="insight-box" id="nc-insight"></div>
     </div>
     <div class="panel">
@@ -311,7 +339,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
 <!-- ANALISE DE PRECOS -->
 <div class="preco-section" style="padding:0 16px 24px;border-top:1px solid var(--border-g);margin-top:8px;padding-top:14px">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
-    <span class="section-title">Analise de Compras por Preco e Avaliador</span>
+    <span class="section-title">Analise de Compras por Preco e Avaliador <span title="1&#186; Preco = primeiro valor oferecido ao cliente. Menor R$/g indica que a avaliadora fechou por menos logo de cara." style="font-size:10px;color:var(--muted);cursor:help;border-bottom:1px dotted var(--muted)">&#9432; o que e isso?</span></span>
     <span style="font-size:10px;color:var(--muted)" id="preco-period"></span>
   </div>
 
@@ -377,7 +405,7 @@ var mpYear=2026,mpStart=null,mpEnd=null,mpPicking=false;
 })();
 
 var F={loja:'TODAS'};
-var mainChart=null,valorChart=null,slotChart=null,heatChart=null;
+var mainChart=null,valorChart=null,slotChart=null,heatChart=null,ncDonutChart=null;
 var tblSort={col:'ANO_MES',dir:'desc'};
 var tblLimit=6;
 
@@ -457,19 +485,20 @@ function updateAll(){
   var dd=(last.CONV-prev.CONV).toFixed(2);
   var nc=data.reduce(function(a,r){return a+r.NC;},0);
   document.getElementById('k-aval').textContent=fmtN(aval);
-  document.getElementById('k-aval-s').textContent=data.length+' meses | '+Math.round(aval/data.length)+'/mes';
+  document.getElementById('k-aval-s').textContent=data.length+' meses | media '+Math.round(aval/data.length)+'/mes';
   document.getElementById('k-nc').textContent=fmtN(nc);
-  document.getElementById('k-nc-s').textContent='media '+Math.round(nc/data.length)+'/mes';
+  document.getElementById('k-nc-s').textContent='media '+Math.round(nc/data.length)+'/mes | '+((nc/(aval||1))*100).toFixed(1)+'% nao fechou';
   document.getElementById('k-comp').textContent=fmtN(comp);
   document.getElementById('k-comp-s').textContent='media '+Math.round(comp/data.length)+'/mes';
   document.getElementById('k-conv').textContent=conv+'%';
-  document.getElementById('k-conv-s').innerHTML='<span class="kpi-delta-'+(dd>=0?'up':'down')+'">'+(dd>=0?'+':'')+dd+'pp vs mes ant.</span>';
+  document.getElementById('k-conv-s').innerHTML='<span class="kpi-delta-'+(dd>=0?'up':'down')+'">'+(dd>=0?'+':'')+dd+'pp vs mes anterior</span>';
   document.getElementById('k-metal').textContent=metal.toFixed(2)+'g';
   document.getElementById('k-metal-s').textContent=metal.toFixed(2)+'g total';
   document.getElementById('k-ticket').textContent=fmtR(ticket);
   document.getElementById('k-ticket-s').textContent=fmtR(valor)+' total';
   renderMainChart(data);
   renderValorChart(data);
+  renderMetalValorChart(data);
   renderMetalBars(data);
   renderTable(data);
   updateAnalytics();
@@ -481,15 +510,73 @@ function renderMainChart(data){
   var labels=data.map(function(r){return fmtMes(r.ANO_MES);});
   var ctx=document.getElementById('mainChart').getContext('2d');
   if(mainChart)mainChart.destroy();
-  var grad=ctx.createLinearGradient(0,0,0,340);
-  grad.addColorStop(0,'rgba(212,175,55,0.35)');grad.addColorStop(1,'rgba(212,175,55,0.02)');
   mainChart=new Chart(ctx,{data:{labels:labels,datasets:[
-    {type:'bar',label:'Avaliacoes s/4',data:data.map(function(r){return r.AVAL_S4;}),backgroundColor:'#2a2008',borderColor:'#6b5520',borderWidth:1,yAxisID:'y',order:4,datalabels:{anchor:'end',align:'end',offset:1,color:'#6b5520',font:{size:9,weight:'600'},formatter:function(v){return v;}}},
-    {type:'bar',label:'Compras',data:data.map(function(r){return r.COMPRAS;}),backgroundColor:'#5a4010',borderColor:'#D4AF37',borderWidth:1,yAxisID:'y',order:3,datalabels:{anchor:'center',align:'center',color:'#F0D060',font:{size:9,weight:'700'},formatter:function(v){return v;}}},
-    {type:'line',label:'Metal (g)',data:data.map(function(r){return r.METAL;}),borderColor:'#D4AF37',backgroundColor:grad,borderWidth:2.5,pointRadius:4,pointBackgroundColor:'#D4AF37',pointBorderColor:'#0a0a0a',pointBorderWidth:1.5,tension:0.4,fill:true,yAxisID:'y3',order:2,datalabels:{anchor:'top',align:'top',offset:2,color:'#F0D060',font:{size:9,weight:'700'},formatter:function(v){return v.toFixed(0)+'g';},backgroundColor:'rgba(0,0,0,0.55)',borderRadius:3,padding:{top:1,bottom:1,left:3,right:3}}},
-    {type:'line',label:'Conversao %',data:data.map(function(r){return r.CONV;}),borderColor:'#ffffff',backgroundColor:'transparent',borderWidth:2,pointRadius:4,pointBackgroundColor:'#0a0a0a',pointBorderColor:'#fff',pointBorderWidth:2,tension:0.3,yAxisID:'y2',order:1,datalabels:{anchor:'end',align:'top',offset:4,color:'#fff',font:{size:9,weight:'700'},formatter:function(v){return v.toFixed(1)+'%';},backgroundColor:'rgba(0,0,0,0.5)',borderRadius:3,padding:{top:1,bottom:1,left:3,right:3}}}
-  ]},options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:34,bottom:5}},interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},datalabels:{display:true},tooltip:{backgroundColor:'#111',borderColor:'#3a2f10',borderWidth:1,titleColor:'#D4AF37',bodyColor:'#f0f0f0'}},scales:{x:{ticks:{autoSkip:false,maxRotation:45,font:{size:10},color:'#555'},grid:{color:'#1a1a1a'}},y:{position:'left',ticks:{font:{size:10},color:'#555'},grid:{color:'#1a1a1a'}},y2:{position:'right',min:70,max:105,ticks:{font:{size:10},color:'#888',callback:function(v){return v+'%';}},grid:{display:false}},y3:{position:'right',display:true,ticks:{font:{size:10},color:'#8B6914',callback:function(v){return v+'g';}},grid:{display:false}}}}});
+    {type:'bar',label:'Atendimentos',data:data.map(function(r){return r.AVAL_S4;}),
+      backgroundColor:'#2a2008',borderColor:'#6b5520',borderWidth:1,yAxisID:'y',order:2,
+      datalabels:{display:false}},
+    {type:'bar',label:'Fechamentos',data:data.map(function(r){return r.COMPRAS;}),
+      backgroundColor:'#5a4010',borderColor:'#D4AF37',borderWidth:1,yAxisID:'y',order:3,
+      datalabels:{display:false}},
+    {type:'line',label:'Taxa Fechamento',data:data.map(function(r){return r.CONV;}),
+      borderColor:'#ffffff',backgroundColor:'transparent',borderWidth:2.5,
+      pointRadius:4,pointBackgroundColor:data.map(function(r){
+        return r.CONV>=93?'#4ade80':r.CONV>=85?'#D4AF37':'#f87171';}),
+      pointBorderColor:'#0a0a0a',pointBorderWidth:2,tension:0.3,yAxisID:'y2',order:1,
+      datalabels:{anchor:'end',align:'top',offset:3,
+        color:function(c){var v=data[c.dataIndex].CONV;return v>=93?'#4ade80':v>=85?'#D4AF37':'#f87171';},
+        font:{size:9,weight:'700'},formatter:function(v){return v.toFixed(1)+'%';},
+        backgroundColor:'rgba(0,0,0,0.5)',borderRadius:3,padding:{top:1,bottom:1,left:3,right:3}}}
+  ]},options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:28,bottom:4}},
+    interaction:{mode:'index',intersect:false},
+    plugins:{legend:{display:false},datalabels:{display:true},
+      tooltip:{backgroundColor:'#111',borderColor:'#3a2f10',borderWidth:1,
+        titleColor:'#D4AF37',bodyColor:'#f0f0f0',
+        callbacks:{label:function(c){
+          if(c.datasetIndex===2) return ' Taxa: '+c.parsed.y.toFixed(1)+'%';
+          return ' '+(c.datasetIndex===0?'Atend.':'Fechou')+': '+fmtN(c.parsed.y);
+        }}}},
+    scales:{x:{ticks:{autoSkip:false,maxRotation:45,font:{size:10},color:'#555'},grid:{color:'#1a1a1a'}},
+      y:{position:'left',ticks:{font:{size:10},color:'#555'},grid:{color:'#1a1a1a'}},
+      y2:{position:'right',min:60,max:102,
+        ticks:{font:{size:10},color:'#888',callback:function(v){return v+'%';}},
+        grid:{display:false}}}}});
 }
+
+function renderMetalValorChart(data){
+  var labels=data.map(function(r){return fmtMes(r.ANO_MES);});
+  var ctx=document.getElementById('metalValorChart');
+  if(!ctx) return;
+  if(window.metalValorChartInst) window.metalValorChartInst.destroy();
+  var grad=ctx.getContext('2d').createLinearGradient(0,0,0,280);
+  grad.addColorStop(0,'rgba(74,222,128,0.25)');
+  grad.addColorStop(1,'rgba(74,222,128,0.02)');
+  window.metalValorChartInst=new Chart(ctx.getContext('2d'),{
+    data:{labels:labels,datasets:[
+      {type:'bar',label:'Metal (g)',data:data.map(function(r){return r.METAL;}),
+        backgroundColor:'rgba(212,175,55,0.25)',borderColor:'#D4AF37',borderWidth:1,
+        yAxisID:'ym',order:2,datalabels:{display:false}},
+      {type:'line',label:'Valor (R$)',data:data.map(function(r){return r.VALOR;}),
+        borderColor:'#4ade80',backgroundColor:grad,borderWidth:2.5,fill:true,
+        pointRadius:4,pointBackgroundColor:'#4ade80',pointBorderColor:'#0a0a0a',
+        pointBorderWidth:2,tension:0.3,yAxisID:'yv',order:1,
+        datalabels:{anchor:'end',align:'top',offset:3,
+          color:'#4ade80',font:{size:9,weight:'700'},
+          formatter:function(v){return v>=1000000?'R$'+(v/1000000).toFixed(1)+'M':'R$'+(v/1000).toFixed(0)+'k';},
+          backgroundColor:'rgba(0,0,0,0.5)',borderRadius:3,padding:{top:1,bottom:1,left:3,right:3}}}
+    ]},options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:28,bottom:4}},
+      interaction:{mode:'index',intersect:false},
+      plugins:{legend:{display:false},datalabels:{display:true},
+        tooltip:{backgroundColor:'#111',borderColor:'#1a3a1a',borderWidth:1,
+          titleColor:'#4ade80',bodyColor:'#f0f0f0',
+          callbacks:{label:function(c){
+            if(c.datasetIndex===0) return ' Metal: '+c.parsed.y.toFixed(2)+'g';
+            return ' Valor: '+fmtR(c.parsed.y);
+          }}}},
+      scales:{x:{ticks:{autoSkip:false,maxRotation:45,font:{size:10},color:'#555'},grid:{color:'#1a1a1a'}},
+        ym:{position:'left',ticks:{font:{size:10},color:'#8B6914',callback:function(v){return v.toFixed(0)+'g';}},grid:{color:'#1a1a1a'}},
+        yv:{position:'right',ticks:{font:{size:10},color:'#4ade80',callback:function(v){return v>=1000000?'R$'+(v/1000000).toFixed(1)+'M':'R$'+(v/1000).toFixed(0)+'k';}},grid:{display:false}}}}});
+}
+
 
 function renderValorChart(data){
   var w=getLast13Window(),labels=data.map(function(r){return fmtMes(r.ANO_MES);});
@@ -507,12 +594,12 @@ function renderValorChart(data){
 
 function renderMetalBars(data){
   var keys=[
-    {l:'750',    mk:'METAL_750', vk:'VALOR_750'},
-    {l:'720',    mk:'METAL_720', vk:'VALOR_720'},
-    {l:'BX',     mk:'METAL_BX',  vk:'VALOR_BX'},
-    {l:'24K',    mk:'METAL_24K', vk:'VALOR_24K'},
-    {l:'22K',    mk:'METAL_22K', vk:'VALOR_22K'},
-    {l:'PT',     mk:'METAL_PT',  vk:'VALOR_PT'}
+    {l:'750 (18K)',      mk:'METAL_750', vk:'VALOR_750'},
+    {l:'720 (16K)',      mk:'METAL_720', vk:'VALOR_720'},
+    {l:'BX (Bx.Teor)',   mk:'METAL_BX',  vk:'VALOR_BX'},
+    {l:'24K (Puro)',     mk:'METAL_24K', vk:'VALOR_24K'},
+    {l:'22K',            mk:'METAL_22K', vk:'VALOR_22K'},
+    {l:'PT (Port.)',     mk:'METAL_PT',  vk:'VALOR_PT'}
   ];
   var items=keys.map(function(k){
     return {l:k.l,
@@ -578,6 +665,13 @@ function renderFeedback(){
   var top=d[0];
   document.getElementById('fb-insight').innerHTML='<strong>'+top.FEEDBACK+'</strong> lidera com '+top.total.toLocaleString('pt-BR')+' atend. e '+top.conv+'% de conv. -- '+(top.total/tot*100).toFixed(0)+'% do volume.';
 }
+var slotMode='hora'; // 'hora' ou '30min'
+function setSlotMode(m){
+  slotMode=m;
+  document.getElementById('slot-toggle-h').classList.toggle('active',m==='hora');
+  document.getElementById('slot-toggle-30').classList.toggle('active',m==='30min');
+  renderSlots();
+}
 function getSlotData(){
   // Agrega slots do SLOTS_RAW respeitando filtros de loja + periodo
   var w=getLast13Window();
@@ -595,7 +689,23 @@ function getSlotData(){
       });
     });
   });
-  return Object.values(agg).sort(function(a,b){return a.slot-b.slot;}).map(function(x){
+  var raw=Object.values(agg).sort(function(a,b){return a.slot-b.slot;});
+  if(slotMode==='hora'){
+    // Agrupar pares de 30min em horas inteiras
+    var byH={};
+    raw.forEach(function(x){
+      var h=Math.floor(x.slot/60);
+      if(!byH[h])byH[h]={slot:h*60,aval:0,comp:0,nc:0};
+      byH[h].aval+=x.aval;byH[h].comp+=x.comp;byH[h].nc+=x.nc;
+    });
+    return Object.values(byH).sort(function(a,b){return a.slot-b.slot;}).map(function(x){
+      var hh=Math.floor(x.slot/60);
+      return {slot:x.slot,label:(hh<10?'0':'')+hh+'h',
+              total:x.aval,compras:x.comp,nc:x.nc,
+              conv:x.aval>0?+(x.comp/x.aval*100).toFixed(1):0};
+    });
+  }
+  return raw.map(function(x){
     var hh=Math.floor(x.slot/60),mm=x.slot%60;
     return {slot:x.slot,label:(hh<10?'0':'')+hh+':'+(mm===0?'00':'30'),
             total:x.aval,compras:x.comp,nc:x.nc,
@@ -639,9 +749,9 @@ function renderSlots(){
 }
 function getMotivosData(){
   var MLABELS={1:'Melhor preco concorrente',2:'Imagina preco melhor',3:'Elo emocional',
-  5:'Peca de terceiros',6:'Nao deixou limar',7:'Imagina preco acima cotacao',
-  8:'Pesquisando preco',9:'Sem documentos',10:'Nao quis assinar',
-  11:'Dispensado',12:'Fiz merda'};
+    5:'Peca de terceiros',6:'Nao deixou limar',7:'Imagina preco acima cotacao',
+    8:'Pesquisando preco',9:'Sem documentos',10:'Nao quis assinar',
+    11:'Dispensado',12:'Fiz merda'};
   var w=getLast13Window();
   var lojas=F.loja==='TODAS'?['24K','GTI','GTT']:[F.loja];
   var agg={};
@@ -651,15 +761,28 @@ function getMotivosData(){
       if(mes<w.start||mes>w.end) return;
       Object.keys(ld[mes]).forEach(function(cod){
         var c=parseInt(cod);
-        var v=ld[mes][cod]; // [total, peso, valor]
+        var v=ld[mes][cod];
         if(!agg[c]) agg[c]={cod:c,label:MLABELS[c]||('Motivo '+c),total:0,peso:0,valor:0};
-        agg[c].total+=v[0]; agg[c].peso+=v[1]; agg[c].valor+=v[2];
+        agg[c].total+=v[0];agg[c].peso+=v[1];agg[c].valor+=v[2];
       });
     });
   });
-  return Object.values(agg)
-    .filter(function(x){return x.total>0;})
-    .sort(function(a,b){return b.total-a.total;});
+  return Object.values(agg).filter(function(x){return x.total>0;}).sort(function(a,b){return b.total-a.total;});
+}
+
+// Categorias de motivo NC
+var NC_GRUPOS={
+  preco:[2,7,8],    // negociação de preço
+  peca:[3,5,6],     // problema na peça
+  processo:[1,9,10,11,12] // processo/documentação/outros
+};
+var NC_GRUPO_LABELS={preco:'Preco',peca:'Peca/Posse',processo:'Outros'};
+var NC_GRUPO_COLORS={preco:'#D4AF37',peca:'#60a5fa',processo:'#6b7280'};
+
+function getNcGrupo(cod){
+  if(NC_GRUPOS.preco.indexOf(cod)>=0) return 'preco';
+  if(NC_GRUPOS.peca.indexOf(cod)>=0)  return 'peca';
+  return 'processo';
 }
 
 function renderNC(){
@@ -672,21 +795,21 @@ function renderNC(){
   var max=d[0].total;
   var tot=d.reduce(function(a,x){return a+x.total;},0);
   var totPeso=d.reduce(function(a,x){return a+x.peso;},0);
-  var totValor=d.reduce(function(a,x){return a+x.valor;},0);
 
   var rows=d.map(function(x){
     var pct=(x.total/tot*100).toFixed(1);
+    var grupo=getNcGrupo(x.cod);
+    var barColor=NC_GRUPO_COLORS[grupo];
     return '<div class="nc-row">'
       +'<span class="nc-num" style="font-size:10px;color:var(--gold-dk);width:18px;flex-shrink:0;text-align:right">'+x.cod+'</span>'
       +'<span class="nc-label">'+x.label+'</span>'
-      +'<div class="nc-bar-wrap"><div class="nc-bar" style="width:'+(x.total/max*100).toFixed(1)+'%"></div></div>'
+      +'<div class="nc-bar-wrap"><div class="nc-bar" style="width:'+(x.total/max*100).toFixed(1)+'%;background:'+barColor+'"></div></div>'
       +'<span class="nc-val">'+x.total+'</span>'
       +'<span class="nc-pct" style="font-size:10px;color:var(--muted);width:34px;text-align:right;flex-shrink:0">'+pct+'%</span>'
       +'<span style="font-size:10px;color:#4ade80;font-weight:600;width:74px;text-align:right;flex-shrink:0">'+x.peso.toFixed(2)+'g</span>'
       +'</div>';
   });
 
-  // Linha de totais alinhada com as colunas acima
   rows.push(
     '<div class="nc-row" style="border-top:1px solid var(--border);margin-top:6px;padding-top:6px">'
     +'<span class="nc-num" style="width:18px;flex-shrink:0"></span>'
@@ -697,16 +820,45 @@ function renderNC(){
     +'<span style="font-size:10px;color:#4ade80;font-weight:700;width:74px;text-align:right;flex-shrink:0">'+totPeso.toFixed(2)+'g</span>'
     +'</div>'
   );
-
   document.getElementById('nc-list').innerHTML=rows.join('');
 
-  var priceNC=d.filter(function(x){return [2,7,8].indexOf(x.cod)>=0;}).reduce(function(a,x){return a+x.total;},0);
+  // Donut por categoria
+  var grupoTotals={preco:0,peca:0,processo:0};
+  d.forEach(function(x){grupoTotals[getNcGrupo(x.cod)]+=x.total;});
+  var donutLabels=Object.keys(grupoTotals).map(function(k){return NC_GRUPO_LABELS[k];});
+  var donutData=Object.values(grupoTotals);
+  var donutColors=Object.keys(grupoTotals).map(function(k){return NC_GRUPO_COLORS[k];});
+
+  var ctx=document.getElementById('nc-donut');
+  if(ctx){
+    if(ncDonutChart){ncDonutChart.destroy();ncDonutChart=null;}
+    ncDonutChart=new Chart(ctx.getContext('2d'),{type:'doughnut',
+      data:{labels:donutLabels,datasets:[{data:donutData,backgroundColor:donutColors,
+        borderColor:'#111',borderWidth:2}]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false},datalabels:{
+          color:'#fff',font:{size:9,weight:'700'},
+          formatter:function(v){return v>0?((v/tot)*100).toFixed(0)+'%':'';}
+        },tooltip:{backgroundColor:'#111',titleColor:'#D4AF37',bodyColor:'#f0f0f0',
+          callbacks:{label:function(c){return ' '+c.label+': '+c.parsed+' casos';}}}}
+      }});
+    // Legenda manual
+    document.getElementById('nc-donut-legend').innerHTML=Object.keys(grupoTotals).map(function(k){
+      return '<div style="display:flex;align-items:center;gap:4px;margin-bottom:3px">'
+        +'<span style="width:8px;height:8px;border-radius:2px;background:'+NC_GRUPO_COLORS[k]+';flex-shrink:0"></span>'
+        +'<span style="font-size:9px;color:var(--muted)">'+NC_GRUPO_LABELS[k]+': '+grupoTotals[k]+'</span>'
+        +'</div>';
+    }).join('');
+  }
+
   var top=d[0];
+  var priceNC=d.filter(function(x){return NC_GRUPOS.preco.indexOf(x.cod)>=0;}).reduce(function(a,x){return a+x.total;},0);
   document.getElementById('nc-insight').innerHTML=
     '<strong>'+top.label+'</strong> lidera: '+top.total+' casos | '+top.peso.toFixed(2)+'g. '
     +'Total nao comprado: <strong>'+totPeso.toFixed(2)+'g</strong>. '
-    +(priceNC/tot*100).toFixed(0)+'% por preco (motivos 2, 7, 8).';
+    +(priceNC/tot*100).toFixed(0)+'% por preco.';
 }
+
 
 function renderHeatmap(){
   var d=getSlotData(),byH={};
@@ -761,7 +913,23 @@ function getAvSlotData(avName){
       agg[s].aval+=v[0]; agg[s].comp+=v[1]; agg[s].nc+=v[2];
     });
   });
-  return Object.values(agg).sort(function(a,b){return a.slot-b.slot;}).map(function(x){
+  var raw=Object.values(agg).sort(function(a,b){return a.slot-b.slot;});
+  if(slotMode==='hora'){
+    // Agrupar pares de 30min em horas inteiras
+    var byH={};
+    raw.forEach(function(x){
+      var h=Math.floor(x.slot/60);
+      if(!byH[h])byH[h]={slot:h*60,aval:0,comp:0,nc:0};
+      byH[h].aval+=x.aval;byH[h].comp+=x.comp;byH[h].nc+=x.nc;
+    });
+    return Object.values(byH).sort(function(a,b){return a.slot-b.slot;}).map(function(x){
+      var hh=Math.floor(x.slot/60);
+      return {slot:x.slot,label:(hh<10?'0':'')+hh+'h',
+              total:x.aval,compras:x.comp,nc:x.nc,
+              conv:x.aval>0?+(x.comp/x.aval*100).toFixed(1):0};
+    });
+  }
+  return raw.map(function(x){
     var hh=Math.floor(x.slot/60),mm=x.slot%60;
     return {slot:x.slot,label:(hh<10?'0':'')+hh+':'+(mm===0?'00':'30'),
             total:x.aval,compras:x.comp,nc:x.nc,
@@ -854,7 +1022,7 @@ function renderAvCards(){
       +'<div class="av-stat-row"><span class="av-stat-label">Conversao</span><span class="av-stat-val" style="color:'+convColor(d.conv)+'">'+d.conv.toFixed(1)+'%</span></div>'
       +'<div class="av-stat-row"><span class="av-stat-label">Metal</span><span class="av-stat-val">'+d.metal.toFixed(2)+'g</span></div>'
       +'<div class="av-stat-row"><span class="av-stat-label">Ticket Medio</span><span class="av-stat-val">'+fmtR(d.ticket)+'</span></div>'
-      +'<div class="av-conv-bar"><div class="av-conv-fill" style="width:'+(d.comp/maxComp*100).toFixed(1)+'%;background:'+convColor(d.conv)+'"></div></div>'
+      +'<div class="av-conv-bar"><div class="av-conv-fill" style="width:'+d.conv.toFixed(1)+'%;background:'+convColor(d.conv)+'"></div></div>'
       +convBadge(d.conv)
       +'</div>';
   }).join('');
@@ -867,12 +1035,12 @@ function openAvDetail(avName){
   document.getElementById('avd-loja').textContent=lojaTag(d.loja);
   document.getElementById('avd-kpis').innerHTML=
     '<div class="kpi"><div class="kpi-label">Avaliacoes</div><div class="kpi-val">'+fmtN(d.aval)+'</div><div class="kpi-sub">'+d.meses.length+' meses</div></div>'
-    +'<div class="kpi"><div class="kpi-label">Nao Compras</div><div class="kpi-val" style="color:#f87171">'+fmtN(d.nc)+'</div><div class="kpi-sub">media '+Math.round(d.nc/d.meses.length)+'/mes</div></div>'
-    +'<div class="kpi"><div class="kpi-label">Compras</div><div class="kpi-val">'+fmtN(d.comp)+'</div><div class="kpi-sub">concluidas</div></div>'
+    +'<div class="kpi"><div class="kpi-label">Nao Fecharam</div><div class="kpi-val" style="color:#f87171">'+fmtN(d.nc)+'</div><div class="kpi-sub">media '+Math.round(d.nc/d.meses.length)+'/mes</div></div>'
+    +'<div class="kpi"><div class="kpi-label">Fechamentos</div><div class="kpi-val">'+fmtN(d.comp)+'</div><div class="kpi-sub">concluidas</div></div>'
     +'<div class="kpi"><div class="kpi-label">Conversao</div><div class="kpi-val" style="color:'+convColor(d.conv)+'">'+d.conv.toFixed(1)+'%</div><div class="kpi-sub">'+convBadge(d.conv)+'</div></div>'
     +'<div class="kpi"><div class="kpi-label">Metal Total</div><div class="kpi-val">'+d.metal.toFixed(2)+'g</div><div class="kpi-sub">sem prata</div></div>'
     +'<div class="kpi"><div class="kpi-label">Ticket Medio</div><div class="kpi-val">'+fmtR(d.ticket)+'</div><div class="kpi-sub">'+fmtR(d.valor)+' total</div></div>';
-  var metals=[['750',d.m750],['BX',d.mbx],['720',d.m720],['22K',d.m22k],['PT',d.mpt],['24K',d.m24k]].sort(function(a,b){return b[1]-a[1];});
+  var metals=[['750 (18K)',d.m750],['BX (Bx.Teor)',d.mbx],['720 (16K)',d.m720],['22K',d.m22k],['PT (Port.)',d.mpt],['24K (Puro)',d.m24k]].sort(function(a,b){return b[1]-a[1];});
   var mtot=metals.reduce(function(s,m){return s+m[1];},0),mmax=metals[0][1]||1;
   document.getElementById('avd-metal-bars').innerHTML=metals.map(function(mi){
     return '<div class="bar-row"><span class="bar-label">'+mi[0]+'</span>'
