@@ -120,6 +120,12 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
 .mp-cell.selected{background:var(--gold-dim);border-color:var(--gold);color:var(--gold-lt);font-weight:700}
 .mp-cell.disabled{opacity:.25;cursor:default;pointer-events:none}
 .footer{text-align:center;padding:12px;font-size:10px;color:var(--muted2);border-top:1px solid var(--border)}
+.tip{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--bg4);border:1px solid var(--border);color:var(--muted);font-size:9px;font-weight:700;cursor:help;margin-left:5px;flex-shrink:0;vertical-align:middle;position:relative}
+.tip:hover{border-color:var(--gold);color:var(--gold)}
+.tip::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#1a1a1a;border:1px solid var(--border-g);color:var(--white);font-size:10px;font-weight:400;padding:7px 10px;border-radius:7px;white-space:pre-line;min-width:180px;max-width:260px;line-height:1.5;z-index:500;pointer-events:none;opacity:0;transition:opacity .15s;text-align:left}
+.tip:hover::after{opacity:1}
+.tip::before{content:'';position:absolute;bottom:calc(100% + 1px);left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--border-g);z-index:501;opacity:0;transition:opacity .15s}
+.tip:hover::before{opacity:1}
 @media(max-width:600px){
   .kpi-row{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:10px 12px 0}
   
@@ -194,7 +200,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
     <!-- Grafico 1: Volume + Conversao -->
     <div>
       <div class="section-header" style="margin-bottom:6px">
-        <span class="section-title" id="chart-title">Atendimentos &amp; Fechamentos</span>
+        <span class="section-title" id="chart-title">Atendimentos &amp; Fechamentos</span><span class="tip" data-tip="Barras: total de atendimentos (cinza) e fechamentos (dourado) por mês.&#10;Linha branca: taxa de fechamento (%).&#10;Ideal: barras próximas e linha acima de 90%.">i</span>
         <div class="legend">
           <span class="leg"><span class="leg-sq" style="background:#2a2008;border:1px solid #6b5520"></span> Atendimentos</span>
           <span class="leg"><span class="leg-sq" style="background:#5a4010;border:1px solid #D4AF37"></span> Fechamentos</span>
@@ -206,7 +212,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
     <!-- Grafico 2: Metal + Valor -->
     <div>
       <div class="section-header" style="margin-bottom:6px">
-        <span class="section-title">Metal Comprado (g) &amp; Valor Investido (R$)</span>
+        <span class="section-title" style="display:flex;align-items:center;gap:0">Metal Comprado (g) &amp; Valor Investido (R$)<span class="tip" data-tip="Barras douradas: peso total de metal comprado em gramas.&#10;Linha verde: valor total investido em R$.&#10;Ambos devem crescer juntos.">i</span></span>
         <div class="legend">
           <span class="leg"><span class="leg-sq" style="background:rgba(212,175,55,.35);border:1px solid #D4AF37"></span> Metal (g)</span>
           <span class="leg"><span class="leg-sq" style="background:#1a3a1a;border:1px solid #4ade80"></span> Valor (R$)</span>
@@ -219,18 +225,18 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
 
 <div class="bottom-grid">
   <div class="panel">
-    <div class="panel-title">Distribuicao de Metal por Tipo (periodo selecionado)</div>
+    <div class="panel-title" style="display:flex;align-items:center;gap:0">Distribuicao de Metal por Tipo (periodo selecionado)<span class="tip" data-tip="Divide o metal comprado por qualidade.&#10;750 (18K) é o mais comum.&#10;BX = Baixo Teor (menos de 16K).&#10;PT = Ouro Português.">i</span></div>
     <div id="metal-bars"></div>
   </div>
   <div class="panel">
-    <div class="panel-title">Valor Investido por Mes (R$) -- por loja</div>
+    <div class="panel-title" style="display:flex;align-items:center;gap:0">Valor Investido por Mes (R$) -- por loja<span class="tip" data-tip="Barras empilhadas: cada cor = uma loja.&#10;Permite ver qual loja representa mais do valor total&#10;e como o investimento evolui mês a mês.">i</span></div>
     <div style="height:220px"><canvas id="valorChart"></canvas></div>
   </div>
 </div>
 
 <div class="table-section">
   <div class="section-header" style="margin-bottom:8px">
-    <span class="section-title">Resumo Mensal Detalhado</span>
+    <span class="section-title" style="display:flex;align-items:center;gap:0">Resumo Mensal Detalhado<span class="tip" data-tip="Tabela com todos os números por mês e loja.&#10;Clique no cabeçalho para ordenar.&#10;Mini-barra colorida = taxa de fechamento visual.">i</span></span>
     <div style="display:flex;align-items:center;gap:8px">
       <div class="filter-group" id="tbl-limit-btns">
         <div class="chip active" onclick="setTblLimit(6,this)">6m</div>
@@ -260,7 +266,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
 <div class="av-section">
   <div class="av-header">
     <div>
-      <span class="section-title">Desempenho por Avaliador</span>
+      <span class="section-title" style="display:flex;align-items:center;gap:0">Desempenho por Avaliador<span class="tip" data-tip="Cada card = uma avaliadora.&#10;A barra mostra a taxa de fechamento dela (0–100%).&#10;Verde = ótimo (≥95%), dourado = bom (≥88%), vermelho = atenção.">i</span></span>
       <span class="av-period" id="av-period">(ultimos 13 meses)</span>
     </div>
     <div class="av-sort-row">
@@ -282,11 +288,11 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
     </div>
     <div class="av-detail-kpis" id="avd-kpis"></div>
     <div class="av-detail-grid">
-      <div class="panel"><div class="panel-title">Distribuicao por Tipo de Metal</div><div id="avd-metal-bars"></div></div>
-      <div class="panel"><div class="panel-title">Conversao Mensal (%)</div><div style="height:160px"><canvas id="avd-chart"></canvas></div></div>
+      <div class="panel"><div class="panel-title" style="display:flex;align-items:center;gap:0">Distribuicao por Tipo de Metal<span class="tip" data-tip="Metal comprado por esta avaliadora, dividido por tipo.&#10;Mostra em quais qualidades ela mais negocia.">i</span></div><div id="avd-metal-bars"></div></div>
+      <div class="panel"><div class="panel-title" style="display:flex;align-items:center;gap:0">Conversao Mensal (%)<span class="tip" data-tip="Taxa de fechamento desta avaliadora mês a mês.&#10;Verde ≥ 95% · Dourado ≥ 88% · Vermelho < 88%.">i</span></div><div style="height:160px"><canvas id="avd-chart"></canvas></div></div>
     </div>
     <div class="panel" style="margin-top:10px">
-      <div class="panel-title">Movimentacao por Horario (periodo selecionado)</div>
+      <div class="panel-title" style="display:flex;align-items:center;gap:0">Movimentacao por Horario (periodo selecionado)<span class="tip" data-tip="Horários de atendimento desta avaliadora&#10;no período filtrado.&#10;Mostra em que horas ela mais trabalha e converte.">i</span></div>
       <div style="height:180px"><canvas id="avd-slot-chart"></canvas></div>
     </div>
   </div>
@@ -294,17 +300,17 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
 
 <div class="analytics-section">
   <div style="margin-bottom:12px">
-    <span class="section-title">Analise Operacional -- Feedback - Horario - Motivo NC</span>
+    <span class="section-title" style="display:flex;align-items:center;gap:0">Analise Operacional -- Feedback - Horario - Motivo NC<span class="tip" data-tip="Visão operacional do atendimento:&#10;• Qual feedback traz mais conversão&#10;• Quais horários são mais movimentados&#10;• Por que os clientes não fecharam">i</span></span>
   </div>
   <div class="analytics-grid-3">
     <div class="panel" style="grid-column:span 1">
-      <div class="panel-title">Feedback -- Conversao por Tipo</div>
+      <div class="panel-title" style="display:flex;align-items:center;gap:0">Feedback -- Conversao por Tipo<span class="tip" data-tip="Cada linha = um código de feedback do cliente.&#10;Mostra quantos atendimentos tiveram aquele feedback&#10;e qual % deles resultou em fechamento.">i</span></div>
       <div id="fb-list"></div>
       <div class="insight-box" id="fb-insight"></div>
     </div>
     <div class="panel" style="grid-column:span 2">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-      <div class="panel-title" style="border:none;padding:0;margin:0">Movimentacao por Horario</div>
+      <div class="panel-title" style="border:none;padding:0;margin:0;display:flex;align-items:center;gap:0">Movimentacao por Horario<span class="tip" data-tip="Barras: atendimentos e fechamentos por horário.&#10;Linha branca: taxa de fechamento naquele slot.&#10;Alterne entre "Por Hora" e "30 min" no botão acima.">i</span></div>
       <div style="display:flex;gap:4px">
         <div class="chip active" id="slot-toggle-h" onclick="setSlotMode('hora')" style="font-size:10px;padding:2px 8px">Por Hora</div>
         <div class="chip" id="slot-toggle-30" onclick="setSlotMode('30min')" style="font-size:10px;padding:2px 8px">30 min</div>
@@ -317,7 +323,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
   </div>
   <div class="analytics-grid-2" style="margin-top:10px">
     <div class="panel">
-      <div class="panel-title">Motivo de Nao Compra -- Analise de Perda</div>
+      <div class="panel-title" style="display:flex;align-items:center;gap:0">Motivo de Nao Compra -- Analise de Perda<span class="tip" data-tip="Por que o cliente não vendeu o metal?&#10;Dourado = questão de preço (negociável).&#10;Azul = problema na peça (estrutural).&#10;Cinza = outros motivos.&#10;O peso mostra quanto metal deixamos de comprar.">i</span></div>
       <div style="display:flex;gap:10px">
         <div style="flex:1"><div id="nc-list"></div></div>
         <div style="width:140px;flex-shrink:0">
@@ -329,7 +335,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
       <div class="insight-box" id="nc-insight"></div>
     </div>
     <div class="panel">
-      <div class="panel-title">Heatmap -- Volume por Hora do Dia</div>
+      <div class="panel-title" style="display:flex;align-items:center;gap:0">Heatmap -- Volume por Hora do Dia<span class="tip" data-tip="Concentração de atendimentos por hora.&#10;Cor mais intensa = mais atendimentos naquela hora.&#10;Use para planejar escala de pessoal.">i</span></div>
       <div style="height:200px"><canvas id="heatChart"></canvas></div>
       <div class="insight-box" id="heat-insight"></div>
     </div>
@@ -339,7 +345,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
 <!-- ANALISE DE PRECOS -->
 <div class="preco-section" style="padding:0 16px 24px;border-top:1px solid var(--border-g);margin-top:8px;padding-top:14px">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
-    <span class="section-title">Analise de Compras por Preco e Avaliador <span title="1&#186; Preco = primeiro valor oferecido ao cliente. Menor R$/g indica que a avaliadora fechou por menos logo de cara." style="font-size:10px;color:var(--muted);cursor:help;border-bottom:1px dotted var(--muted)">&#9432; o que e isso?</span></span>
+    <span class="section-title" style="display:flex;align-items:center;gap:0">Analise de Compras por Preco e Avaliador<span class="tip" data-tip="1º Preço = primeiro valor oferecido ao cliente.&#10;Menor R$/g no 1º preço = avaliadora fecha mais barato logo de cara.&#10;Ordenado do menor para o maior (melhor primeiro).">i</span></span>
     <span style="font-size:10px;color:var(--muted)" id="preco-period"></span>
   </div>
 
