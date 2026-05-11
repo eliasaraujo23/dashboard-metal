@@ -842,11 +842,6 @@ function renderAvCards(){
     return avSort==='conv'?b.conv-a.conv:avSort==='metal'?b.metal-a.metal:
            avSort==='valor'?b.valor-a.valor:avSort==='ticket'?b.ticket-a.ticket:b.comp-a.comp;
   });
-  // Prioridade: Clara sempre primeiro
-  var prio=[],resto=[];
-  all.forEach(function(d){AV_PRIORITY.indexOf(d.av)>=0?prio.push(d):resto.push(d);});
-  prio.sort(function(a,b){return AV_PRIORITY.indexOf(a.av)-AV_PRIORITY.indexOf(b.av);});
-  all=[].concat(prio,resto);
   var maxComp=all.reduce(function(m,d){return Math.max(m,d.comp);},1);
   document.getElementById('av-cards').innerHTML=all.map(function(d,i){
     return '<div class="av-card'+(avSelected===d.av?' selected':'')+'" onclick="openAvDetail(\''+d.av+'\')">'
