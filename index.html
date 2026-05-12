@@ -322,7 +322,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
       <div class="insight-box" id="slot-insight"></div>
     </div>
   </div>
-  <div class="analytics-grid-2" style="margin-top:10px">
+  <div style="margin-top:10px">
     <div class="panel">
       <div class="panel-title" style="display:flex;align-items:center;gap:0">Motivo de Nao Compra -- Analise de Perda<span class="tip" data-tip="Por que o cliente não vendeu o metal?&#10;Dourado = questão de preço (negociável).&#10;Azul = problema na peça (estrutural).&#10;Cinza = outros motivos.&#10;O peso mostra quanto metal deixamos de comprar.">i</span></div>
       <div style="display:flex;gap:10px">
@@ -335,11 +335,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
       </div>
       <div class="insight-box" id="nc-insight"></div>
     </div>
-    <div class="panel">
-      <div class="panel-title" style="display:flex;align-items:center;gap:0">Heatmap -- Volume por Hora do Dia<span class="tip" data-tip="Concentração de atendimentos por hora.&#10;Cor mais intensa = mais atendimentos naquela hora.&#10;Use para planejar escala de pessoal.">i</span></div>
-      <div style="height:200px"><canvas id="heatChart"></canvas></div>
-      <div class="insight-box" id="heat-insight"></div>
-    </div>
+
   </div>
 </div>
 
@@ -412,7 +408,7 @@ var mpYear=2026,mpStart=null,mpEnd=null,mpPicking=false;
 })();
 
 var F={loja:'TODAS'};
-var mainChart=null,valorChart=null,slotChart=null,heatChart=null,ncDonutChart=null,metalPizzaChart=null;
+var mainChart=null,valorChart=null,slotChart=null,ncDonutChart=null,metalPizzaChart=null;
 var tblSort={col:'ANO_MES',dir:'desc'};
 var tblLimit=6;
 
@@ -945,37 +941,7 @@ function renderNC(){
 }
 
 
-function renderHeatmap(){
-  var d=getSlotData(),byH={};
-  d.forEach(function(s){
-    var h=Math.floor(s.slot/60);
-    if(!byH[h])byH[h]={H:h,total:0,compras:0,nc:0};
-    byH[h].total+=s.total;byH[h].compras+=s.compras;byH[h].nc+=s.nc;
-  });
-  var hArr=Object.values(byH).sort(function(a,b){return a.H-b.H;});
-  if(!hArr.length) return;
-  hArr.forEach(function(x){x.conv=+(x.compras/x.total*100).toFixed(1);});
-  var maxT=Math.max.apply(null,hArr.map(function(x){return x.total;}));
-  var ctx=document.getElementById('heatChart').getContext('2d');
-  if(heatChart){heatChart.destroy();heatChart=null;}
-  heatChart=new Chart(ctx,{type:'bar',
-    data:{labels:hArr.map(function(x){return x.H+'h';}),
-      datasets:[{label:'Atendimentos',data:hArr.map(function(x){return x.total;}),
-        backgroundColor:hArr.map(function(x){return 'rgba(212,175,55,'+(0.15+x.total/maxT*0.8).toFixed(2)+')';}),
-        borderColor:'#8B6914',borderWidth:1,datalabels:{display:false}}]},
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},datalabels:{display:false},
-        tooltip:{backgroundColor:'#111',titleColor:'#D4AF37',bodyColor:'#f0f0f0',
-          callbacks:{label:function(c){var x=hArr[c.dataIndex];
-            return[' Atendimentos: '+x.total,' Compras: '+x.compras,' NC: '+x.nc,' Conv: '+x.conv+'%'];}}}},
-      scales:{x:{ticks:{font:{size:10},color:'#555'},grid:{display:false}},
-        y:{ticks:{font:{size:9},color:'#444'},grid:{color:'#1a1a1a'}}}}});
-  var pk=hArr.reduce(function(a,b){return b.total>a.total?b:a;});
-  var morn=hArr.filter(function(x){return x.H<=11;}).reduce(function(a,x){return a+x.total;},0);
-  var aftn=hArr.filter(function(x){return x.H>=12&&x.H<=17;}).reduce(function(a,x){return a+x.total;},0);
-  document.getElementById('heat-insight').innerHTML='<strong>Pico:</strong> '+pk.H+'h com '+pk.total+' atend. ('+pk.conv+'% conv.) -- Manha: '+morn+' | Tarde: '+aftn;
-}
-function updateAnalytics(){renderFeedback();renderSlots();renderNC();renderHeatmap();}
+function updateAnalytics(){renderFeedback();renderSlots();renderNC();}
 
 // -- AVALIADORES DINAMICOS --
 // calcAvData recalcula o avaliador com base nos filtros ativos (loja + periodo)
