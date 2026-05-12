@@ -187,10 +187,10 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
 </div>
 
 <div class="kpi-row" style="grid-template-columns:repeat(6,minmax(0,1fr))">
-  <div class="kpi"><div class="kpi-label">Atendimentos</div><div class="kpi-val" id="k-aval">--</div><div class="kpi-sub" id="k-aval-s">--</div></div>
-  <div class="kpi"><div class="kpi-label">Nao Fecharam</div><div class="kpi-val" id="k-nc" style="color:#f87171">--</div><div class="kpi-sub" id="k-nc-s">--</div></div>
-  <div class="kpi"><div class="kpi-label">Fechamentos</div><div class="kpi-val" id="k-comp">--</div><div class="kpi-sub" id="k-comp-s">--</div></div>
-  <div class="kpi"><div class="kpi-label">Taxa de Fechamento</div><div class="kpi-val" id="k-conv">--</div><div class="kpi-sub" id="k-conv-s">--</div></div>
+  <div class="kpi"><div class="kpi-label">Avaliacoes</div><div class="kpi-val" id="k-aval">--</div><div class="kpi-sub" id="k-aval-s">--</div></div>
+  <div class="kpi"><div class="kpi-label">Nao Compras</div><div class="kpi-val" id="k-nc" style="color:#f87171">--</div><div class="kpi-sub" id="k-nc-s">--</div></div>
+  <div class="kpi"><div class="kpi-label">Compras</div><div class="kpi-val" id="k-comp">--</div><div class="kpi-sub" id="k-comp-s">--</div></div>
+  <div class="kpi"><div class="kpi-label">Conversao</div><div class="kpi-val" id="k-conv">--</div><div class="kpi-sub" id="k-conv-s">--</div></div>
   <div class="kpi"><div class="kpi-label">Metal Comprado</div><div class="kpi-val" id="k-metal">--</div><div class="kpi-sub" id="k-metal-s">--</div></div>
   <div class="kpi"><div class="kpi-label">Ticket Medio</div><div class="kpi-val" id="k-ticket">--</div><div class="kpi-sub" id="k-ticket-s">--</div></div>
 </div>
@@ -223,10 +223,15 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
   </div>
 </div>
 
-<div class="bottom-grid">
+<div class="bottom-grid" style="grid-template-columns:1.4fr 0.8fr 1fr">
   <div class="panel">
     <div class="panel-title" style="display:flex;align-items:center;gap:0">Distribuicao de Metal por Tipo (periodo selecionado)<span class="tip" data-tip="Divide o metal comprado por qualidade.&#10;750 (18K) é o mais comum.&#10;BX = Baixo Teor (menos de 16K).&#10;PT = Ouro Português.">i</span></div>
     <div id="metal-bars"></div>
+  </div>
+  <div class="panel" style="display:flex;flex-direction:column">
+    <div class="panel-title" style="display:flex;align-items:center;gap:0;width:100%">Divisao por Teor<span class="tip" data-tip="Proporcao de cada teor no total de metal comprado no periodo filtrado.">i</span></div>
+    <div style="height:180px;width:100%"><canvas id="metalPizzaChart"></canvas></div>
+    <div id="metal-pizza-legend" style="margin-top:8px"></div>
   </div>
   <div class="panel">
     <div class="panel-title" style="display:flex;align-items:center;gap:0">Valor Investido por Mes (R$) -- por loja<span class="tip" data-tip="Barras empilhadas: cada cor = uma loja.&#10;Permite ver qual loja representa mais do valor total&#10;e como o investimento evolui mês a mês.">i</span></div>
@@ -407,7 +412,7 @@ var mpYear=2026,mpStart=null,mpEnd=null,mpPicking=false;
 })();
 
 var F={loja:'TODAS'};
-var mainChart=null,valorChart=null,slotChart=null,heatChart=null,ncDonutChart=null;
+var mainChart=null,valorChart=null,slotChart=null,heatChart=null,ncDonutChart=null,metalPizzaChart=null;
 var tblSort={col:'ANO_MES',dir:'desc'};
 var tblLimit=6;
 
@@ -489,7 +494,7 @@ function updateAll(){
   document.getElementById('k-aval').textContent=fmtN(aval);
   document.getElementById('k-aval-s').textContent=data.length+' meses | media '+Math.round(aval/data.length)+'/mes';
   document.getElementById('k-nc').textContent=fmtN(nc);
-  document.getElementById('k-nc-s').textContent='media '+Math.round(nc/data.length)+'/mes | '+((nc/(aval||1))*100).toFixed(1)+'% nao fechou';
+  document.getElementById('k-nc-s').textContent='media '+Math.round(nc/data.length)+'/mes | '+((nc/(aval||1))*100).toFixed(1)+'% nao compraram';
   document.getElementById('k-comp').textContent=fmtN(comp);
   document.getElementById('k-comp-s').textContent='media '+Math.round(comp/data.length)+'/mes';
   document.getElementById('k-conv').textContent=conv+'%';
@@ -502,6 +507,7 @@ function updateAll(){
   renderValorChart(data);
   renderMetalValorChart(data);
   renderMetalBars(data);
+  renderMetalPizza(data);
   renderTable(data);
   updateAnalytics();
   renderAvCards();
@@ -594,10 +600,56 @@ function renderValorChart(data){
   valorChart=new Chart(ctx,{type:'bar',data:{labels:labels,datasets:datasets},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:lojas.length>1,labels:{generateLabels:function(c){return lojas.map(function(l){return{text:l,fillStyle:CORES[l].bg,strokeStyle:CORES[l].border,lineWidth:1};});},color:'#D4AF37',font:{size:10},boxWidth:12,boxHeight:9}},datalabels:{display:false},tooltip:{backgroundColor:'#111',titleColor:'#D4AF37',bodyColor:'#f0f0f0',callbacks:{label:function(c){return ' '+c.dataset.label+': '+fmtR(c.parsed.y);}}}},scales:{x:{stacked:true,ticks:{font:{size:9},color:'#555',maxRotation:45},grid:{display:false}},y:{stacked:true,ticks:{font:{size:9},color:'#555',callback:function(v){return 'R$'+(v/1000).toFixed(0)+'k';}},grid:{color:'#1a1a1a'}}}}});
 }
 
+
+function renderMetalPizza(data){
+  var PIZZA_KEYS=[
+    {l:'750 (18K)',mk:'METAL_750',color:'#D4AF37'},
+    {l:'BX',      mk:'METAL_BX', color:'#8B6914'},
+    {l:'720 (18K)',mk:'METAL_720',color:'#F0D060'},
+    {l:'24K',     mk:'METAL_24K',color:'#c9a227'},
+    {l:'22K',     mk:'METAL_22K',color:'#6b5520'},
+    {l:'PT',      mk:'METAL_PT', color:'#3a2f10'}
+  ];
+  var items=PIZZA_KEYS.map(function(k){
+    return {l:k.l,g:data.reduce(function(a,r){return a+r[k.mk];},0),color:k.color};
+  }).filter(function(i){return i.g>0.1;});
+  var total=items.reduce(function(a,i){return a+i.g;},0);
+  var ctx=document.getElementById('metalPizzaChart');
+  if(!ctx) return;
+  if(metalPizzaChart){metalPizzaChart.destroy();metalPizzaChart=null;}
+  metalPizzaChart=new Chart(ctx.getContext('2d'),{
+    type:'doughnut',
+    data:{labels:items.map(function(i){return i.l;}),
+      datasets:[{data:items.map(function(i){return +i.g.toFixed(2);}),
+        backgroundColor:items.map(function(i){return i.color;}),
+        borderColor:'#111111',borderWidth:2,hoverOffset:6}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'58%',
+      plugins:{legend:{display:false},
+        datalabels:{
+          display:function(c){return c.dataset.data[c.dataIndex]/total*100>=5;},
+          color:'#f0f0f0',font:{size:9,weight:'700'},
+          formatter:function(v){return (v/total*100).toFixed(1)+'%';}},
+        tooltip:{backgroundColor:'#111',borderColor:'#3a2f10',borderWidth:1,
+          titleColor:'#D4AF37',bodyColor:'#f0f0f0',
+          callbacks:{label:function(c){
+            var pct=(c.parsed/total*100).toFixed(1);
+            return ' '+c.label+': '+c.parsed.toFixed(2)+'g ('+pct+'%)';
+          }}}}}});
+  document.getElementById('metal-pizza-legend').innerHTML=items.map(function(i){
+    var pct=(i.g/total*100).toFixed(1);
+    return '<div style="display:flex;align-items:center;gap:5px;margin-bottom:4px">'
+      +'<span style="width:10px;height:10px;border-radius:2px;background:'+i.color+';flex-shrink:0;border:1px solid rgba(255,255,255,0.15)"></span>'
+      +'<span style="font-size:9px;color:'+i.color+';font-weight:600;flex:1">'+i.l+'</span>'
+      +'<span style="font-size:9px;color:'+i.color+';font-weight:700">'+pct+'%</span>'
+      +'<span style="font-size:9px;color:var(--muted);margin-left:4px">'+i.g.toFixed(2)+'g</span>'
+      +'</div>';
+  }).join('');
+}
+
 function renderMetalBars(data){
   var keys=[
     {l:'750 (18K)',      mk:'METAL_750', vk:'VALOR_750'},
-    {l:'720 (16K)',      mk:'METAL_720', vk:'VALOR_720'},
+    {l:'720 (18K)',      mk:'METAL_720', vk:'VALOR_720'},
     {l:'BX (Bx.Teor)',   mk:'METAL_BX',  vk:'VALOR_BX'},
     {l:'24K (Puro)',     mk:'METAL_24K', vk:'VALOR_24K'},
     {l:'22K',            mk:'METAL_22K', vk:'VALOR_22K'},
@@ -614,21 +666,23 @@ function renderMetalBars(data){
   var maxG=items[0]?items[0].g:1;
   var rows=items.map(function(i){
     var pctG=totalG>0?(i.g/totalG*100).toFixed(1):0;
-    var ppg=i.g>0?Math.round(i.v/i.g):0;
-    var vStr=i.v>=1000000?'R$'+(i.v/1000000).toFixed(2)+'M':i.v>=1000?'R$'+(i.v/1000).toFixed(0)+'k':'R$'+Math.round(i.v);
+    var ppg=i.g>0?(i.v/i.g).toFixed(2):0;
+    var vStr=i.v>=1000000?'R$'+(i.v/1000000).toFixed(2)+'M':i.v>=1000?'R$'+(i.v/1000).toFixed(2)+'k':'R$'+i.v.toFixed(2);
     return '<div class="bar-row">'
       +'<span class="bar-label">'+i.l+'</span>'
       +'<div class="bar-track"><div class="bar-fill" style="width:'+(maxG>0?(i.g/maxG*100).toFixed(1):0)+'%"></div></div>'
-      +'<span class="bar-val">'+i.g.toFixed(0)+'g</span>'
+      +'<span class="bar-val">'+i.g.toFixed(2)+'g</span>'
       +'<span style="font-size:10px;color:var(--gold-dk);width:34px;text-align:right;flex-shrink:0">'+pctG+'%</span>'
-      +'<span style="font-size:10px;color:#4ade80;font-weight:600;width:54px;text-align:right;flex-shrink:0">'+vStr+'</span>'
+      +'<span style="font-size:10px;color:#4ade80;font-weight:600;width:60px;text-align:right;flex-shrink:0">'+vStr+'</span>'
       +'</div>';
   });
-  var vTotStr=totalV>=1000000?'R$'+(totalV/1000000).toFixed(2)+'M':'R$'+(totalV/1000).toFixed(0)+'k';
-  rows.push('<div style="border-top:1px solid var(--border);margin-top:6px;padding-top:6px;display:flex;justify-content:space-between;align-items:center">'
-    +'<span style="font-size:10px;font-weight:600;color:var(--muted);flex:1">TOTAL</span>'
-    +'<span style="font-size:11px;color:var(--gold);font-weight:700;margin-right:8px">'+totalG.toFixed(2)+'g</span>'
-    +'<span style="font-size:11px;color:#4ade80;font-weight:700">'+vTotStr+'</span>'
+  var vTotStr=totalV>=1000000?'R$'+(totalV/1000000).toFixed(2)+'M':'R$'+(totalV/1000).toFixed(2)+'k';
+  rows.push('<div class="bar-row" style="border-top:1px solid var(--border);margin-top:6px;padding-top:6px">'
+    +'<span class="bar-label" style="font-weight:700;color:var(--gold)">TOTAL</span>'
+    +'<div class="bar-track" style="background:transparent;border:none"></div>'
+    +'<span class="bar-val" style="font-size:11px;font-weight:700;color:var(--gold)">'+totalG.toFixed(2)+'g</span>'
+    +'<span style="font-size:10px;color:var(--muted);width:34px;text-align:right;flex-shrink:0">100%</span>'
+    +'<span style="font-size:11px;color:#4ade80;font-weight:700;width:60px;text-align:right;flex-shrink:0">'+vTotStr+'</span>'
     +'</div>');
   document.getElementById('metal-bars').innerHTML=rows.join('');
 }
@@ -1050,8 +1104,8 @@ function openAvDetail(avName){
   document.getElementById('avd-loja').textContent=lojaTag(d.loja);
   document.getElementById('avd-kpis').innerHTML=
     '<div class="kpi"><div class="kpi-label">Avaliacoes</div><div class="kpi-val">'+fmtN(d.aval)+'</div><div class="kpi-sub">'+d.meses.length+' meses</div></div>'
-    +'<div class="kpi"><div class="kpi-label">Nao Fecharam</div><div class="kpi-val" style="color:#f87171">'+fmtN(d.nc)+'</div><div class="kpi-sub">media '+Math.round(d.nc/d.meses.length)+'/mes</div></div>'
-    +'<div class="kpi"><div class="kpi-label">Fechamentos</div><div class="kpi-val">'+fmtN(d.comp)+'</div><div class="kpi-sub">concluidas</div></div>'
+    +'<div class="kpi"><div class="kpi-label">Nao Compras</div><div class="kpi-val" style="color:#f87171">'+fmtN(d.nc)+'</div><div class="kpi-sub">media '+Math.round(d.nc/d.meses.length)+'/mes</div></div>'
+    +'<div class="kpi"><div class="kpi-label">Compras</div><div class="kpi-val">'+fmtN(d.comp)+'</div><div class="kpi-sub">concluidas</div></div>'
     +'<div class="kpi"><div class="kpi-label">Conversao</div><div class="kpi-val" style="color:'+convColor(d.conv)+'">'+d.conv.toFixed(1)+'%</div><div class="kpi-sub">'+convBadge(d.conv)+'</div></div>'
     +'<div class="kpi"><div class="kpi-label">Metal Total</div><div class="kpi-val">'+d.metal.toFixed(2)+'g</div><div class="kpi-sub">sem prata</div></div>'
     +'<div class="kpi"><div class="kpi-label">Ticket Medio</div><div class="kpi-val">'+fmtR(d.ticket)+'</div><div class="kpi-sub">'+fmtR(d.valor)+' total</div></div>';
