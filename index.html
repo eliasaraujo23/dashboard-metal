@@ -170,15 +170,30 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
     <div onclick="togglePicker()" style="display:flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--border-g);border-radius:8px;padding:5px 12px;cursor:pointer;font-size:12px;color:var(--gold);white-space:nowrap;user-select:none">
       &#128197; <span id="mr-label">---</span> &#9660;
     </div>
-    <div id="month-picker" style="display:none;position:absolute;top:calc(100% + 6px);left:0;z-index:300;background:var(--bg2);border:1px solid var(--border-g);border-radius:12px;padding:14px;width:260px;box-shadow:0 8px 32px rgba(0,0,0,.7)">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-        <button onclick="mpNav(-1);event.stopPropagation()" style="background:transparent;border:1px solid var(--border);color:var(--muted);width:26px;height:26px;border-radius:6px;cursor:pointer">&#8249;</button>
-        <span id="mp-title" style="font-size:13px;font-weight:600;color:var(--gold)"></span>
-        <button onclick="mpNav(1);event.stopPropagation()" style="background:transparent;border:1px solid var(--border);color:var(--muted);width:26px;height:26px;border-radius:6px;cursor:pointer">&#8250;</button>
+    <div id="month-picker" style="display:none;position:absolute;top:calc(100% + 6px);left:0;z-index:300;background:var(--bg2);border:1px solid var(--border-g);border-radius:12px;padding:14px;width:560px;box-shadow:0 8px 32px rgba(0,0,0,.7)">
+      <div style="display:flex;gap:16px">
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <button onclick="dpNav(-1);event.stopPropagation()" style="background:transparent;border:1px solid var(--border);color:var(--muted);width:26px;height:26px;border-radius:6px;cursor:pointer">&#8249;</button>
+            <span id="dp-title-l" style="font-size:12px;font-weight:600;color:var(--gold)"></span>
+            <div style="width:26px"></div>
+          </div>
+          <div id="dp-grid-l" style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;font-size:11px"></div>
+        </div>
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <div style="width:26px"></div>
+            <span id="dp-title-r" style="font-size:12px;font-weight:600;color:var(--gold)"></span>
+            <button onclick="dpNav(1);event.stopPropagation()" style="background:transparent;border:1px solid var(--border);color:var(--muted);width:26px;height:26px;border-radius:6px;cursor:pointer">&#8250;</button>
+          </div>
+          <div id="dp-grid-r" style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;font-size:11px"></div>
+        </div>
       </div>
-      <div id="mp-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px"></div>
-      <div style="padding-top:8px;border-top:1px solid var(--border);margin-top:10px">
-        <span id="mp-hint" style="font-size:10px;color:var(--muted)">Clique inicio, depois fim</span>
+      <div style="padding-top:8px;border-top:1px solid var(--border);margin-top:10px;display:flex;align-items:center;justify-content:space-between">
+        <span id="dp-hint" style="font-size:10px;color:var(--muted)">Clique na data inicial</span>
+        <div style="display:flex;gap:8px">
+          <span id="dp-range-label" style="font-size:11px;color:var(--gold-lt)"></span>
+        </div>
       </div>
     </div>
   </div>
@@ -398,14 +413,22 @@ const SLOTS_RAW={"24K":{"2024-01":{"540":[1,1,0],"570":[7,6,1],"600":[8,6,2],"63
 var ALL_MONTHS=["2022-01","2022-02","2022-03","2022-04","2022-05","2022-06","2022-07","2022-08","2022-09","2022-10","2022-11","2022-12","2023-01","2023-02","2023-03","2023-04","2023-05","2023-06","2023-07","2023-08","2023-09","2023-10","2023-11","2023-12","2024-01","2024-02","2024-03","2024-04","2024-05","2024-06","2024-07","2024-08","2024-09","2024-10","2024-11","2024-12","2025-01","2025-02","2025-03","2025-04","2025-05","2025-06","2025-07","2025-08","2025-09","2025-10","2025-11","2025-12","2026-01","2026-02","2026-03","2026-04","2026-05"];
 
 var MP_MN=["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
-var mpYear=2026,mpStart=null,mpEnd=null,mpPicking=false;
+var dpStart=null,dpEnd=null,dpPicking=false,dpViewL=null,dpViewR=null;
+var DP_MIN=null,DP_MAX=null;
 (function(){
-  var allM=ALL_MONTHS,last=allM[allM.length-1];
-  mpEnd=last;
-  var y=parseInt(last.split('-')[0]),m=parseInt(last.split('-')[1]);
-  var sd=new Date(y,m-13,1);
-  mpStart=sd.getFullYear()+'-'+((sd.getMonth()+1)<10?'0':'')+(sd.getMonth()+1);
-  mpYear=y;
+  var allDates=[];
+  Object.keys(RAW).forEach(function(l){(RAW[l]||[]).forEach(function(r){if(r.ANO_MES)allDates.push(r.ANO_MES);});});
+  allDates.sort();
+  if(allDates.length){
+    var mn=allDates[0].split('-');DP_MIN=new Date(+mn[0],+mn[1]-1,1);
+    var mx=allDates[allDates.length-1].split('-');
+    DP_MAX=new Date(+mx[0],+mx[1],0);
+  } else {DP_MIN=new Date(2022,0,1);DP_MAX=new Date();}
+  dpEnd=new Date(DP_MAX);
+  dpStart=new Date(DP_MAX.getFullYear(),DP_MAX.getMonth()-12,1);
+  if(dpStart<DP_MIN)dpStart=new Date(DP_MIN);
+  dpViewR=new Date(dpEnd.getFullYear(),dpEnd.getMonth(),1);
+  dpViewL=new Date(dpViewR.getFullYear(),dpViewR.getMonth()-1,1);
 })();
 
 var F={loja:'TODAS'};
@@ -417,40 +440,70 @@ function fmtN(n){return Math.round(n).toLocaleString('pt-BR');}
 function fmtR(n){return 'R$ '+Math.round(n).toLocaleString('pt-BR');}
 function fmtMes(s){var p=s.split('-');return MP_MN[+p[1]-1]+'/'+p[0].slice(2);}
 function slotLabel(label){
-  // Converte "09:00" → "09:00-09:29" e "09:30" → "09:30-09:59"
   var p=label.split(':'),hh=parseInt(p[0]),mm=parseInt(p[1]);
   var endMm=mm+29,endHh=hh;
   if(endMm>=60){endMm-=60;endHh++;}
   return label+'-'+(endHh<10?'0':'')+endHh+':'+(endMm<10?'0':'')+endMm;
 }
+function dpDateStr(d){return d.getFullYear()+'-'+(d.getMonth()<9?'0':'')+(d.getMonth()+1)+'-'+(d.getDate()<10?'0':'')+d.getDate();}
+function dpMonStr(d){return d.getFullYear()+'-'+(d.getMonth()<9?'0':'')+(d.getMonth()+1);}
+function dpFmtLabel(d){return (d.getDate()<10?'0':'')+d.getDate()+'/'+MP_MN[d.getMonth()]+'/'+d.getFullYear().toString().slice(2);}
 
 function getLast13Window(){
-  if(mpStart){var a=mpStart,b=mpEnd||mpStart;return{start:a<=b?a:b,end:a<=b?b:a};}
-  var last=ALL_MONTHS[ALL_MONTHS.length-1];
-  var y=parseInt(last.split('-')[0]),m=parseInt(last.split('-')[1]);
-  var sd=new Date(y,m-13,1);
-  var start=sd.getFullYear()+'-'+((sd.getMonth()+1)<10?'0':'')+(sd.getMonth()+1);
-  return{start:start,end:last};
+  var s=dpStart||DP_MIN,e=dpEnd||DP_MAX;
+  if(s>e){var t=s;s=e;e=t;}
+  return{start:dpMonStr(s),end:dpMonStr(e),startDate:dpDateStr(s),endDate:dpDateStr(e)};
 }
-function mpFmt(s){var p=s.split('-');return MP_MN[+p[1]-1]+'/'+p[0].slice(2);}
-function updateRangeLabel(){var el=document.getElementById('mr-label');if(el){var w=getLast13Window();el.textContent=mpFmt(w.start)+' > '+mpFmt(w.end);}}
-function togglePicker(){var dp=document.getElementById('month-picker');if(!dp)return;dp.style.display=dp.style.display==='none'?'block':'none';if(dp.style.display==='block')renderMpGrid();}
-function mpNav(d){var yrs=[];ALL_MONTHS.forEach(function(m){var y=parseInt(m);if(yrs.indexOf(y)<0)yrs.push(y);});mpYear=Math.max(yrs[0],Math.min(yrs[yrs.length-1],mpYear+d));renderMpGrid();}
-function renderMpGrid(){
-  var el=document.getElementById('mp-title');if(!el)return;el.textContent=mpYear;
-  var w=getLast13Window(),html='';
-  for(var m=1;m<=12;m++){
-    var key=mpYear+'-'+(m<10?'0':'')+m;
-    var ex=ALL_MONTHS.indexOf(key)>=0,isSel=(key===w.start||key===w.end),inR=key>w.start&&key<w.end;
-    html+='<div class="mp-cell'+(isSel?' selected':'')+(!isSel&&inR?' in-range':'')+(!ex?' disabled':'')+"\" onclick=\"mpClick('"+key+"')\">"+MP_MN[m-1]+'</div>';
+function updateRangeLabel(){
+  var el=document.getElementById('mr-label');
+  if(el){var s=dpStart||DP_MIN,e=dpEnd||DP_MAX;if(s>e){var t=s;s=e;e=t;}el.textContent=dpFmtLabel(s)+' > '+dpFmtLabel(e);}
+}
+function togglePicker(){var dp=document.getElementById('month-picker');if(!dp)return;dp.style.display=dp.style.display==='none'?'block':'none';if(dp.style.display==='block')renderDpGrids();}
+function dpNav(d){dpViewL=new Date(dpViewL.getFullYear(),dpViewL.getMonth()+d,1);dpViewR=new Date(dpViewR.getFullYear(),dpViewR.getMonth()+d,1);renderDpGrids();}
+function renderDpGrid(containerId,viewDate){
+  var el=document.getElementById(containerId);if(!el)return;
+  var y=viewDate.getFullYear(),m=viewDate.getMonth();
+  var s=dpStart,e=dpEnd;if(s&&e&&s>e){var t=s;s=e;e=t;}
+  var dias=['D','S','T','Q','Q','S','S'];
+  var html=dias.map(function(d){return '<div style="color:#555;padding:3px 0;font-size:10px">'+d+'</div>';}).join('');
+  var first=new Date(y,m,1).getDay();
+  for(var i=0;i<first;i++)html+='<div></div>';
+  var lastDay=new Date(y,m+1,0).getDate();
+  for(var day=1;day<=lastDay;day++){
+    var dt=new Date(y,m,day);
+    var ds=dpDateStr(dt);
+    var disabled=dt<DP_MIN||dt>DP_MAX;
+    var isSel=(s&&dpDateStr(s)===ds)||(e&&dpDateStr(e)===ds);
+    var inR=s&&e&&dt>s&&dt<e;
+    var style='padding:3px 1px;border-radius:4px;cursor:'+(disabled?'default':'pointer')+';';
+    if(isSel)style+='background:var(--gold-dim);color:var(--gold-lt);font-weight:600;';
+    else if(inR)style+='background:#1a1a0a;color:#ccc;';
+    else if(disabled)style+='color:#333;';
+    else style+='color:#aaa;';
+    html+='<div style="'+style+'"'+(disabled?'':' onclick="dpClick(\''+ds+'\');event.stopPropagation()"')+'>'+day+'</div>';
   }
-  document.getElementById('mp-grid').innerHTML=html;
+  el.innerHTML=html;
 }
-function mpClick(key){
-  if(ALL_MONTHS.indexOf(key)<0)return;
-  if(!mpPicking){mpStart=key;mpEnd=key;mpPicking=true;var h=document.getElementById('mp-hint');if(h)h.textContent='Agora clique no mes final';}
-  else{if(key<mpStart){mpEnd=mpStart;mpStart=key;}else mpEnd=key;mpPicking=false;var h=document.getElementById('mp-hint');if(h)h.textContent='Clique inicio, depois fim';}
-  renderMpGrid();updateRangeLabel();
+function renderDpGrids(){
+  var tl=document.getElementById('dp-title-l'),tr=document.getElementById('dp-title-r');
+  if(tl)tl.textContent=MP_MN[dpViewL.getMonth()]+' '+dpViewL.getFullYear();
+  if(tr)tr.textContent=MP_MN[dpViewR.getMonth()]+' '+dpViewR.getFullYear();
+  renderDpGrid('dp-grid-l',dpViewL);
+  renderDpGrid('dp-grid-r',dpViewR);
+  var rl=document.getElementById('dp-range-label');
+  if(rl&&dpStart&&dpEnd){var s=dpStart,e=dpEnd;if(s>e){var t=s;s=e;e=t;}rl.textContent=dpFmtLabel(s)+' → '+dpFmtLabel(e);}
+}
+function dpClick(ds){
+  var dt=new Date(ds+'T12:00:00');
+  if(!dpPicking){
+    dpStart=dt;dpEnd=dt;dpPicking=true;
+    var h=document.getElementById('dp-hint');if(h)h.textContent='Agora clique na data final';
+  } else {
+    if(dt<dpStart){dpEnd=dpStart;dpStart=dt;}else dpEnd=dt;
+    dpPicking=false;
+    var h=document.getElementById('dp-hint');if(h)h.textContent='Clique na data inicial';
+  }
+  renderDpGrids();updateRangeLabel();
 }
 function applyPicker(){var dp=document.getElementById('month-picker');if(dp)dp.style.display='none';updateAll();}
 document.addEventListener('click',function(e){var w=document.getElementById('mp-wrap'),dp=document.getElementById('month-picker');if(w&&dp&&!w.contains(e.target))dp.style.display='none';});
@@ -1178,11 +1231,16 @@ document.querySelectorAll('.chip').forEach(function(chip){
 
 function resetFiltros(){
   F={loja:'TODAS'};
-  mpStart=null;mpEnd=null;mpPicking=false;
+  dpEnd=new Date(DP_MAX);
+  dpStart=new Date(DP_MAX.getFullYear(),DP_MAX.getMonth()-12,1);
+  if(dpStart<DP_MIN)dpStart=new Date(DP_MIN);
+  dpPicking=false;
+  dpViewR=new Date(dpEnd.getFullYear(),dpEnd.getMonth(),1);
+  dpViewL=new Date(dpViewR.getFullYear(),dpViewR.getMonth()-1,1);
   document.querySelectorAll('.chip').forEach(function(c){c.classList.remove('active');if(c.dataset.val==='TODAS')c.classList.add('active');});
   document.querySelectorAll('[data-avsort]').forEach(function(c){c.classList.remove('active');if(c.dataset.avsort==='comp')c.classList.add('active');});
   avSort='comp';
-  updateAll();updateRangeLabel();renderMpGrid();
+  updateAll();updateRangeLabel();
 }
 
 
@@ -1367,7 +1425,6 @@ renderAvCards();
 updateAll();
 renderPrecoTable();
 updateRangeLabel();
-renderMpGrid();
 </script>
 </body>
 </html>
