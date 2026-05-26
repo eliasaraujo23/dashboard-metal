@@ -128,21 +128,58 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
 .tip:hover::after{opacity:1}
 .tip::before{content:'';position:absolute;bottom:calc(100% + 1px);left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--border-g);z-index:501;opacity:0;transition:opacity .15s}
 .tip:hover::before{opacity:1}
+.kpi-row-6{grid-template-columns:repeat(6,minmax(0,1fr))}
+.bottom-grid-3{grid-template-columns:1.4fr 0.8fr 1fr}
+/* ── RESPONSIVO ─────────────────────────────────────────────────────────── */
+
+/* Médio: tablets e janelas estreitas (≤900px) */
+@media(max-width:900px){
+  .kpi-row{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+  .kpi-row-6{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .bottom-grid{grid-template-columns:1fr 1fr}
+  .bottom-grid-3{grid-template-columns:1fr 1fr}
+  .analytics-grid-3{grid-template-columns:1fr 1fr}
+  .av-detail-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .preco-section{padding:0 12px 16px}
+  #month-picker{width:min(560px,96vw) !important}
+}
+
+/* Pequeno: mobile e janelas muito estreitas (≤600px) */
 @media(max-width:600px){
-  .kpi-row{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:10px 12px 0}
-  
+  .kpi-row{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;padding:10px 12px 0}
+  .kpi-row-6{grid-template-columns:repeat(3,minmax(0,1fr))}
   .bottom-grid{grid-template-columns:1fr;padding:0 12px 10px}
+  .bottom-grid-3{grid-template-columns:1fr}
   .analytics-grid-3{grid-template-columns:1fr}
   .analytics-grid-2{grid-template-columns:1fr}
   .av-cards{grid-template-columns:repeat(2,minmax(0,1fr))}
   .av-detail-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .av-detail-kpis 
   .av-detail-grid{grid-template-columns:1fr}
-  .nc-label{width:120px;font-size:9px}
-  .chart-box{height:260px}
-  .mini-box{height:180px}
-  .tbl{font-size:10px;min-width:480px}
+  .nc-label{width:auto;flex:1;font-size:9px}
+  .nc-price{width:56px}
+  .chart-box{height:220px}
+  .mini-box{height:160px}
+  .tbl{font-size:10px;min-width:420px}
+  .section-title{font-size:12px}
+  .preco-section{padding:0 10px 14px}
+  .panel{padding:10px}
+  .fb-row{grid-template-columns:34px 1fr 60px 50px 44px;gap:4px}
+  .fb-row .fb-bar-wrap{display:none}
+  #month-picker{width:min(560px,96vw) !important;left:50% !important;transform:translateX(-50%) !important}
 }
+
+/* Extra pequeno: ≤400px */
+@media(max-width:400px){
+  .kpi-row{grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;padding:8px 10px 0}
+  .kpi-row-6{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .av-cards{grid-template-columns:1fr}
+  .av-detail-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .filters{gap:4px;padding:6px 10px}
+  .chip{padding:3px 8px;font-size:10px}
+  .fb-row{grid-template-columns:30px 1fr 58px 44px;gap:3px}
+  .fb-desc{display:none}
+}
+
 </style>
 </head>
 <body>
@@ -204,7 +241,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
   <button class="reset-btn" onclick="resetFiltros()">&#8635; Resetar</button>
 </div>
 
-<div class="kpi-row" style="grid-template-columns:repeat(6,minmax(0,1fr))">
+<div class="kpi-row kpi-row-6">
   <div class="kpi"><div class="kpi-label">Avaliacoes</div><div class="kpi-val" id="k-aval">--</div><div class="kpi-sub" id="k-aval-s">--</div></div>
   <div class="kpi"><div class="kpi-label">Nao Compras</div><div class="kpi-val" id="k-nc" style="color:#f87171">--</div><div class="kpi-sub" id="k-nc-s">--</div></div>
   <div class="kpi"><div class="kpi-label">Compras</div><div class="kpi-val" id="k-comp">--</div><div class="kpi-sub" id="k-comp-s">--</div></div>
@@ -241,7 +278,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
   </div>
 </div>
 
-<div class="bottom-grid" style="grid-template-columns:1.4fr 0.8fr 1fr">
+<div class="bottom-grid bottom-grid-3">
   <div class="panel">
     <div class="panel-title" style="display:flex;align-items:center;gap:0">Distribuicao de Metal por Tipo (periodo selecionado)<span class="tip" data-tip="Divide o metal comprado por qualidade.&#10;750 (18K) é o mais comum.&#10;BX = Baixo Teor (menos de 16K).&#10;PT = Ouro Português.">i</span></div>
     <div id="metal-bars"></div>
@@ -326,33 +363,31 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
     <span class="section-title" style="display:flex;align-items:center;gap:0">Analise Operacional -- Feedback - Horario - Motivo NC<span class="tip" data-tip="Visão operacional do atendimento:&#10;• Qual feedback traz mais conversão&#10;• Quais horários são mais movimentados&#10;• Por que os clientes não fecharam">i</span></span>
   </div>
 
-  <!-- 1. Feedback siglas + Horário lado a lado -->
-  <div class="analytics-grid-3">
-    <!-- Painel Feedback -->
-    <div class="panel" style="overflow:hidden">
-      <div class="panel-title" style="display:flex;align-items:center;gap:4px">Feedback -- Conversao por Tipo<span class="tip" data-tip="Cada linha = um código de feedback do cliente.&#10;Mostra quantos atendimentos tiveram aquele feedback&#10;e qual % deles resultou em fechamento.&#10;&#10;⚠ Reage ao filtro de loja.&#10;Filtro de período: requer atualização dos CSVs.">i</span><span id="fb-period-warn" style="font-size:10px;color:#f87171;font-weight:normal;margin-left:4px"></span></div>
-      <div style="display:grid;grid-template-columns:40px 140px 1fr 72px 60px 48px;align-items:center;gap:6px;padding:3px 6px;margin-bottom:2px;border-bottom:1px solid var(--border-g)">
-        <span style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Sigla</span>
-        <span style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Descrição</span>
-        <span style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Volume de Metal</span>
-        <span style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;text-align:right">Peso (g)</span>
-        <span style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;text-align:right">C / A</span>
-        <span style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;text-align:right">Conv.</span>
-      </div>
-      <div id="fb-list"></div>
-      <div class="insight-box" id="fb-insight"></div>
-    </div>
-    <!-- Painel Horario -->
-    <div class="panel">
-      <div class="panel-title" style="display:flex;align-items:center;gap:0;margin-bottom:10px">Movimentacao por Horario -- Intervalos de 30 min<span class="tip" data-tip="Barras: atendimentos e fechamentos a cada 30 minutos.&#10;Linha branca: taxa de fechamento naquele slot.&#10;Ex: 09:00 = atendimentos entre 09:00 e 09:29.">i</span></div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px" id="slot-peaks"></div>
-      <div style="height:280px;width:100%"><canvas id="slotChart"></canvas></div>
-      <div class="insight-box" id="slot-insight"></div>
-    </div>
+  <!-- 1. Horário — full width -->
+  <div class="panel" style="margin-bottom:10px">
+    <div class="panel-title" style="display:flex;align-items:center;gap:0;margin-bottom:10px">Movimentacao por Horario -- Intervalos de 30 min<span class="tip" data-tip="Barras: atendimentos e fechamentos a cada 30 minutos.&#10;Linha branca: taxa de fechamento naquele slot.&#10;Ex: 09:00 = atendimentos entre 09:00 e 09:29.">i</span></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px" id="slot-peaks"></div>
+    <div style="height:280px;width:100%"><canvas id="slotChart"></canvas></div>
+    <div class="insight-box" id="slot-insight"></div>
   </div>
 
-  <!-- 3. Motivo NC — embaixo, full width -->
-  <div style="margin-top:10px">
+  <!-- 2. Feedback — full width -->
+  <div class="panel" style="overflow:hidden;margin-bottom:10px">
+    <div class="panel-title" style="display:flex;align-items:center;gap:4px">Feedback -- Conversao por Tipo<span class="tip" data-tip="Cada linha = um código de feedback do cliente.&#10;Mostra quantos atendimentos tiveram aquele feedback&#10;e qual % deles resultou em fechamento.&#10;&#10;⚠ Reage ao filtro de loja e período.">i</span><span id="fb-period-warn" style="font-size:10px;color:#f87171;font-weight:normal;margin-left:4px"></span></div>
+    <div id="fb-header" style="display:grid;grid-template-columns:40px 140px 1fr 72px 60px 48px;align-items:center;gap:6px;padding:3px 6px;margin-bottom:2px;border-bottom:1px solid var(--border-g)">
+      <span style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Sigla</span>
+      <span style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em" id="fb-h-desc">Descrição</span>
+      <span style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em" id="fb-h-bar">Volume de Metal</span>
+      <span style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;text-align:right">Peso (g)</span>
+      <span style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;text-align:right">C / A</span>
+      <span style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;text-align:right">Conv.</span>
+    </div>
+    <div id="fb-list"></div>
+    <div class="insight-box" id="fb-insight"></div>
+  </div>
+
+  <!-- 3. Motivo NC — full width -->
+  <div>
     <div class="panel">
       <div class="panel-title" style="display:flex;align-items:center;gap:0">Motivo de Nao Compra -- Analise de Perda<span class="tip" data-tip="Por que o cliente não vendeu o metal?&#10;Dourado = questão de preço (negociável).&#10;Azul = problema na peça (estrutural).&#10;Cinza = outros motivos.&#10;O peso mostra quanto metal deixamos de comprar.">i</span></div>
       <div style="display:flex;gap:10px">
@@ -543,6 +578,31 @@ function getFilteredData(){
   arr.forEach(function(r){r.CONV=r.AVAL_S4>0?+(r.COMPRAS/r.AVAL_S4*100).toFixed(2):0;r.TICKET_MEDIO=r.TICKET_CNT>0?+(r.TICKET_SUM/r.TICKET_CNT).toFixed(0):0;});
   return arr;
 }
+
+// ── RESPONSIVO: sincronizar header do fb com o grid atual ────────────────────
+(function(){
+  function syncFbHeader(){
+    var hdr=document.getElementById('fb-header');
+    if(!hdr) return;
+    var w=window.innerWidth;
+    var cols,showDesc=true,showBar=true;
+    if(w<=400){
+      cols='30px 1fr 58px 44px'; showDesc=false; showBar=false;
+    } else if(w<=600){
+      cols='34px 1fr 60px 50px 44px'; showDesc=false; showBar=false;
+    } else {
+      cols='40px 140px 1fr 72px 60px 48px'; showDesc=true; showBar=true;
+    }
+    hdr.style.gridTemplateColumns=cols;
+    var hDesc=document.getElementById('fb-h-desc');
+    var hBar=document.getElementById('fb-h-bar');
+    if(hDesc) hDesc.style.display=showDesc?'':'none';
+    if(hBar)  hBar.style.display=showBar?'':'none';
+  }
+  window.addEventListener('resize',syncFbHeader);
+  document.addEventListener('DOMContentLoaded',syncFbHeader);
+  setTimeout(syncFbHeader,100);
+})();
 
 function updateAll(){
   var data=getFilteredData();
