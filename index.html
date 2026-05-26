@@ -9,55 +9,55 @@
 <style>
 :root{--gold:#D4AF37;--gold-lt:#F0D060;--gold-dk:#8B6914;--gold-dim:#6b5520;--bg:#0a0a0a;--bg2:#111111;--bg3:#1a1a1a;--bg4:#222222;--border:#2a2a2a;--border-g:#3a3020;--white:#f0f0f0;--muted:#666666;--muted2:#444444}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--white);font-size:13px;min-height:100vh}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--white);font-size:15px;min-height:100vh}
 .header{background:var(--bg2);border-bottom:1px solid var(--border-g);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.7)}
 .logo{display:flex;align-items:center;gap:10px}
-.logo-icon{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#D4AF37,#8B6914);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-.logo-text{font-size:16px;font-weight:700;color:var(--gold);letter-spacing:.04em}
-.logo-sub{font-size:10px;color:var(--muted);margin-top:1px}
-.header-right{font-size:10px;color:var(--muted)}
+.logo-icon{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#D4AF37,#8B6914);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.logo-text{font-size:18px;font-weight:700;color:var(--gold);letter-spacing:.04em}
+.logo-sub{font-size:12px;color:var(--muted);margin-top:1px}
+.header-right{font-size:12px;color:var(--muted)}
 .filters{background:var(--bg2);border-bottom:1px solid var(--border);padding:8px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;position:sticky;top:57px;z-index:99;box-shadow:0 2px 8px rgba(0,0,0,.5)}
-.filter-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+.filter-label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
 .filter-group{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
-.chip{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:500;cursor:pointer;border:1px solid var(--border);color:var(--muted);background:var(--bg3);transition:all .15s;user-select:none;white-space:nowrap;-webkit-tap-highlight-color:transparent}
+.chip{padding:4px 10px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;border:1px solid var(--border);color:var(--muted);background:var(--bg3);transition:all .15s;user-select:none;white-space:nowrap;-webkit-tap-highlight-color:transparent}
 .chip:hover{border-color:var(--gold-dk);color:var(--gold)}
 .chip.active{background:var(--gold-dim);border-color:var(--gold);color:var(--gold-lt)}
 .filter-divider{width:1px;height:20px;background:var(--border);margin:0 2px}
-.reset-btn{margin-left:auto;padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer;background:transparent;border:1px solid var(--border);color:var(--muted);-webkit-tap-highlight-color:transparent}
+.reset-btn{margin-left:auto;padding:4px 10px;border-radius:6px;font-size:13px;cursor:pointer;background:transparent;border:1px solid var(--border);color:var(--muted);-webkit-tap-highlight-color:transparent}
 .reset-btn:hover{border-color:var(--gold-dk);color:var(--gold)}
 .kpi-row{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;padding:12px 16px 0}
 .kpi{background:var(--bg2);border:1px solid var(--border-g);border-radius:10px;padding:10px 12px;position:relative;overflow:hidden}
 .kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold-dk),var(--gold))}
-.kpi-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
-.kpi-val{font-size:18px;font-weight:700;color:var(--gold);line-height:1.1}
-.kpi-sub{font-size:9px;color:var(--muted);margin-top:3px}
+.kpi-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.kpi-val{font-size:20px;font-weight:700;color:var(--gold);line-height:1.1}
+.kpi-sub{font-size:11px;color:var(--muted);margin-top:3px}
 .kpi-delta-up{color:#4ade80}.kpi-delta-down{color:#f87171}
 .chart-section{padding:12px 16px}
 .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px}
-.section-title{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.section-title{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
 .legend{display:flex;gap:12px;flex-wrap:wrap}
-.leg{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted)}
+.leg{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--muted)}
 .leg-sq{width:10px;height:10px;border-radius:2px;flex-shrink:0}
 .leg-ln{width:18px;height:0;border-top:2px solid;flex-shrink:0}
 .chart-box{position:relative;width:100%;height:320px}
 .bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px 12px}
 .panel{background:var(--bg2);border:1px solid var(--border-g);border-radius:10px;padding:12px}
-.panel-title{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;border-bottom:1px solid var(--border);padding-bottom:7px}
+.panel-title{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;border-bottom:1px solid var(--border);padding-bottom:7px}
 .bar-row{display:flex;align-items:center;gap:6px;margin-bottom:7px}
-.bar-label{font-size:10px;color:var(--white);width:58px;flex-shrink:0}
+.bar-label{font-size:12px;color:var(--white);width:58px;flex-shrink:0}
 .bar-track{flex:1;height:7px;background:var(--bg4);border-radius:4px;overflow:hidden}
 .bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gold-dk),var(--gold))}
-.bar-val{font-size:10px;color:var(--gold);width:44px;text-align:right;flex-shrink:0}
+.bar-val{font-size:12px;color:var(--gold);width:44px;text-align:right;flex-shrink:0}
 .mini-box{height:170px}
 .table-section{padding:0 16px 20px}
 .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:8px}
-.tbl{width:100%;border-collapse:collapse;font-size:11px;min-width:520px}
+.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:520px}
 .tbl th.th-sort{cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
 .tbl th.th-sort:hover{color:var(--gold-lt)}
 .tbl th.th-sort.sorted{color:var(--gold)}
-.sort-icon{font-size:10px;margin-left:3px;opacity:.5}
+.sort-icon{font-size:12px;margin-left:3px;opacity:.5}
 .th-sort.sorted .sort-icon{opacity:1;color:var(--gold)}
-.tbl th{background:var(--bg3);color:var(--gold);font-weight:600;padding:7px 10px;text-align:left;border-bottom:1px solid var(--border-g);font-size:10px;text-transform:uppercase;letter-spacing:.04em}
+.tbl th{background:var(--bg3);color:var(--gold);font-weight:600;padding:7px 10px;text-align:left;border-bottom:1px solid var(--border-g);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
 .tbl td{padding:6px 10px;border-bottom:1px solid var(--border);color:var(--white)}
 .tbl tr:hover td{background:var(--bg3)}
 .tbl td.num{text-align:right;color:var(--gold);font-weight:500}
@@ -67,66 +67,66 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
 .av-section{padding:0 16px 20px}
 .av-header{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;border-top:1px solid var(--border-g);padding-top:14px}
 .av-sort-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.av-period{font-size:10px;color:var(--muted);margin-left:10px}
+.av-period{font-size:12px;color:var(--muted);margin-left:10px}
 .av-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:14px}
 .av-card{background:var(--bg2);border:1px solid var(--border-g);border-radius:10px;padding:14px;cursor:pointer;transition:border-color .15s,transform .1s;position:relative;overflow:hidden}
 .av-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold-dk),var(--gold))}
 .av-card:hover{border-color:var(--gold);transform:translateY(-2px)}
 .av-card.selected{border-color:var(--gold);background:var(--bg3)}
-.av-card-name{font-size:13px;font-weight:700;color:var(--gold);margin-bottom:2px}
-.av-card-loja{font-size:10px;color:var(--muted);margin-bottom:10px}
-.av-card-rank{position:absolute;top:10px;right:12px;font-size:11px;font-weight:700;color:var(--gold-dk)}
+.av-card-name{font-size:15px;font-weight:700;color:var(--gold);margin-bottom:2px}
+.av-card-loja{font-size:12px;color:var(--muted);margin-bottom:10px}
+.av-card-rank{position:absolute;top:10px;right:12px;font-size:13px;font-weight:700;color:var(--gold-dk)}
 .av-stat-row{display:flex;justify-content:space-between;margin-bottom:5px}
-.av-stat-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
-.av-stat-val{font-size:11px;font-weight:600;color:var(--white)}
+.av-stat-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.av-stat-val{font-size:13px;font-weight:600;color:var(--white)}
 .av-conv-bar{height:4px;background:var(--bg4);border-radius:2px;margin-top:8px;overflow:hidden}
 .av-conv-fill{height:100%;border-radius:2px;transition:width .4s}
-.av-badge{display:inline-block;font-size:9px;padding:2px 6px;border-radius:3px;font-weight:700;margin-top:6px}
+.av-badge{display:inline-block;font-size:11px;padding:2px 6px;border-radius:3px;font-weight:700;margin-top:6px}
 .av-badge-high{background:#14532d;color:#86efac}
 .av-badge-mid{background:var(--gold-dim);color:var(--gold-lt)}
 .av-badge-low{background:#450a0a;color:#fca5a5}
 .av-detail{background:var(--bg2);border:1px solid var(--gold-dk);border-radius:12px;padding:18px;margin-top:4px}
 .av-detail-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px}
-.av-detail-name{font-size:18px;font-weight:700;color:var(--gold)}
-.av-detail-loja{font-size:11px;color:var(--muted);background:var(--bg3);padding:3px 10px;border-radius:20px;margin-left:10px}
-.av-close{background:transparent;border:1px solid var(--border);color:var(--muted);padding:5px 12px;border-radius:6px;cursor:pointer;font-size:11px}
+.av-detail-name{font-size:20px;font-weight:700;color:var(--gold)}
+.av-detail-loja{font-size:13px;color:var(--muted);background:var(--bg3);padding:3px 10px;border-radius:20px;margin-left:10px}
+.av-close{background:transparent;border:1px solid var(--border);color:var(--muted);padding:5px 12px;border-radius:6px;cursor:pointer;font-size:13px}
 .av-close:hover{border-color:var(--gold-dk);color:var(--gold)}
 .av-detail-kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-bottom:14px}
 .av-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .analytics-section{padding:0 16px 20px;border-top:1px solid var(--border-g);margin-top:8px;padding-top:14px}
 .analytics-grid-3{display:grid;grid-template-columns:1fr 2fr;gap:10px;margin-top:12px}
 .analytics-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
-.insight-box{background:var(--bg3);border-left:3px solid var(--gold);border-radius:0 6px 6px 0;padding:8px 12px;font-size:11px;color:var(--white);line-height:1.6;margin-top:10px}
+.insight-box{background:var(--bg3);border-left:3px solid var(--gold);border-radius:0 6px 6px 0;padding:8px 12px;font-size:13px;color:var(--white);line-height:1.6;margin-top:10px}
 .insight-box strong{color:var(--gold)}
 .fb-row{display:grid;grid-template-columns:28px 40px 140px 1fr 72px 60px 48px;align-items:center;gap:6px;margin-bottom:6px;padding:5px 8px;border-radius:6px}
 .fb-row:hover{background:var(--bg3)}
-.fb-rank{font-size:11px;color:var(--muted);text-align:right;white-space:nowrap}
+.fb-rank{font-size:13px;color:var(--muted);text-align:right;white-space:nowrap}
 .fb-rank-top{color:var(--gold-lt);font-weight:700}
-.fb-code{font-size:13px;font-weight:700;color:var(--gold);white-space:nowrap}
-.fb-desc{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-transform:uppercase;letter-spacing:.03em}
+.fb-code{font-size:15px;font-weight:700;color:var(--gold);white-space:nowrap}
+.fb-desc{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-transform:uppercase;letter-spacing:.03em}
 .fb-bar-wrap{height:8px;background:var(--bg4);border-radius:4px;overflow:hidden}
 .fb-bar{height:100%;border-radius:4px}
-.fb-metal{font-size:12px;color:var(--gold-dim);text-align:right;white-space:nowrap}
-.fb-nums{font-size:12px;color:var(--muted);text-align:right;white-space:nowrap}
-.fb-conv{font-size:12px;font-weight:700;text-align:right;white-space:nowrap}
+.fb-metal{font-size:14px;color:var(--gold-dim);text-align:right;white-space:nowrap}
+.fb-nums{font-size:14px;color:var(--muted);text-align:right;white-space:nowrap}
+.fb-conv{font-size:14px;font-weight:700;text-align:right;white-space:nowrap}
 .nc-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-.nc-label{font-size:12px;color:var(--white);width:190px;flex-shrink:0}
+.nc-label{font-size:14px;color:var(--white);width:190px;flex-shrink:0}
 .nc-bar-wrap{flex:1;height:9px;background:var(--bg4);border-radius:4px;overflow:hidden}
 .nc-bar{height:100%;border-radius:4px;background:linear-gradient(90deg,#450a0a,#f87171)}
-.nc-val{font-size:12px;color:#f87171;width:36px;text-align:right;flex-shrink:0}
-.nc-price{font-size:12px;color:var(--muted);width:80px;text-align:right;flex-shrink:0}
+.nc-val{font-size:14px;color:#f87171;width:36px;text-align:right;flex-shrink:0}
+.nc-price{font-size:14px;color:var(--muted);width:80px;text-align:right;flex-shrink:0}
 .slot-peak{background:rgba(212,175,55,.15);border:1px solid var(--gold-dk);border-radius:6px;padding:6px 10px;text-align:center}
-.slot-peak-time{font-size:14px;font-weight:700;color:var(--gold)}
-.slot-peak-label{font-size:9px;color:var(--muted);margin-top:2px}
-.mp-cell{padding:7px 4px;text-align:center;border-radius:6px;cursor:pointer;font-size:11px;color:var(--muted);transition:all .12s;border:1px solid transparent}
+.slot-peak-time{font-size:16px;font-weight:700;color:var(--gold)}
+.slot-peak-label{font-size:11px;color:var(--muted);margin-top:2px}
+.mp-cell{padding:7px 4px;text-align:center;border-radius:6px;cursor:pointer;font-size:13px;color:var(--muted);transition:all .12s;border:1px solid transparent}
 .mp-cell:hover{background:var(--bg3);color:var(--white)}
 .mp-cell.in-range{background:rgba(212,175,55,.15);color:var(--gold-lt)}
 .mp-cell.selected{background:var(--gold-dim);border-color:var(--gold);color:var(--gold-lt);font-weight:700}
 .mp-cell.disabled{opacity:.25;cursor:default;pointer-events:none}
-.footer{text-align:center;padding:12px;font-size:10px;color:var(--muted2);border-top:1px solid var(--border)}
-.tip{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--bg4);border:1px solid var(--border);color:var(--muted);font-size:9px;font-weight:700;cursor:help;margin-left:5px;flex-shrink:0;vertical-align:middle;position:relative}
+.footer{text-align:center;padding:12px;font-size:12px;color:var(--muted2);border-top:1px solid var(--border)}
+.tip{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--bg4);border:1px solid var(--border);color:var(--muted);font-size:11px;font-weight:700;cursor:help;margin-left:5px;flex-shrink:0;vertical-align:middle;position:relative}
 .tip:hover{border-color:var(--gold);color:var(--gold)}
-.tip::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#1a1a1a;border:1px solid var(--border-g);color:var(--white);font-size:10px;font-weight:400;padding:7px 10px;border-radius:7px;white-space:pre-line;min-width:180px;max-width:260px;line-height:1.5;z-index:500;pointer-events:none;opacity:0;transition:opacity .15s;text-align:left}
+.tip::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#1a1a1a;border:1px solid var(--border-g);color:var(--white);font-size:12px;font-weight:400;padding:7px 10px;border-radius:7px;white-space:pre-line;min-width:180px;max-width:260px;line-height:1.5;z-index:500;pointer-events:none;opacity:0;transition:opacity .15s;text-align:left}
 .tip:hover::after{opacity:1}
 .tip::before{content:'';position:absolute;bottom:calc(100% + 1px);left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--border-g);z-index:501;opacity:0;transition:opacity .15s}
 .tip:hover::before{opacity:1}
@@ -157,12 +157,12 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
   .av-cards{grid-template-columns:repeat(2,minmax(0,1fr))}
   .av-detail-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
   .av-detail-grid{grid-template-columns:1fr}
-  .nc-label{width:auto;flex:1;font-size:11px}
+  .nc-label{width:auto;flex:1;font-size:13px}
   .nc-price{width:56px}
   .chart-box{height:220px}
   .mini-box{height:160px}
-  .tbl{font-size:10px;min-width:420px}
-  .section-title{font-size:12px}
+  .tbl{font-size:12px;min-width:420px}
+  .section-title{font-size:14px}
   .preco-section{padding:0 10px 14px}
   .panel{padding:10px}
   .fb-row{grid-template-columns:24px 34px 1fr 60px 50px 44px;gap:4px}
@@ -177,7 +177,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
   .av-cards{grid-template-columns:1fr}
   .av-detail-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
   .filters{gap:4px;padding:6px 10px}
-  .chip{padding:3px 8px;font-size:10px}
+  .chip{padding:3px 8px;font-size:12px}
   .fb-row{grid-template-columns:20px 30px 1fr 58px 44px;gap:3px}
   .fb-desc{display:none}
 }
@@ -209,7 +209,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
   <div class="filter-divider"></div>
   <span class="filter-label">Periodo</span>
   <div style="position:relative" id="mp-wrap">
-    <div onclick="togglePicker()" style="display:flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--border-g);border-radius:8px;padding:5px 12px;cursor:pointer;font-size:12px;color:var(--gold);white-space:nowrap;user-select:none">
+    <div onclick="togglePicker()" style="display:flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--border-g);border-radius:8px;padding:5px 12px;cursor:pointer;font-size:14px;color:var(--gold);white-space:nowrap;user-select:none">
       &#128197; <span id="mr-label">---</span> &#9660;
     </div>
     <div id="month-picker" style="display:none;position:absolute;top:calc(100% + 6px);left:0;z-index:300;background:var(--bg2);border:1px solid var(--border-g);border-radius:12px;padding:14px;width:560px;box-shadow:0 8px 32px rgba(0,0,0,.7)">
@@ -217,29 +217,29 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
         <div style="flex:1">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
             <button onclick="dpNav(-1);event.stopPropagation()" style="background:transparent;border:1px solid var(--border);color:var(--muted);width:26px;height:26px;border-radius:6px;cursor:pointer">&#8249;</button>
-            <span id="dp-title-l" style="font-size:12px;font-weight:600;color:var(--gold)"></span>
+            <span id="dp-title-l" style="font-size:14px;font-weight:600;color:var(--gold)"></span>
             <div style="width:26px"></div>
           </div>
-          <div id="dp-grid-l" style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;font-size:11px"></div>
+          <div id="dp-grid-l" style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;font-size:13px"></div>
         </div>
         <div style="flex:1">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
             <div style="width:26px"></div>
-            <span id="dp-title-r" style="font-size:12px;font-weight:600;color:var(--gold)"></span>
+            <span id="dp-title-r" style="font-size:14px;font-weight:600;color:var(--gold)"></span>
             <button onclick="dpNav(1);event.stopPropagation()" style="background:transparent;border:1px solid var(--border);color:var(--muted);width:26px;height:26px;border-radius:6px;cursor:pointer">&#8250;</button>
           </div>
-          <div id="dp-grid-r" style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;font-size:11px"></div>
+          <div id="dp-grid-r" style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;font-size:13px"></div>
         </div>
       </div>
       <div style="padding-top:8px;border-top:1px solid var(--border);margin-top:10px;display:flex;align-items:center;justify-content:space-between">
-        <span id="dp-hint" style="font-size:10px;color:var(--muted)">Clique na data inicial</span>
+        <span id="dp-hint" style="font-size:12px;color:var(--muted)">Clique na data inicial</span>
         <div style="display:flex;gap:8px">
-          <span id="dp-range-label" style="font-size:11px;color:var(--gold-lt)"></span>
+          <span id="dp-range-label" style="font-size:13px;color:var(--gold-lt)"></span>
         </div>
       </div>
     </div>
   </div>
-  <button onclick="applyPicker()" style="background:var(--gold-dim);border:1px solid var(--gold);color:var(--gold-lt);padding:4px 14px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:700;white-space:nowrap">Aplicar</button>
+  <button onclick="applyPicker()" style="background:var(--gold-dim);border:1px solid var(--gold);color:var(--gold-lt);padding:4px 14px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:700;white-space:nowrap">Aplicar</button>
   <button class="reset-btn" onclick="resetFiltros()">&#8635; Resetar</button>
 </div>
 
@@ -305,7 +305,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
         <div class="chip" onclick="setTblLimit(13,this)">13m</div>
         <div class="chip" onclick="setTblLimit(9999,this)">Todos</div>
       </div>
-      <span style="font-size:11px;color:#555" id="tbl-count"></span>
+      <span style="font-size:13px;color:#555" id="tbl-count"></span>
     </div>
   </div>
   <div class="tbl-wrap">
@@ -375,15 +375,15 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
 
   <!-- 2. Feedback — full width -->
   <div class="panel" style="overflow:hidden;margin-bottom:10px">
-    <div class="panel-title" style="display:flex;align-items:center;gap:4px">Feedback -- Conversao por Tipo<span class="tip" data-tip="Cada linha = um código de feedback do cliente.&#10;Mostra quantos atendimentos tiveram aquele feedback&#10;e qual % deles resultou em fechamento.&#10;&#10;⚠ Reage ao filtro de loja e período.">i</span><span id="fb-period-warn" style="font-size:10px;color:#f87171;font-weight:normal;margin-left:4px"></span></div>
+    <div class="panel-title" style="display:flex;align-items:center;gap:4px">Feedback -- Conversao por Tipo<span class="tip" data-tip="Cada linha = um código de feedback do cliente.&#10;Mostra quantos atendimentos tiveram aquele feedback&#10;e qual % deles resultou em fechamento.&#10;&#10;⚠ Reage ao filtro de loja e período.">i</span><span id="fb-period-warn" style="font-size:12px;color:#f87171;font-weight:normal;margin-left:4px"></span></div>
     <div id="fb-header" style="display:grid;grid-template-columns:28px 40px 140px 1fr 72px 60px 48px;align-items:center;gap:6px;padding:3px 6px;margin-bottom:2px;border-bottom:1px solid var(--border-g)">
-      <span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;text-align:right">#</span>
-      <span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Sigla</span>
-      <span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em" id="fb-h-desc">Descrição</span>
-      <span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em" id="fb-h-bar">Volume de Metal</span>
-      <span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;text-align:right">Peso (g)</span>
-      <span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;text-align:right">C / A</span>
-      <span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;text-align:right">Conv.</span>
+      <span style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;text-align:right">#</span>
+      <span style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Sigla</span>
+      <span style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em" id="fb-h-desc">Descrição</span>
+      <span style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em" id="fb-h-bar">Volume de Metal</span>
+      <span style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;text-align:right">Peso (g)</span>
+      <span style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;text-align:right">C / A</span>
+      <span style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;text-align:right">Conv.</span>
     </div>
     <div id="fb-list"></div>
     <div class="insight-box" id="fb-insight"></div>
@@ -396,7 +396,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
       <div style="display:flex;gap:10px">
         <div style="flex:1"><div id="nc-list"></div></div>
         <div style="width:140px;flex-shrink:0">
-          <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;text-align:center">Por Categoria</div>
+          <div style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;text-align:center">Por Categoria</div>
           <div style="height:130px"><canvas id="nc-donut"></canvas></div>
           <div id="nc-donut-legend" style="margin-top:6px"></div>
         </div>
@@ -411,7 +411,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
 <div class="preco-section" style="padding:0 16px 24px;border-top:1px solid var(--border-g);margin-top:8px;padding-top:14px">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
     <span class="section-title" style="display:flex;align-items:center;gap:0">Analise de Compras por Preco e Avaliador<span class="tip" data-tip="1º Preço = primeiro valor oferecido ao cliente.&#10;Menor R$/g no 1º preço = avaliadora fecha mais barato logo de cara.&#10;Ordenado do menor para o maior (melhor primeiro).">i</span></span>
-    <span style="font-size:10px;color:var(--muted)" id="preco-period"></span>
+    <span style="font-size:12px;color:var(--muted)" id="preco-period"></span>
   </div>
 
   <!-- PAINEL VISUAL DINAMICO -->
@@ -425,22 +425,22 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
           <th style="min-width:110px">Avaliador</th>
           <th style="min-width:60px">Loja</th>
           <th class="th-psort" data-precosort="p1" style="text-align:center;cursor:pointer;user-select:none">
-            1&#186; Preco<br><span style="font-size:9px;font-weight:400;color:var(--muted)">N | R$/g</span>
+            1&#186; Preco<br><span style="font-size:11px;font-weight:400;color:var(--muted)">N | R$/g</span>
           </th>
           <th class="th-psort" data-precosort="p2" style="text-align:center;cursor:pointer;user-select:none">
-            2&#186; Preco<br><span style="font-size:9px;font-weight:400;color:var(--muted)">N | R$/g</span>
+            2&#186; Preco<br><span style="font-size:11px;font-weight:400;color:var(--muted)">N | R$/g</span>
           </th>
           <th class="th-psort" data-precosort="p3" style="text-align:center;cursor:pointer;user-select:none">
-            3&#186; Preco<br><span style="font-size:9px;font-weight:400;color:var(--muted)">N | R$/g</span>
+            3&#186; Preco<br><span style="font-size:11px;font-weight:400;color:var(--muted)">N | R$/g</span>
           </th>
           <th class="th-psort" data-precosort="p4" style="text-align:center;cursor:pointer;user-select:none">
-            4&#186; Preco<br><span style="font-size:9px;font-weight:400;color:var(--muted)">N | R$/g</span>
+            4&#186; Preco<br><span style="font-size:11px;font-weight:400;color:var(--muted)">N | R$/g</span>
           </th>
           <th class="th-psort" data-precosort="p5" style="text-align:center;cursor:pointer;user-select:none">
-            5&#186; Preco<br><span style="font-size:9px;font-weight:400;color:var(--muted)">N | R$/g</span>
+            5&#186; Preco<br><span style="font-size:11px;font-weight:400;color:var(--muted)">N | R$/g</span>
           </th>
           <th class="th-psort" data-precosort="geral" style="text-align:center;cursor:pointer;user-select:none;background:var(--gold-dim);color:var(--gold-lt)">
-            Media Geral<br><span style="font-size:9px;font-weight:400;color:var(--gold-dk)">N | R$/g</span>
+            Media Geral<br><span style="font-size:11px;font-weight:400;color:var(--gold-dk)">N | R$/g</span>
           </th>
         </tr>
       </thead>
@@ -520,7 +520,7 @@ function renderDpGrid(containerId,viewDate){
   var y=viewDate.getFullYear(),m=viewDate.getMonth();
   var s=dpStart,e=dpEnd;if(s&&e&&s>e){var t=s;s=e;e=t;}
   var dias=['D','S','T','Q','Q','S','S'];
-  var html=dias.map(function(d){return '<div style="color:#555;padding:3px 0;font-size:10px">'+d+'</div>';}).join('');
+  var html=dias.map(function(d){return '<div style="color:#555;padding:3px 0;font-size:12px">'+d+'</div>';}).join('');
   var first=new Date(y,m,1).getDay();
   for(var i=0;i<first;i++)html+='<div></div>';
   var lastDay=new Date(y,m+1,0).getDate();
@@ -769,9 +769,9 @@ function renderMetalPizza(data){
     var pct=(i.g/total*100).toFixed(1);
     return '<div style="display:flex;align-items:center;gap:5px;margin-bottom:4px">'
       +'<span style="width:10px;height:10px;border-radius:2px;background:'+i.color+';flex-shrink:0;border:1px solid rgba(255,255,255,0.15)"></span>'
-      +'<span style="font-size:9px;color:'+i.color+';font-weight:600;flex:1">'+i.l+'</span>'
-      +'<span style="font-size:9px;color:'+i.color+';font-weight:700">'+pct+'%</span>'
-      +'<span style="font-size:9px;color:var(--muted);margin-left:4px">'+i.g.toFixed(2)+'g</span>'
+      +'<span style="font-size:11px;color:'+i.color+';font-weight:600;flex:1">'+i.l+'</span>'
+      +'<span style="font-size:11px;color:'+i.color+';font-weight:700">'+pct+'%</span>'
+      +'<span style="font-size:11px;color:var(--muted);margin-left:4px">'+i.g.toFixed(2)+'g</span>'
       +'</div>';
   }).join('');
 }
@@ -802,17 +802,17 @@ function renderMetalBars(data){
       +'<span class="bar-label">'+i.l+'</span>'
       +'<div class="bar-track"><div class="bar-fill" style="width:'+(maxG>0?(i.g/maxG*100).toFixed(1):0)+'%"></div></div>'
       +'<span class="bar-val">'+i.g.toFixed(2)+'g</span>'
-      +'<span style="font-size:10px;color:var(--gold-dk);width:34px;text-align:right;flex-shrink:0">'+pctG+'%</span>'
-      +'<span style="font-size:10px;color:#4ade80;font-weight:600;width:60px;text-align:right;flex-shrink:0">'+vStr+'</span>'
+      +'<span style="font-size:12px;color:var(--gold-dk);width:34px;text-align:right;flex-shrink:0">'+pctG+'%</span>'
+      +'<span style="font-size:12px;color:#4ade80;font-weight:600;width:60px;text-align:right;flex-shrink:0">'+vStr+'</span>'
       +'</div>';
   });
   var vTotStr=totalV>=1000000?'R$'+(totalV/1000000).toFixed(2)+'M':'R$'+(totalV/1000).toFixed(2)+'k';
   rows.push('<div class="bar-row" style="border-top:1px solid var(--border);margin-top:6px;padding-top:6px">'
     +'<span class="bar-label" style="font-weight:700;color:var(--gold)">TOTAL</span>'
     +'<div class="bar-track" style="background:transparent;border:none"></div>'
-    +'<span class="bar-val" style="font-size:11px;font-weight:700;color:var(--gold)">'+totalG.toFixed(2)+'g</span>'
-    +'<span style="font-size:10px;color:var(--muted);width:34px;text-align:right;flex-shrink:0">100%</span>'
-    +'<span style="font-size:11px;color:#4ade80;font-weight:700;width:60px;text-align:right;flex-shrink:0">'+vTotStr+'</span>'
+    +'<span class="bar-val" style="font-size:13px;font-weight:700;color:var(--gold)">'+totalG.toFixed(2)+'g</span>'
+    +'<span style="font-size:12px;color:var(--muted);width:34px;text-align:right;flex-shrink:0">100%</span>'
+    +'<span style="font-size:13px;color:#4ade80;font-weight:700;width:60px;text-align:right;flex-shrink:0">'+vTotStr+'</span>'
     +'</div>');
   document.getElementById('metal-bars').innerHTML=rows.join('');
 }
@@ -1074,7 +1074,7 @@ function getNcGrupo(cod){
 function renderNC(){
   var d=getMotivosData();
   if(!d.length){
-    document.getElementById('nc-list').innerHTML='<div style="color:var(--muted);font-size:11px;padding:10px">Sem dados no periodo.</div>';
+    document.getElementById('nc-list').innerHTML='<div style="color:var(--muted);font-size:13px;padding:10px">Sem dados no periodo.</div>';
     document.getElementById('nc-insight').innerHTML='';
     return;
   }
@@ -1087,12 +1087,12 @@ function renderNC(){
     var grupo=getNcGrupo(x.cod);
     var barColor=NC_GRUPO_COLORS[grupo];
     return '<div class="nc-row">'
-      +'<span class="nc-num" style="font-size:12px;color:var(--gold-dk);width:22px;flex-shrink:0;text-align:right">'+x.cod+'</span>'
+      +'<span class="nc-num" style="font-size:14px;color:var(--gold-dk);width:22px;flex-shrink:0;text-align:right">'+x.cod+'</span>'
       +'<span class="nc-label">'+x.label+'</span>'
       +'<div class="nc-bar-wrap"><div class="nc-bar" style="width:'+(x.total/max*100).toFixed(1)+'%;background:'+barColor+'"></div></div>'
       +'<span class="nc-val">'+x.total+'</span>'
-      +'<span class="nc-pct" style="font-size:10px;color:var(--muted);width:34px;text-align:right;flex-shrink:0">'+pct+'%</span>'
-      +'<span style="font-size:10px;color:#4ade80;font-weight:600;width:74px;text-align:right;flex-shrink:0">'+x.peso.toFixed(2)+'g</span>'
+      +'<span class="nc-pct" style="font-size:12px;color:var(--muted);width:34px;text-align:right;flex-shrink:0">'+pct+'%</span>'
+      +'<span style="font-size:12px;color:#4ade80;font-weight:600;width:74px;text-align:right;flex-shrink:0">'+x.peso.toFixed(2)+'g</span>'
       +'</div>';
   });
 
@@ -1102,8 +1102,8 @@ function renderNC(){
     +'<span class="nc-label" style="font-weight:700;color:var(--gold)">TOTAL</span>'
     +'<div class="nc-bar-wrap" style="background:transparent"></div>'
     +'<span class="nc-val" style="font-weight:700;color:var(--gold)">'+tot+'</span>'
-    +'<span style="font-size:10px;color:var(--muted);width:34px;text-align:right;flex-shrink:0">100%</span>'
-    +'<span style="font-size:10px;color:#4ade80;font-weight:700;width:74px;text-align:right;flex-shrink:0">'+totPeso.toFixed(2)+'g</span>'
+    +'<span style="font-size:12px;color:var(--muted);width:34px;text-align:right;flex-shrink:0">100%</span>'
+    +'<span style="font-size:12px;color:#4ade80;font-weight:700;width:74px;text-align:right;flex-shrink:0">'+totPeso.toFixed(2)+'g</span>'
     +'</div>'
   );
   document.getElementById('nc-list').innerHTML=rows.join('');
@@ -1132,7 +1132,7 @@ function renderNC(){
     document.getElementById('nc-donut-legend').innerHTML=Object.keys(grupoTotals).map(function(k){
       return '<div style="display:flex;align-items:center;gap:4px;margin-bottom:3px">'
         +'<span style="width:8px;height:8px;border-radius:2px;background:'+NC_GRUPO_COLORS[k]+';flex-shrink:0"></span>'
-        +'<span style="font-size:9px;color:var(--muted)">'+NC_GRUPO_LABELS[k]+': '+grupoTotals[k]+'</span>'
+        +'<span style="font-size:11px;color:var(--muted)">'+NC_GRUPO_LABELS[k]+': '+grupoTotals[k]+'</span>'
         +'</div>';
     }).join('');
   }
@@ -1259,7 +1259,7 @@ var AV_PRIORITY=['Clara'];
 function renderAvCards(){
   var all=Object.keys(AV_RAW).map(calcAvData).filter(Boolean);
   if(!all.length){
-    document.getElementById('av-cards').innerHTML='<div style="color:var(--muted);font-size:11px;padding:20px">Nenhum avaliador no periodo selecionado.</div>';
+    document.getElementById('av-cards').innerHTML='<div style="color:var(--muted);font-size:13px;padding:20px">Nenhum avaliador no periodo selecionado.</div>';
     return;
   }
   all.sort(function(a,b){
@@ -1302,7 +1302,7 @@ function openAvDetail(avName){
     return '<div class="bar-row"><span class="bar-label">'+mi[0]+'</span>'
       +'<div class="bar-track"><div class="bar-fill" style="width:'+(mi[1]/mmax*100).toFixed(1)+'%"></div></div>'
       +'<span class="bar-val">'+mi[1].toFixed(2)+'g</span>'
-      +'<span style="font-size:10px;color:var(--gold-dk);width:36px;text-align:right;flex-shrink:0">'+(mtot>0?(mi[1]/mtot*100).toFixed(1):0)+'%</span></div>';
+      +'<span style="font-size:12px;color:var(--gold-dk);width:36px;text-align:right;flex-shrink:0">'+(mtot>0?(mi[1]/mtot*100).toFixed(1):0)+'%</span></div>';
   }).join('');
   var meses=d.meses.sort();
   var convs=meses.map(function(m){return d.monthly[m].conv;});
@@ -1454,7 +1454,7 @@ function renderPrecoTable(){
       .sort(function(a,b){return a.med-b.med;}); // menor primeiro = melhor
 
     if(!colData.length){
-      visualHtml+='<div class="panel" style="opacity:.4"><div class="panel-title">'+PRECO_LABELS[ki]+'</div><div style="font-size:10px;color:var(--muted);padding:8px 0">sem dados</div></div>';
+      visualHtml+='<div class="panel" style="opacity:.4"><div class="panel-title">'+PRECO_LABELS[ki]+'</div><div style="font-size:12px;color:var(--muted);padding:8px 0">sem dados</div></div>';
       return;
     }
 
@@ -1473,14 +1473,14 @@ function renderPrecoTable(){
       var rank=i+1;
       visualHtml+='<div style="margin-bottom:7px">'
         +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">'
-        +'<span style="font-size:10px;font-weight:'+(isWinner?'700':'500')+';color:'+nameColor+'">'
+        +'<span style="font-size:12px;font-weight:'+(isWinner?'700':'500')+';color:'+nameColor+'">'
         +(isWinner?'&#9733; ':rank+'. ')+x.av+'</span>'
-        +'<span style="font-size:9px;color:var(--muted)">'+x.n+'x</span>'
+        +'<span style="font-size:11px;color:var(--muted)">'+x.n+'x</span>'
         +'</div>'
         +'<div style="height:5px;background:var(--bg4);border-radius:3px;overflow:hidden;margin-bottom:2px">'
         +'<div style="width:'+barPct+'%;height:100%;background:'+barColor+';border-radius:3px"></div>'
         +'</div>'
-        +'<span style="font-size:10px;font-weight:700;color:'+(isWinner?'#4ade80':(isGeral?'var(--gold)':'var(--gold)'))+'">'+fmtPPG(x.med)+'</span>'
+        +'<span style="font-size:12px;font-weight:700;color:'+(isWinner?'#4ade80':(isGeral?'var(--gold)':'var(--gold)'))+'">'+fmtPPG(x.med)+'</span>'
         +'</div>';
     });
     visualHtml+='</div>';
@@ -1490,7 +1490,7 @@ function renderPrecoTable(){
 
   // ── TABELA ──
   function cell(n, med, key){
-    if(n===0) return '<td style="text-align:center;color:var(--muted2);font-size:10px">--</td>';
+    if(n===0) return '<td style="text-align:center;color:var(--muted2);font-size:12px">--</td>';
     var isGeral=key==='geral';
     var isMin=Math.abs(med-minMed[key])<0.001&&n>0;
     var isMax=Math.abs(med-maxMed[key])<0.001&&n>0;
@@ -1500,8 +1500,8 @@ function renderPrecoTable(){
     var col=isMin?'#4ade80':isGeral?'var(--gold-lt)':'var(--gold)';
     var border=isMin?'border-left:2px solid #4ade80':'';
     return '<td style="text-align:center;background:'+bg+';padding:5px 8px;'+border+'">'
-      +'<span style="font-size:10px;color:var(--muted);display:block">'+n+'x</span>'
-      +'<span style="font-size:11px;font-weight:700;color:'+col+'">'
+      +'<span style="font-size:12px;color:var(--muted);display:block">'+n+'x</span>'
+      +'<span style="font-size:13px;font-weight:700;color:'+col+'">'
       +(isMin?'&#9660; ':'')+fmtPPG(med)
       +'</span>'
       +'</td>';
@@ -1510,7 +1510,7 @@ function renderPrecoTable(){
   document.getElementById('preco-body').innerHTML=all.map(function(d){
     return '<tr>'
       +'<td style="font-weight:700;color:var(--gold)">'+d.av+'</td>'
-      +'<td><span style="color:'+(lc[d.loja]||'#fff')+';font-size:10px;font-weight:600">'+d.loja+'</span></td>'
+      +'<td><span style="color:'+(lc[d.loja]||'#fff')+';font-size:12px;font-weight:600">'+d.loja+'</span></td>'
       +cell(d.p1_n,d.p1_med,'p1')
       +cell(d.p2_n,d.p2_med,'p2')
       +cell(d.p3_n,d.p3_med,'p3')
