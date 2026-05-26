@@ -98,15 +98,17 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
 .analytics-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
 .insight-box{background:var(--bg3);border-left:3px solid var(--gold);border-radius:0 6px 6px 0;padding:8px 12px;font-size:11px;color:var(--white);line-height:1.6;margin-top:10px}
 .insight-box strong{color:var(--gold)}
-.fb-row{display:grid;grid-template-columns:40px 140px 1fr 72px 60px 48px;align-items:center;gap:6px;margin-bottom:4px;padding:3px 6px;border-radius:6px}
+.fb-row{display:grid;grid-template-columns:28px 40px 140px 1fr 72px 60px 48px;align-items:center;gap:6px;margin-bottom:6px;padding:5px 8px;border-radius:6px}
 .fb-row:hover{background:var(--bg3)}
-.fb-code{font-size:11px;font-weight:700;color:var(--gold);white-space:nowrap}
-.fb-desc{font-size:9px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-transform:uppercase;letter-spacing:.03em}
-.fb-bar-wrap{height:7px;background:var(--bg4);border-radius:4px;overflow:hidden}
+.fb-rank{font-size:11px;color:var(--muted);text-align:right;white-space:nowrap}
+.fb-rank-top{color:var(--gold-lt);font-weight:700}
+.fb-code{font-size:13px;font-weight:700;color:var(--gold);white-space:nowrap}
+.fb-desc{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-transform:uppercase;letter-spacing:.03em}
+.fb-bar-wrap{height:8px;background:var(--bg4);border-radius:4px;overflow:hidden}
 .fb-bar{height:100%;border-radius:4px}
-.fb-metal{font-size:10px;color:var(--gold-dim);text-align:right;white-space:nowrap}
-.fb-nums{font-size:10px;color:var(--muted);text-align:right;white-space:nowrap}
-.fb-conv{font-size:10px;font-weight:700;text-align:right;white-space:nowrap}
+.fb-metal{font-size:12px;color:var(--gold-dim);text-align:right;white-space:nowrap}
+.fb-nums{font-size:12px;color:var(--muted);text-align:right;white-space:nowrap}
+.fb-conv{font-size:12px;font-weight:700;text-align:right;white-space:nowrap}
 .nc-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
 .nc-label{font-size:10px;color:var(--white);width:160px;flex-shrink:0}
 .nc-bar-wrap{flex:1;height:8px;background:var(--bg4);border-radius:4px;overflow:hidden}
@@ -163,7 +165,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
   .section-title{font-size:12px}
   .preco-section{padding:0 10px 14px}
   .panel{padding:10px}
-  .fb-row{grid-template-columns:34px 1fr 60px 50px 44px;gap:4px}
+  .fb-row{grid-template-columns:24px 34px 1fr 60px 50px 44px;gap:4px}
   .fb-row .fb-bar-wrap{display:none}
   #month-picker{width:min(560px,96vw) !important;left:50% !important;transform:translateX(-50%) !important}
 }
@@ -176,7 +178,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
   .av-detail-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
   .filters{gap:4px;padding:6px 10px}
   .chip{padding:3px 8px;font-size:10px}
-  .fb-row{grid-template-columns:30px 1fr 58px 44px;gap:3px}
+  .fb-row{grid-template-columns:20px 30px 1fr 58px 44px;gap:3px}
   .fb-desc{display:none}
 }
 
@@ -374,13 +376,14 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--wh
   <!-- 2. Feedback — full width -->
   <div class="panel" style="overflow:hidden;margin-bottom:10px">
     <div class="panel-title" style="display:flex;align-items:center;gap:4px">Feedback -- Conversao por Tipo<span class="tip" data-tip="Cada linha = um código de feedback do cliente.&#10;Mostra quantos atendimentos tiveram aquele feedback&#10;e qual % deles resultou em fechamento.&#10;&#10;⚠ Reage ao filtro de loja e período.">i</span><span id="fb-period-warn" style="font-size:10px;color:#f87171;font-weight:normal;margin-left:4px"></span></div>
-    <div id="fb-header" style="display:grid;grid-template-columns:40px 140px 1fr 72px 60px 48px;align-items:center;gap:6px;padding:3px 6px;margin-bottom:2px;border-bottom:1px solid var(--border-g)">
-      <span style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Sigla</span>
-      <span style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em" id="fb-h-desc">Descrição</span>
-      <span style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em" id="fb-h-bar">Volume de Metal</span>
-      <span style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;text-align:right">Peso (g)</span>
-      <span style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;text-align:right">C / A</span>
-      <span style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;text-align:right">Conv.</span>
+    <div id="fb-header" style="display:grid;grid-template-columns:28px 40px 140px 1fr 72px 60px 48px;align-items:center;gap:6px;padding:3px 6px;margin-bottom:2px;border-bottom:1px solid var(--border-g)">
+      <span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;text-align:right">#</span>
+      <span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Sigla</span>
+      <span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em" id="fb-h-desc">Descrição</span>
+      <span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em" id="fb-h-bar">Volume de Metal</span>
+      <span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;text-align:right">Peso (g)</span>
+      <span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;text-align:right">C / A</span>
+      <span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;text-align:right">Conv.</span>
     </div>
     <div id="fb-list"></div>
     <div class="insight-box" id="fb-insight"></div>
@@ -890,7 +893,7 @@ function renderFeedback(){
   }
   var maxC=d[0]?d[0].compras:1,tot=d.reduce(function(a,x){return a+x.total;},0);
   var metalMax=d.reduce(function(a,x){return Math.max(a,x.metal||0);},0.001);
-  document.getElementById('fb-list').innerHTML=d.map(function(x){
+  document.getElementById('fb-list').innerHTML=d.map(function(x,idx){
     var cc=x.conv>=95?'#4ade80':x.conv>=88?'#D4AF37':'#f87171';
     var lojaKey=F.loja==='TODAS'?null:F.loja;
     var fbDesc='';
@@ -903,7 +906,11 @@ function renderFeedback(){
     }
     var m=x.metal||0;
     var metalStr=m.toFixed(2)+'g';
+    var rank=idx+1;
+    var rankCls=rank<=3?'fb-rank fb-rank-top':'fb-rank';
+    var rankStr=rank+'º';
     return '<div class="fb-row">'
+      +'<span class="'+rankCls+'">'+rankStr+'</span>'
       +'<span class="fb-code">'+x.FEEDBACK+'</span>'
       +'<span class="fb-desc">'+(fbDesc||'—')+'</span>'
       +'<div class="fb-bar-wrap"><div class="fb-bar" style="width:'+(m/metalMax*100).toFixed(1)+'%;background:'+cc+'"></div></div>'
