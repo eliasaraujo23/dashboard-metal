@@ -491,6 +491,7 @@ var tblLimit=6;
 function fmtN(n){return Math.round(n).toLocaleString('pt-BR');}
 function fmtR(n){return 'R$ '+Math.round(n).toLocaleString('pt-BR');}
 function fmtG(n){return (n||0).toFixed(2)+'g';}  // sempre 2 casas decimais, nunca kg
+var MP_MN=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 function fmtMes(s){var p=s.split('-');return MP_MN[+p[1]-1]+'/'+p[0].slice(2);}
 function slotLabel(label){
   var p=label.split(':'),hh=parseInt(p[0]),mm=parseInt(p[1]);
